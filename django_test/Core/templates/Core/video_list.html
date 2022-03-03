@@ -1,0 +1,26 @@
+{% load staticfiles %}
+
+<html>
+<head>
+    <title>Video List</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class="content container">
+    <header class="page-header" style="overflow: auto;">
+        <h1 style="display: inline;">Video List</h1>
+        <a class="btn btn-default" href="/video/new" style="float: right;">New Video</a>
+    </header>
+    <div class="row">
+        <div class="col-md-12">
+            {% for video in video_list %}
+                <a href="/video/{{ video.id }}">
+                    <h4>{{ video.title }}</h4>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
