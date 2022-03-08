@@ -14,13 +14,16 @@ def uploadFile(request):
         # Saving the information in the database
         if request.FILES.get("uploadedFile") :
             fileTitle = request.POST["fileTitle"]
-            uploadedFile = request.FILES["uploadedFile"] 
+            uploadedFile = request.FILES["uploadedFile"]
             document = models.Document(
                 title = fileTitle,
                 uploadedFile = uploadedFile
             )
             document.save()
-            return render(request, "Core/success.html", context={"file" : document})
+
+            #sttService로 결과 받아오기
+            message = sttService.doSttService(document.uploadedFile.url)
+            return render(request, "Core/success.html", context={"file" : document, "message" : message})
 
         # True if empty  
         else :
@@ -28,8 +31,3 @@ def uploadFile(request):
 
     else :
         return render(request, "Core/upload.html") 
-
-
-def success(request):
-    filePath = sttService.doService()
-    return render(request, "Core/success.html")
