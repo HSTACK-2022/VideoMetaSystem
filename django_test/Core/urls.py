@@ -6,8 +6,7 @@ from django.conf.urls.static import static
 app_name = "Core"
 
 urlpatterns = [
-    path("", views.uploadFile, name="uploadFile"),
-    path("success", views.success, name="success")
+    path("", views.uploadFile, name="uploadFile")
 ]
 
 if settings.DEBUG: 
