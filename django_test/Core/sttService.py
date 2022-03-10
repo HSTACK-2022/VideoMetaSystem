@@ -1,7 +1,7 @@
 import os
+import math
 import json
 import base64
-import mutagen
 import requests
 import subprocess
 
@@ -17,12 +17,25 @@ audioContents = None
 accessKey = ["2d40b072-37f1-4317-9899-33e0b3f5fb90","80ff5736-f813-4686-aca6-472739d8ebe0","25833dd1-e685-4f13-adc6-c85341d1bac5",
             "40c498a8-7d33-4909-9b60-427b3d0ccf8b", "0913ccd7-0cd1-4455-8b60-7940aa54f7be"]
 
+audioFile = None
+isAudioExt = False
+
+# 통 오디오 파일을 받아오는 함수
+def getFullAudioFile():
+    if isAudioExt:
+        return audioFile
+    else :
+        return None
+
+
 # 파일의 경로를 받아 음원을 추출하고 텍스트파일로 바꾼다.
 def doSttService(videoFilePath):
     # 지금은 임시로 파일명을 저장했지만
     # 나중에는 audioFile을 자신의 DB에 저장해두고 그 key값에 맞게 txt 파일 이름을 지정해야 할 것.
     #filePath = rootFilePath + "test" + ".txt"
     audioFile = video2audio(videoFilePath)
+    isAudioExt = True
+
     successed = splitAudio(audioFile, 10)
     #sttResult = audio2text(audioFile, 0)
     #res2file = content2file(sttResult, filePath, True)
@@ -62,11 +75,38 @@ def video2audio(videoFilePath):
 
 # Audio를 조각낸다.
 def splitAudio(audioFilePath, sec):
-    audioLen = WAVE(audioFilePath).info.length
-    print("**************************************")
-    print(audioLen)
-    return False
+    audioLen = WAVE(audioFilePath).info.length              #파일의 전체 길이 알아오기
+
+    # 파일의 이름만 가져오기 - E:/2022_CAPSTONE/test.wav 이면 test만 추출
+    audioName = os.path.basename(audioFilePath).split('.')[0]
+
+    os.mkdir(os.path.dirname(audioFilePath) + "/" + audioName)
+    audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
+
+    count = 0
+    for i in range(0, math.ceil(audioLen), 10):
+        startTime = 0 if (i == 0) else (i + 1)
+        endTime = audioLen if (i + 10 > audioLen) else (i + 10)
+        newAudioFilePath = audioPath+audioName + str(count) + ".wav"
+
+        result = subprocess.Popen(
+            ['ffmpeg', '-i', audioFilePath, '-ss', str(startTime), '-t', str(endTime),
+            '-acodec', 'copy', newAudioFilePath],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        out, err = result.communicate()
+        exitcode = result.returncode
+        if exitcode != 0:
+            print(exitcode, out.decode('utf8'), err.decode('utf8'))
+            return False
+        else:
+            print('%d Completed' %count)
+
+        count+=1
+
+    return audioPath
     
+
 # AudioPath를 주면 STT 작업을 해서 뱉는다.
 def audio2text(audioFilePath, i):
     result = None
