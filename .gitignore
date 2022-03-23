@@ -244,6 +244,7 @@ cython_debug/
 
 
 
-#가상환경, ffmpeg 제외
+#가상환경, ffmpeg, test media 제외
 ffmpeg-4.4.1-full_build/
 myenv/
+hstack/media/

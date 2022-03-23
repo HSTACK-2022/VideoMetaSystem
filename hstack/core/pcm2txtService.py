@@ -2,8 +2,9 @@ from asyncio.windows_events import NULL
 import threading
 import sttService
 
-audioPath = './cache/'
-filePath = './cache/a2T_integrated.txt'
+
+audioPath = None
+filePath = None
 audioPath_0 = []
 audioPath_1 = []
 audioPath_2 = []
@@ -17,6 +18,11 @@ result_3 = []
 result_4 = []
 resultVector = []
 threads = []
+
+def pcm2text(audioPath, filePath) : 
+
+    return True
+
 
 def sttAsync(endNum):
     for i in range(0, endNum):
