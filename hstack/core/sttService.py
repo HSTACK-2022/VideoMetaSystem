@@ -3,6 +3,7 @@ import math
 import json
 import base64
 import requests
+import platform
 import threading
 import subprocess
 
@@ -13,6 +14,8 @@ from urllib.error import HTTPError
 from asyncio.windows_events import NULL
 
 # 상수 설정
+OS = platform.system()
+
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Recognition"
 languageCode = "korean"
 audioContents = None
@@ -21,6 +24,7 @@ accessKey = ["2d40b072-37f1-4317-9899-33e0b3f5fb90","80ff5736-f813-4686-aca6-472
 
 audioFile = None
 isAudioExt = False
+
 
 # 파일의 경로를 받아 음원을 추출하고 텍스트파일로 바꾼다.
 def doSttService(videoFilePath):
@@ -48,19 +52,31 @@ def getFullAudioFile():
 
 #상대경로를 절대경로로 변환하는 함수
 def getRealDirPath(path):
-    BASE_DIR = os.getcwd().replace("/", "\\")
-    FILE_DIR = os.path.dirname(path).replace("/", "\\")
-    path = BASE_DIR + FILE_DIR + "\\"
+    if OS == "Windows" : 
+        BASE_DIR = os.getcwd().replace("/", "\\")
+        FILE_DIR = os.path.dirname(path).replace("/", "\\")
+        path = BASE_DIR + FILE_DIR + "\\"
+    else :
+        BASE_DIR = os.getcwd()
+        FILE_DIR = os.path.dirname(path)
+        path = BASE_DIR + FILE_DIR + "/"
     return path
 
 
 #비디오 파일을 받아 오디오 파일로 바꾼다.
 def video2audio(videoFilePath):
     WORK_DIR = getRealDirPath(videoFilePath)
-    videoName = os.path.basename(videoFilePath).replace("/", "\\")
-    audioName = videoName.split('.')[0] + ".wav"
-    videoPath = WORK_DIR + videoName 
-    audioPath = WORK_DIR.split('Video\\')[0] + "Audio\\" + audioName
+
+    if OS == "Windows" : 
+        videoName = os.path.basename(videoFilePath).replace("/", "\\")
+        audioName = videoName.split('.')[0] + ".wav"
+        videoPath = WORK_DIR + videoName 
+        audioPath = WORK_DIR.split('Video\\')[0] + "Audio\\" + audioName
+    else : 
+        videoName = os.path.basename(videoFilePath)
+        audioName = videoName.split('.')[0] + ".wav"
+        videoPath = WORK_DIR + videoName 
+        audioPath = WORK_DIR.split('Video/')[0] + "Audio/" + audioName
 
     #Sampling rate:16000 / mono channel 
     result = subprocess.Popen(['ffmpeg', '-y',
@@ -79,12 +95,13 @@ def video2audio(videoFilePath):
 # Audio를 조각낸다.
 def splitAudio(audioFilePath, sec):
     audioLen = WAVE(audioFilePath).info.length              #파일의 전체 길이 알아오기
-
-    # 파일의 이름만 가져오기 - E:/2022_CAPSTONE/test.wav 이면 test만 추출
-    audioName = os.path.basename(audioFilePath).split('.')[0]
-
+    audioName = os.path.basename(audioFilePath).split('.')[0]    # 파일의 이름만 가져오기 - test.wav 이면 test만
     os.mkdir(os.path.dirname(audioFilePath) + "/" + audioName)
-    audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
+
+    if OS == "Windows" :
+        audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
+    else :
+        audioPath = os.path.dirname(audioFilePath) + "/" + audioName + "/"
 
     count = 0
     for i in range(0, math.ceil(audioLen), 10):
@@ -93,8 +110,11 @@ def splitAudio(audioFilePath, sec):
         #newAudioFilePath = audioPath + audioName + str(count) + ".wav"
         newAudioFilePath = audioPath + str(count) + ".wav"
 
+        print("*******************************")
+        print("start = %d, end = %d" %(startTime, endTime))
+
         result = subprocess.Popen(
-            ['ffmpeg', '-i', audioFilePath, '-ss', str(startTime), '-t', str(endTime),
+            ['ffmpeg', '-i', audioFilePath, '-ss', str(startTime), '-t', str(sec),
             '-acodec', 'copy', newAudioFilePath],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
@@ -110,6 +130,55 @@ def splitAudio(audioFilePath, sec):
 
     return audioPath
     
+    
+# 기존 TimeStampFinder의 SplitAudio
+# def splitAudio2(audioFilePath, sec):
+#     channels = 1
+#     byteRate = 16 * 16000 * channels/8
+#     splitUnit = (int)(sec*byteRate)
+#     count = 1
+#     length = os.path.getsize(audioFilePath)
+    
+#     audioLen = WAVE(audioFilePath).info.length              #파일의 전체 길이 알아오기
+
+#     # 파일의 이름만 가져오기 - E:/2022_CAPSTONE/test.wav 이면 test만 추출
+#     audioName = os.path.basename(audioFilePath).split('.')[0]
+
+#     os.mkdir(os.path.dirname(audioFilePath) + "/" + audioName)
+#     audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
+
+#     try :
+#         f = open(audioFilePath, "r", encoding="cp949")
+#         part = [0 for i in range(splitUnit)]
+#         avg = (int)(length/splitUnit)
+#         fosize = 0
+#         part = f.read(44)
+
+#         while count!=avg :
+#             f.read(part, 0, splitUnit)
+#             fosize+=splitUnit
+#             newFileName = (count - 1) + ".pcm"
+#             newFilePath = audioPath + newFileName
+#             newFile = open(newFilePath, 'w')
+#             newFile.write(part)
+#             newFile.close()
+#             count+=1
+
+#         remain = f.read(part, 0, (int)(length-fosize))
+#         newFileName = (count - 1) + ".pcm"
+#         newFilePath = audioPath + newFileName
+#         newFile = open(newFilePath, 'w')
+#         newFile.write(part)
+#         newFile.close()
+
+#         f.close()
+
+#     except IOError as err :
+#         print(err)
+
+#     return audioPath
+
+
 
 # AudioPath를 주면 STT 작업을 해서 뱉는다.
 def audio2text(audioFilePath, i):
@@ -150,7 +219,7 @@ def audio2text(audioFilePath, i):
         e.printStackTrace()
     return result
 
-    
+
 # Contents와 FilePath를 주면 파일에 적어서 뱉는다.
 def content2file(contents, filePath, isFirst):
     f = open(filePath, "a", encoding="UTF-8")
@@ -158,7 +227,7 @@ def content2file(contents, filePath, isFirst):
     try:
         # 이미 열려있던 파일이면 개행 후 시작하자.
         if (isFirst == False) :
-            f.write("\n")
+            f.write(" ")
         f.write(contents)
         f.flush()
         f.close()
@@ -186,12 +255,15 @@ threads = []
 
 # audioPath와 filePath를 가지고 비동기적으로 파일변환
 def pcm2text(audioFilePath) : 
-    FILE_DIR = os.path.dirname(audioFilePath).replace("/", "\\").split('\\Audio')[0]
-    from pathlib import Path
-    fileName = Path(audioFilePath).stem + ".txt"
-    #audioName = os.path.basename(audioFilePath).replace("/", "\\")
-    #textName = audioName.split('.')[0] + ".txt"
-    textPath = FILE_DIR + "\\Text\\" + fileName
+    if OS == "Windows" : 
+        FILE_DIR = os.path.dirname(audioFilePath).replace("/", "\\").split('\\Audio')[0]
+        fileName = Path(audioFilePath).stem + ".txt"
+        textPath = FILE_DIR + "\\Text\\" + fileName
+    else :
+        FILE_DIR = os.path.dirname(audioFilePath).split('\\Audio')[0]
+        fileName = Path(audioFilePath).stem + ".txt"
+        textPath = FILE_DIR + "/Text/" + fileName
+
     print('****************************************')
     print(FILE_DIR)
 
@@ -201,6 +273,7 @@ def pcm2text(audioFilePath) :
         if resultFileWrite(textPath, endNum) == True :
             return textPath
     return False
+
 
 # 비동기적으로 pcm 파일을 text로 변환한다.
 def sttAsync(audioPath, endNum):
@@ -254,6 +327,8 @@ def threadWork(num):
             # new Pcm2Text().pcm2text(String.valueOf(audioPath.get(i)),keys[number]
         print("@@@@" + str(resultVector))
 
+
+# thread 결과물 textPath에 저장
 def resultFileWrite(textPath, endNum):
     try : 
         for j in range(int(endNum/5)+1):
@@ -266,6 +341,14 @@ def resultFileWrite(textPath, endNum):
                     continue
                 #sttService.content2file(str((5 * j) + i) + "\n" + resultVector[i][j], filePath, False)
                 content2file(resultVector[i][j], textPath, False)
+
+        # 저장 후 기존 Vector clear
+        for j in range(0,5):
+            audioPathVector[j].clear()
+            audioPathVector.clear()
+            resultVector[j].clear()
+            resultVector.clear()
+
         return True
     except Exception as e:
         print(e)
