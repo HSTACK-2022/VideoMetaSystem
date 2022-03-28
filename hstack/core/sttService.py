@@ -3,6 +3,7 @@ import math
 import json
 import base64
 import requests
+import platform
 import threading
 import subprocess
 
@@ -13,6 +14,8 @@ from urllib.error import HTTPError
 from asyncio.windows_events import NULL
 
 # 상수 설정
+OS = platform.system()
+
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Recognition"
 languageCode = "korean"
 audioContents = None
@@ -21,6 +24,7 @@ accessKey = ["2d40b072-37f1-4317-9899-33e0b3f5fb90","80ff5736-f813-4686-aca6-472
 
 audioFile = None
 isAudioExt = False
+
 
 # 파일의 경로를 받아 음원을 추출하고 텍스트파일로 바꾼다.
 def doSttService(videoFilePath):
@@ -48,19 +52,31 @@ def getFullAudioFile():
 
 #상대경로를 절대경로로 변환하는 함수
 def getRealDirPath(path):
-    BASE_DIR = os.getcwd().replace("/", "\\")
-    FILE_DIR = os.path.dirname(path).replace("/", "\\")
-    path = BASE_DIR + FILE_DIR + "\\"
+    if OS == "Windows" : 
+        BASE_DIR = os.getcwd().replace("/", "\\")
+        FILE_DIR = os.path.dirname(path).replace("/", "\\")
+        path = BASE_DIR + FILE_DIR + "\\"
+    else :
+        BASE_DIR = os.getcwd()
+        FILE_DIR = os.path.dirname(path)
+        path = BASE_DIR + FILE_DIR + "/"
     return path
 
 
 #비디오 파일을 받아 오디오 파일로 바꾼다.
 def video2audio(videoFilePath):
     WORK_DIR = getRealDirPath(videoFilePath)
-    videoName = os.path.basename(videoFilePath).replace("/", "\\")
-    audioName = videoName.split('.')[0] + ".wav"
-    videoPath = WORK_DIR + videoName 
-    audioPath = WORK_DIR.split('Video\\')[0] + "Audio\\" + audioName
+
+    if OS == "Windows" : 
+        videoName = os.path.basename(videoFilePath).replace("/", "\\")
+        audioName = videoName.split('.')[0] + ".wav"
+        videoPath = WORK_DIR + videoName 
+        audioPath = WORK_DIR.split('Video\\')[0] + "Audio\\" + audioName
+    else : 
+        videoName = os.path.basename(videoFilePath)
+        audioName = videoName.split('.')[0] + ".wav"
+        videoPath = WORK_DIR + videoName 
+        audioPath = WORK_DIR.split('Video/')[0] + "Audio/" + audioName
 
     #Sampling rate:16000 / mono channel 
     result = subprocess.Popen(['ffmpeg', '-y',
@@ -79,12 +95,13 @@ def video2audio(videoFilePath):
 # Audio를 조각낸다.
 def splitAudio(audioFilePath, sec):
     audioLen = WAVE(audioFilePath).info.length              #파일의 전체 길이 알아오기
-
-    # 파일의 이름만 가져오기 - E:/2022_CAPSTONE/test.wav 이면 test만 추출
-    audioName = os.path.basename(audioFilePath).split('.')[0]
-
+    audioName = os.path.basename(audioFilePath).split('.')[0]    # 파일의 이름만 가져오기 - test.wav 이면 test만
     os.mkdir(os.path.dirname(audioFilePath) + "/" + audioName)
-    audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
+
+    if OS == "Windows" :
+        audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
+    else :
+        audioPath = os.path.dirname(audioFilePath) + "/" + audioName + "/"
 
     count = 0
     for i in range(0, math.ceil(audioLen), 10):
@@ -238,12 +255,15 @@ threads = []
 
 # audioPath와 filePath를 가지고 비동기적으로 파일변환
 def pcm2text(audioFilePath) : 
-    FILE_DIR = os.path.dirname(audioFilePath).replace("/", "\\").split('\\Audio')[0]
-    from pathlib import Path
-    fileName = Path(audioFilePath).stem + ".txt"
-    #audioName = os.path.basename(audioFilePath).replace("/", "\\")
-    #textName = audioName.split('.')[0] + ".txt"
-    textPath = FILE_DIR + "\\Text\\" + fileName
+    if OS == "Windows" : 
+        FILE_DIR = os.path.dirname(audioFilePath).replace("/", "\\").split('\\Audio')[0]
+        fileName = Path(audioFilePath).stem + ".txt"
+        textPath = FILE_DIR + "\\Text\\" + fileName
+    else :
+        FILE_DIR = os.path.dirname(audioFilePath).split('\\Audio')[0]
+        fileName = Path(audioFilePath).stem + ".txt"
+        textPath = FILE_DIR + "/Text/" + fileName
+
     print('****************************************')
     print(FILE_DIR)
 
@@ -328,7 +348,7 @@ def resultFileWrite(textPath, endNum):
             audioPathVector.clear()
             resultVector[j].clear()
             resultVector.clear()
-            
+
         return True
     except Exception as e:
         print(e)
