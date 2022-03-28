@@ -93,8 +93,11 @@ def splitAudio(audioFilePath, sec):
         #newAudioFilePath = audioPath + audioName + str(count) + ".wav"
         newAudioFilePath = audioPath + str(count) + ".wav"
 
+        print("*******************************")
+        print("start = %d, end = %d" %(startTime, endTime))
+
         result = subprocess.Popen(
-            ['ffmpeg', '-i', audioFilePath, '-ss', str(startTime), '-t', str(endTime),
+            ['ffmpeg', '-i', audioFilePath, '-ss', str(startTime), '-t', str(sec),
             '-acodec', 'copy', newAudioFilePath],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
@@ -110,6 +113,55 @@ def splitAudio(audioFilePath, sec):
 
     return audioPath
     
+    
+# 기존 TimeStampFinder의 SplitAudio
+# def splitAudio2(audioFilePath, sec):
+#     channels = 1
+#     byteRate = 16 * 16000 * channels/8
+#     splitUnit = (int)(sec*byteRate)
+#     count = 1
+#     length = os.path.getsize(audioFilePath)
+    
+#     audioLen = WAVE(audioFilePath).info.length              #파일의 전체 길이 알아오기
+
+#     # 파일의 이름만 가져오기 - E:/2022_CAPSTONE/test.wav 이면 test만 추출
+#     audioName = os.path.basename(audioFilePath).split('.')[0]
+
+#     os.mkdir(os.path.dirname(audioFilePath) + "/" + audioName)
+#     audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
+
+#     try :
+#         f = open(audioFilePath, "r", encoding="cp949")
+#         part = [0 for i in range(splitUnit)]
+#         avg = (int)(length/splitUnit)
+#         fosize = 0
+#         part = f.read(44)
+
+#         while count!=avg :
+#             f.read(part, 0, splitUnit)
+#             fosize+=splitUnit
+#             newFileName = (count - 1) + ".pcm"
+#             newFilePath = audioPath + newFileName
+#             newFile = open(newFilePath, 'w')
+#             newFile.write(part)
+#             newFile.close()
+#             count+=1
+
+#         remain = f.read(part, 0, (int)(length-fosize))
+#         newFileName = (count - 1) + ".pcm"
+#         newFilePath = audioPath + newFileName
+#         newFile = open(newFilePath, 'w')
+#         newFile.write(part)
+#         newFile.close()
+
+#         f.close()
+
+#     except IOError as err :
+#         print(err)
+
+#     return audioPath
+
+
 
 # AudioPath를 주면 STT 작업을 해서 뱉는다.
 def audio2text(audioFilePath, i):
@@ -150,7 +202,7 @@ def audio2text(audioFilePath, i):
         e.printStackTrace()
     return result
 
-    
+
 # Contents와 FilePath를 주면 파일에 적어서 뱉는다.
 def content2file(contents, filePath, isFirst):
     f = open(filePath, "a", encoding="UTF-8")
@@ -158,7 +210,7 @@ def content2file(contents, filePath, isFirst):
     try:
         # 이미 열려있던 파일이면 개행 후 시작하자.
         if (isFirst == False) :
-            f.write("\n")
+            f.write(" ")
         f.write(contents)
         f.flush()
         f.close()
@@ -201,6 +253,7 @@ def pcm2text(audioFilePath) :
         if resultFileWrite(textPath, endNum) == True :
             return textPath
     return False
+
 
 # 비동기적으로 pcm 파일을 text로 변환한다.
 def sttAsync(audioPath, endNum):
@@ -254,6 +307,8 @@ def threadWork(num):
             # new Pcm2Text().pcm2text(String.valueOf(audioPath.get(i)),keys[number]
         print("@@@@" + str(resultVector))
 
+
+# thread 결과물 textPath에 저장
 def resultFileWrite(textPath, endNum):
     try : 
         for j in range(int(endNum/5)+1):
@@ -266,6 +321,14 @@ def resultFileWrite(textPath, endNum):
                     continue
                 #sttService.content2file(str((5 * j) + i) + "\n" + resultVector[i][j], filePath, False)
                 content2file(resultVector[i][j], textPath, False)
+
+        # 저장 후 기존 Vector clear
+        for j in range(0,5):
+            audioPathVector[j].clear()
+            audioPathVector.clear()
+            resultVector[j].clear()
+            resultVector.clear()
+            
         return True
     except Exception as e:
         print(e)
