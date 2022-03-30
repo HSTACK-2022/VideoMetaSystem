@@ -2,7 +2,7 @@ import os
 import math
 import json
 import base64
-import requests
+import urllib3
 import platform
 import threading
 import subprocess
@@ -11,7 +11,6 @@ from pathlib import Path
 from mutagen.wave import WAVE
 from http.client import HTTPConnection
 from urllib.error import HTTPError
-from asyncio.windows_events import NULL
 
 # 상수 설정
 OS = platform.system()
@@ -126,96 +125,41 @@ def splitAudio(audioFilePath, sec):
         count+=1
 
     return audioPath
-    
-    
-# 기존 TimeStampFinder의 SplitAudio
-# def splitAudio2(audioFilePath, sec):
-#     channels = 1
-#     byteRate = 16 * 16000 * channels/8
-#     splitUnit = (int)(sec*byteRate)
-#     count = 1
-#     length = os.path.getsize(audioFilePath)
-    
-#     audioLen = WAVE(audioFilePath).info.length              #파일의 전체 길이 알아오기
-
-#     # 파일의 이름만 가져오기 - E:/2022_CAPSTONE/test.wav 이면 test만 추출
-#     audioName = os.path.basename(audioFilePath).split('.')[0]
-
-#     os.mkdir(os.path.dirname(audioFilePath) + "/" + audioName)
-#     audioPath = os.path.dirname(audioFilePath).replace("/", "\\") + "\\" + audioName + "\\"
-
-#     try :
-#         f = open(audioFilePath, "r", encoding="cp949")
-#         part = [0 for i in range(splitUnit)]
-#         avg = (int)(length/splitUnit)
-#         fosize = 0
-#         part = f.read(44)
-
-#         while count!=avg :
-#             f.read(part, 0, splitUnit)
-#             fosize+=splitUnit
-#             newFileName = (count - 1) + ".pcm"
-#             newFilePath = audioPath + newFileName
-#             newFile = open(newFilePath, 'w')
-#             newFile.write(part)
-#             newFile.close()
-#             count+=1
-
-#         remain = f.read(part, 0, (int)(length-fosize))
-#         newFileName = (count - 1) + ".pcm"
-#         newFilePath = audioPath + newFileName
-#         newFile = open(newFilePath, 'w')
-#         newFile.write(part)
-#         newFile.close()
-
-#         f.close()
-
-#     except IOError as err :
-#         print(err)
-
-#     return audioPath
-
 
 
 # AudioPath를 주면 STT 작업을 해서 뱉는다.
 def audio2text(audioFilePath, i):
     result = None
 
-    #audioFile 추출
-    try :
-        file = open(audioFilePath, 'rb')
-        audioBytes = bytearray(file.read())
-        audioContents = base64.b64encode(audioBytes).decode('utf8')
-    except IOError as e :
-        e.printStackTrace()
+    file = open(audioFilePath, "rb")
+    audioContents = base64.b64encode(file.read()).decode("utf8")
+    file.close()
+    
+    requestJson = {
+        "access_key": accessKey[i],
+        "argument": {
+            "language_code": languageCode,
+            "audio": audioContents
+        }
+    }
+    
+    http = urllib3.PoolManager()
+    response = http.request(
+        "POST",
+        openApiURL,
+        headers={"Content-Type": "application/json; charset=UTF-8"},
+        body=json.dumps(requestJson)
+    )
+    
+    if (str(response.status) == "200") :
+        responBody = str(response.data, "utf-8")
+        data = responBody.split("\"")[7]
+        print(data)
+        result = data
+    else :
+        result = "ERROR: " + str(response.status)
 
-    #header, body 작성
-    header = {'Content-Type' : 'application/json', 'charset' : 'UTF-8'}
-    argument = {"language_code" : languageCode, "audio" : audioContents}
-    body = {"access_key" : accessKey[i], "argument" : argument}
- 
-    url = None
-    responseCode : int = None
-    responBody : str = None
-
-    try :
-        response = requests.post(openApiURL, headers = header, data=json.dumps(body))
-        response.raise_for_status       #오류 발생시 예외 발생
-            
-        responseCode = response.status_code 
-        if (responseCode == 200) :
-            responBody = response.json()["return_object"]['recognized']
-            print(responBody)
-            result = responBody
-        else :
-            result = "ERROR: " + str(responseCode)
- 
-    except HTTPError as e :
-        e.printStackTrace()
-    except IOError as e : 
-        e.printStackTrace()
     return result
-
 
 # Contents와 FilePath를 주면 파일에 적어서 뱉는다.
 def content2file(contents, filePath, isFirst):
@@ -224,7 +168,7 @@ def content2file(contents, filePath, isFirst):
     try:
         # 이미 열려있던 파일이면 개행 후 시작하자.
         if (isFirst == False) :
-            f.write(" ")
+            f.write("\n")
         f.write(contents)
         f.flush()
         f.close()
@@ -257,7 +201,7 @@ def pcm2text(audioFilePath) :
         fileName = Path(audioFilePath).stem + ".txt"
         textPath = FILE_DIR + "\\Text\\" + fileName
     else :
-        FILE_DIR = os.path.dirname(audioFilePath).split('\\Audio')[0]
+        FILE_DIR = os.path.dirname(audioFilePath).split('/Audio')[0]
         fileName = Path(audioFilePath).stem + ".txt"
         textPath = FILE_DIR + "/Text/" + fileName
 

@@ -45,7 +45,8 @@ def getKeyword(videoPath, min_count = 3, max_length = 10):
         splitWord = word.split(':')[0]
         keyword_list.append(splitWord+' ')
         print(splitWord, end=" ")
-    postProcessing(keyword_list)
+    word = postProcessing(keyword_list)
+    return word
 
 # 전처리 함수
 def postProcessing(keyword_list):
@@ -55,4 +56,5 @@ def postProcessing(keyword_list):
     for word in okt.pos(''.join(keyword_list), join=True):
         if noun in word or alpha in word:
             print(word.split('/')[0], end=" ")
+            return word
 
