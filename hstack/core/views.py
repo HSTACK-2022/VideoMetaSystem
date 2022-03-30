@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from . import models
 from . import sttService
+from . import keywordService
 
 #video list를 보여준다.
 def video_list(request):
@@ -22,8 +23,9 @@ def uploadFile(request):
             document.save()
 
             #sttService로 결과 받아오기
-            message = sttService.doSttService(document.uploadedFile.url)
-            return render(request, "Core/success.html", context={"file" : document, "message" : message})
+            txtFilePath = sttService.doSttService(document.uploadedFile.url)
+            keywords = keywordService.getKeyword(txtFilePath)
+            return render(request, "Core/success.html", context={"file" : document, "message" : keywords})
 
         # True if empty  
         else :
