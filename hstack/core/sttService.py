@@ -110,9 +110,6 @@ def splitAudio(audioFilePath, sec):
         #newAudioFilePath = audioPath + audioName + str(count) + ".wav"
         newAudioFilePath = audioPath + str(count) + ".wav"
 
-        print("*******************************")
-        print("start = %d, end = %d" %(startTime, endTime))
-
         result = subprocess.Popen(
             ['ffmpeg', '-i', audioFilePath, '-ss', str(startTime), '-t', str(sec),
             '-acodec', 'copy', newAudioFilePath],
@@ -345,10 +342,10 @@ def resultFileWrite(textPath, endNum):
         # 저장 후 기존 Vector clear
         for j in range(0,5):
             audioPathVector[j].clear()
-            audioPathVector.clear()
             resultVector[j].clear()
-            resultVector.clear()
-
+        
+        audioPathVector.clear()
+        resultVector.clear()
         return True
     except Exception as e:
         print(e)
