@@ -1,4 +1,4 @@
-# keywordService.py
+# getKeyword.py
 # 키워드 -> 전처리
 
 # 필요 모듈 -> knolpy{JPype(파일 필요), numpy}, nltk, sklearn, scipy
@@ -11,6 +11,13 @@
 # -> getKeyword 함수의 매개변수 이름 videoPath를 filePath 로 변경
 # -> mergeKeyword 함수 구현 (return KEYWORD LIST)
 
+# 04.01 수정 2차 내용 
+# -> mergeKeyword에서 1.음성스크립트에서 키워드를 뽑는 경우랑 
+# 2.영상+음성인 경우로 나눔
+# 아래와 같이 쓰면 됨
+# 1. mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
+# 2. mergeKeyword(audioScriptPath, NULL, NULL)
+
 # 테스트 위한 변수
 min_count = 3   # 단어의 최소 출현 빈도수 (그래프 생성 시)
 max_length = 10 # 단어의 최대 길이
@@ -18,6 +25,9 @@ audioScriptPath = '../cache/algoWithEnter.txt'
 videoScriptPath = '../cache/mytxt2.txt'
 videoIndexScriptPath = '../cache/mytxt.txt'
 
+
+
+from asyncio.windows_events import NULL
 from krwordrank.word import KRWordRank
 from krwordrank.hangle import normalize
 from krwordrank.word import summarize_with_keywords
@@ -71,19 +81,22 @@ def mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath):
     videoScriptKeyword = []
     videoIndexScriptKeyword = []
     audioScriptKeyword = getKeyword(audioScriptPath,min_count,max_length)
-    videoScriptKeyword = getKeyword(videoScriptPath,min_count,max_length)
-    videoIndexScriptKeyword = getKeyword(videoIndexScriptPath,min_count,max_length)
-
     print("audioScriptKeyword >> "+' '.join(audioScriptKeyword))
-    print("videoScriptKeyword >> "+' '.join(videoScriptKeyword))
-    print("videoIndexScriptKeyword >> "+' '.join(videoIndexScriptKeyword))
     set1 = set(audioScriptKeyword)
-    set2 = set(videoScriptKeyword)
-    set1Inter2 = set1.intersection(set2)
-
-    set3 = set(videoIndexScriptKeyword)
-    return (list(set3.union(set1Inter2)))
 
 
+    if (videoScriptPath!=NULL and videoIndexScriptKeyword!=NULL):
+        videoScriptKeyword = getKeyword(videoScriptPath,min_count,max_length)
+        videoIndexScriptKeyword = getKeyword(videoIndexScriptPath,min_count,max_length)
+        print("videoScriptKeyword >> "+' '.join(videoScriptKeyword))
+        print("videoIndexScriptKeyword >> "+' '.join(videoIndexScriptKeyword))
+        set2 = set(videoScriptKeyword)
+        set1Inter2 = set1.intersection(set2)
 
-#print(mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath))
+        set3 = set(videoIndexScriptKeyword)
+        return (list(set3.union(set1Inter2)))
+    
+    return list(set1)
+
+
+print(mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath))
