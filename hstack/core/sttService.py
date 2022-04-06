@@ -9,7 +9,7 @@ import subprocess
 
 from pathlib import Path
 from mutagen.wave import WAVE
-from http.client import HTTPConnection
+from http.client import HTTPConnection, ImproperConnectionState
 from urllib.error import HTTPError
 
 # 상수 설정
@@ -18,15 +18,31 @@ OS = platform.system()
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Recognition"
 languageCode = "korean"
 audioContents = None
-accessKey = ["2d40b072-37f1-4317-9899-33e0b3f5fb90","80ff5736-f813-4686-aca6-472739d8ebe0","25833dd1-e685-4f13-adc6-c85341d1bac5",
-            "40c498a8-7d33-4909-9b60-427b3d0ccf8b", "0913ccd7-0cd1-4455-8b60-7940aa54f7be"]
-
 audioFile = None
 isAudioExt = False
+
+# API KEY 설정
+def initSttService():
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    secretFile = os.path.join(BASE_DIR, 'secrets.json')
+    with open(secretFile) as f:
+        secrets = json.loads(f.read())
+
+    def get_secret(setting, secrets=secrets):
+        try:
+            return secrets[setting]
+        except KeyError:
+            error_msg = "Set the {} environment variable".format(setting)
+            raise ImproperConnectionState(error_msg)
+
+    return get_secret("STT_API_KEY")
 
 
 # 파일의 경로를 받아 음원을 추출하고 텍스트파일로 바꾼다.
 def doSttService(videoFilePath):
+    global accessKey
+    accessKey = initSttService()
+
     # 지금은 임시로 파일명을 저장했지만
     # 나중에는 audioFile을 자신의 DB에 저장해두고 그 key값에 맞게 txt 파일 이름을 지정해야 할 것.
     #filePath = rootFilePath + "test" + ".txt"
@@ -241,7 +257,7 @@ def sttAsync(audioPath, endNum):
     resultVector.append(result_4)
 
     try :
-        for i in range(0, 5):
+        for i in range(0, 4):
             th = threading.Thread(target=threadWork, args=([i]))
             th.start()
             threads.append(th)

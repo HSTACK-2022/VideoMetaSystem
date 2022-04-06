@@ -21,13 +21,11 @@
 # 테스트 위한 변수
 min_count = 3   # 단어의 최소 출현 빈도수 (그래프 생성 시)
 max_length = 10 # 단어의 최대 길이
-audioScriptPath = '../cache/algoWithEnter.txt'
-videoScriptPath = '../cache/mytxt2.txt'
-videoIndexScriptPath = '../cache/mytxt.txt'
+#audioScriptPath = '../cache/algoWithEnter.txt'
+#videoScriptPath = '../cache/mytxt2.txt'
+#videoIndexScriptPath = '../cache/mytxt.txt'
 
 
-
-from asyncio.windows_events import NULL
 from krwordrank.word import KRWordRank
 from krwordrank.hangle import normalize
 from krwordrank.word import summarize_with_keywords
@@ -38,7 +36,7 @@ import sys
 from konlpy.tag import Okt 
 
 # 환경변수가 제대로 안돼서 넣음
-sys.path.append("C:\capstone\capstone\mhenv\Lib\site-packages")
+#sys.path.append("C:\capstone\capstone\mhenv\Lib\site-packages")
 verbose = False # 프로그램 진행을 보이는 정도
 
 def getKeyword(filePath, min_count, max_length):
@@ -63,6 +61,7 @@ def getKeyword(filePath, min_count, max_length):
         #print(splitWord, end=" ")
     return postProcessing(keyword_list)
 
+
 def postProcessing(keyword_list):
     okt = Okt()
     noun = 'Noun'
@@ -80,12 +79,12 @@ def mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath):
     audioScriptKeyword = []
     videoScriptKeyword = []
     videoIndexScriptKeyword = []
-    audioScriptKeyword = getKeyword(audioScriptPath,min_count,max_length)
+    audioScriptKeyword = getKeyword(audioScriptPath, min_count,max_length)
     print("audioScriptKeyword >> "+' '.join(audioScriptKeyword))
     set1 = set(audioScriptKeyword)
 
 
-    if (videoScriptPath!=NULL and videoIndexScriptKeyword!=NULL):
+    if (videoScriptPath!=None and videoIndexScriptKeyword!=None):
         videoScriptKeyword = getKeyword(videoScriptPath,min_count,max_length)
         videoIndexScriptKeyword = getKeyword(videoIndexScriptPath,min_count,max_length)
         print("videoScriptKeyword >> "+' '.join(videoScriptKeyword))
@@ -99,4 +98,4 @@ def mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath):
     return list(set1)
 
 
-print(mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath))
+#print(mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath))
