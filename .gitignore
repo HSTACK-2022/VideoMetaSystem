@@ -248,3 +248,4 @@ cython_debug/
 ffmpeg-4.4.1-full_build/
 myenv/
 hstack/media/
+hstack/secrets.json

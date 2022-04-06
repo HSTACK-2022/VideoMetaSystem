@@ -24,7 +24,7 @@ def uploadFile(request):
 
             #sttService로 결과 받아오기
             txtFilePath = sttService.doSttService(document.uploadedFile.url)
-            keywords = keywordService.getKeyword(txtFilePath)
+            keywords = keywordService.getKeyword(txtFilePath, None, None)
             return render(request, "Core/success.html", context={"file" : document, "message" : keywords})
 
         # True if empty  
