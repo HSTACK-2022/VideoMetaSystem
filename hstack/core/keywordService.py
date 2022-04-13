@@ -34,12 +34,15 @@ import konlpy
 import nltk
 import sys
 from konlpy.tag import Okt 
+from . import models
 
 # 환경변수가 제대로 안돼서 넣음
 #sys.path.append("C:\capstone\capstone\mhenv\Lib\site-packages")
 verbose = False # 프로그램 진행을 보이는 정도
 
-def getKeyword(filePath, min_count, max_length):
+def getKeyword(videoId, min_count, max_length):
+    filePath = models.Videopath.objects.get(id = videoId).textaddr
+
     wordrank_extractor = KRWordRank(min_count, max_length , verbose)
     beta = 0.85    # PageRank의 decaying factor beta
     max_iter = 10
