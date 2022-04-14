@@ -82,7 +82,7 @@ def mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath):
     audioScriptKeyword = []
     videoScriptKeyword = []
     videoIndexScriptKeyword = []
-    audioScriptKeyword = getKeyword(audioScriptPath, min_count,max_length)
+    audioScriptKeyword = getKeyword(audioScriptPath, min_count, max_length)
     print("audioScriptKeyword >> "+' '.join(audioScriptKeyword))
     set1 = set(audioScriptKeyword)
 
