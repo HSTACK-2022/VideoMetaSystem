@@ -45,3 +45,24 @@ def video2audio(videoId):
         print('Completed')
 
     return audioPath
+
+
+# AudioFile로 남/여를 구분한다.
+def detectSex(videoId):
+    audio = getFullAudioFile(videoId)
+    modelPath = os.path.join(os.getcwd(), "tensorflow\\AudioDetect\\test.py")
+    
+    #>python tensorflow\AudioDetect\test.py -f fff.mp3
+    result = subprocess.Popen(['python', modelPath, '-f', audio], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = result.communicate()
+    exitcode = result.returncode
+
+    if exitcode == 0:
+        sex = 'WOMAN'
+    elif exitcode == 1:
+        sex = 'MAN'
+    else :
+        print(exitcode, out.decode('utf8'), err.decode('utf8'))
+
+    return sex
+
