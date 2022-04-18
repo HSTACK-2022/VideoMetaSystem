@@ -3,6 +3,7 @@ import platform
 import subprocess
 
 from . import models
+from . import getRealPath
 
 # 상수 설정
 OS = platform.system()
@@ -15,23 +16,11 @@ def getFullAudioFile(videoId):
     else :
         return None
 
-#상대경로를 절대경로로 변환하는 함수
-def getRealDirPath(path):
-    if OS == "Windows" : 
-        BASE_DIR = os.getcwd().replace("/", "\\")
-        FILE_DIR = os.path.dirname(path).replace("/", "\\")
-        path = BASE_DIR + FILE_DIR + "\\"
-    else :
-        BASE_DIR = os.getcwd()
-        FILE_DIR = os.path.dirname(path)
-        path = BASE_DIR + FILE_DIR + "/"
-    return path
-
 #비디오 파일을 받아 오디오 파일로 바꾼다.
 def video2audio(videoId):
     videoPathObj = models.Videopath.objects.get(id=videoId)     #DB에서 videoId에 해당하는 객체를 가져옴
     videoFilePath = videoPathObj.videoaddr              #DB에서 videoAddr 추출
-    WORK_DIR = getRealDirPath(videoFilePath)
+    WORK_DIR = getRealPath.getRealDirPath(videoFilePath)
 
     if OS == "Windows" : 
         videoName = os.path.basename(videoFilePath).replace("/", "\\")
@@ -56,3 +45,24 @@ def video2audio(videoId):
         print('Completed')
 
     return audioPath
+
+
+# AudioFile로 남/여를 구분한다.
+def detectSex(videoId):
+    audio = getFullAudioFile(videoId)
+    modelPath = os.path.join(os.getcwd(), "tensorflow\\AudioDetect\\test.py")
+    
+    #>python tensorflow\AudioDetect\test.py -f fff.mp3
+    result = subprocess.Popen(['python', modelPath, '-f', audio], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = result.communicate()
+    exitcode = result.returncode
+
+    if exitcode == 0:
+        sex = 'WOMAN'
+    elif exitcode == 1:
+        sex = 'MAN'
+    else :
+        print(exitcode, out.decode('utf8'), err.decode('utf8'))
+
+    return sex
+

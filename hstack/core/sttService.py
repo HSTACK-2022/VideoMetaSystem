@@ -187,7 +187,6 @@ def pcm2text(audioFilePath) :
             return textPath
     return False
 
-
 # 비동기적으로 pcm 파일을 text로 변환한다.
 def sttAsync(audioPath, endNum):
     for i in range(0, endNum):
@@ -227,7 +226,6 @@ def sttAsync(audioPath, endNum):
         print(e)
         return False
 
-
 # thread 돌리기
 def threadWork(num):
     threadAudioPath = audioPathVector[num]
@@ -239,7 +237,6 @@ def threadWork(num):
         # result of Pcm2Text = 
             # new Pcm2Text().pcm2text(String.valueOf(audioPath.get(i)),keys[number]
         print("@@@@" + str(resultVector))
-
 
 # thread 결과물 textPath에 저장
 def resultFileWrite(textPath, endNum):

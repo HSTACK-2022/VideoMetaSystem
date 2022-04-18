@@ -26,10 +26,23 @@ class Videopath(models.Model):
         managed = False
         db_table = 'videopath'    
 
+class Keywords(models.Model):
+    id = models.ForeignKey(Videopath, db_column='id', primary_key=True, on_delete=models.CASCADE)
+    keyword = models.CharField(max_length=10)
+    expose = models.IntegerField(default=True)
+    sysdef = models.IntegerField(default=True)
+
+    class Meta:
+        managed = False
+        db_table = 'keywords'
+        unique_together = (('id', 'keyword'),)
+
 class Timestamp(models.Model):
     id = models.ForeignKey(Videopath, db_column='id', primary_key=True, on_delete=models.CASCADE)
     time = models.TimeField()
     subtitle = models.CharField(max_length=100, blank=True, null=True)
+    expose = models.IntegerField(default=True)
+    sysdef = models.IntegerField(default=True)
 
     class Meta:
         managed = False
@@ -44,7 +57,6 @@ class Metadata(models.Model):
     narrative = models.CharField(max_length=30, blank=True, null=True)
     method = models.CharField(max_length=10, blank=True, null=True)
     voicesex = models.CharField(db_column='voiceSex', max_length=5, blank=True, null=True)  # Field name made lowercase.    
-    keyword = models.CharField(max_length=100, blank=True, null=True)
     videolength = models.TimeField(db_column='videoLength', blank=True, null=True)  # Field name made lowercase.
     videoframe = models.CharField(db_column='videoFrame', max_length=10, blank=True, null=True)  # Field name made lowercase.
     videotype = models.CharField(db_column='videoType', max_length=5, blank=True, null=True)  # Field name made lowercase.  

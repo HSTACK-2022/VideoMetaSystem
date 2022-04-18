@@ -1,9 +1,9 @@
-from django.shortcuts import render, redirect
+import asyncio
+import os
 
-from core import audioService
 from . import models
-from . import sttService
-from . import keywordService
+from django.shortcuts import render, redirect
+from core.extractMetadata import extractMetadata
 
 #video list를 보여준다.
 def video_list(request):
@@ -29,30 +29,15 @@ def uploadFile(request):
                 title = fileTitle,
                 videoaddr = document.uploadedFile.url
             )
-
-            # DB Check
             videoId = models.Videopath.objects.get(videoaddr=document.uploadedFile.url).id
 
-            # AudioFile 추출
-            audioFile = audioService.video2audio(videoId)
-            if (audioFile) :
-                models.Videopath.objects.filter(id=videoId).update(audioaddr = audioFile)
-                textFile = sttService.doSttService(videoId)
-                if (textFile) :
-                    models.Videopath.objects.filter(id=videoId).update(textaddr = textFile)
-                    keywords = keywordService.getKeyword(videoId, None, None)
-                    if(keywords) :
-                        models.Metadata.objects.create(
-                            id = models.Videopath.objects.get(id=videoId),
-                            keyword = keywords
-                        )
-                        metadata = models.Metadata.objects.get(id = videoId)
-                        return render(request, "Core/success.html", context={"file" : document, "Metadata":metadata})
-            return render(request, "Core/success.html", context={"file" : document})    
-
-        # True if empty  
-        else :
-            return render(request, "Core/upload.html") 
-
-    else :
-        return render(request, "Core/upload.html") 
+            models.Metadata.objects.create(
+                id = models.Videopath.objects.get(id=videoId),
+                title = fileTitle,
+                uploaddate = document.dateTimeOfUpload
+            )
+            
+            bools = extractMetadata(videoId)
+            return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
+                        
+    return render(request, "Core/upload.html") 
