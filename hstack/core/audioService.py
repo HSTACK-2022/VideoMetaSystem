@@ -1,12 +1,84 @@
+# audioService.py
+#
+# video에서 audio를 추출하고, 이를 이용한 metadata를 얻어냅니다.
+# - audio에서 성별 정보 얻기
+# - audio에서 다수가 말하는지의 여부 추출
+# - audio를 통해 script, keyword, topic 추출 (sttService.py 참고)
+# 
+# uses
+# - doAudioService(videoId)
+#
+# parameters
+# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# 
+# return
+# - True : 작업이 정상적으로 완료된 경우
+# - False : 중간에 오류가 발생한 경우
+
 import os
 import platform
+import threading
 import subprocess
+
+from sqlalchemy import true
 
 from . import models
 from . import getRealPath
+from . import sttService
+from . import keywordService
 
 # 상수 설정
 OS = platform.system()
+
+# audioService
+def doAudioService(videoId):
+    threads = []
+    audioFile = video2audio(videoId)
+    if (audioFile) :
+        models.Videopath.objects.filter(id=videoId).update(audioaddr = audioFile)
+        vt = threading.Thread(target=voiceThread, args=([videoId]))
+        st = threading.Thread(target=scriptThread, args=([videoId]))
+        vt.start()
+        st.start()
+        threads.append(vt)
+        threads.append(st)
+
+        for thread in threads:
+            thread.join()
+        
+        return True
+
+    return False
+
+# 남여를 구별하는 Thread용 함수
+def voiceThread(videoId):
+    male_prop = float(detectSex(videoId))
+    models.Metadata.objects.filter(id = videoId).update(
+        voicemanrate = male_prop,
+        voicewomanrate = 1 - male_prop
+    )
+
+# sttService를 돌리는 Thread용 함수
+def scriptThread(videoId):
+    textFile = sttService.doSttService(videoId)
+    if (textFile) :
+        models.Videopath.objects.filter(id=videoId).update(textaddr = textFile)
+        keywords = keywordService.mergeKeyword(videoId, None, None)
+        if(keywords) :                
+            for keyword in keywords :
+                print(keyword, end='@')
+                models.Keywords.objects.create(
+                    id = models.Videopath.objects.get(id=videoId),
+                    keyword = keyword
+                )
+            topic = keywordService.extractTopic(videoId)
+            if(topic):
+                print("*************************************************")
+                print(topic)
+                models.Metadata.objects.filter(id = videoId).update(topic = topic)
+                return True    
+    return False
+
 
 # 통 오디오 파일을 받아오는 함수
 def getFullAudioFile(videoId):
@@ -46,23 +118,13 @@ def video2audio(videoId):
 
     return audioPath
 
-
 # AudioFile로 남/여를 구분한다.
 def detectSex(videoId):
     audio = getFullAudioFile(videoId)
     modelPath = os.path.join(os.getcwd(), "tensorflow\\AudioDetect\\test.py")
     
     #>python tensorflow\AudioDetect\test.py -f fff.mp3
-    result = subprocess.Popen(['python', modelPath, '-f', audio], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = result.communicate()
-    exitcode = result.returncode
+    result = subprocess.check_output(['python', modelPath, '-f', audio], universal_newlines=true)
+    male_prop = result.split("*****")[1]
 
-    if exitcode == 0:
-        sex = 'WOMAN'
-    elif exitcode == 1:
-        sex = 'MAN'
-    else :
-        print(exitcode, out.decode('utf8'), err.decode('utf8'))
-
-    return sex
-
+    return male_prop

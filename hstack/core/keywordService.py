@@ -1,10 +1,19 @@
-# getKeyword.py
-# 키워드 -> 전처리
+# keywordService.py
+#
+# keyword를 추출하고, 그 keyword를 통해 topic을 얻어냅니다.
+#
+# uses
+# - mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
+# - extractTopic(videoId)
+
+# parameters
+# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# - audioScriptPath : audio에서 추출한 text 파일의 경로
+# - videoScriptPath : 
+# - videoIndexScriptPath : 
 
 # 필요 모듈 -> knolpy{JPype(파일 필요), numpy}, nltk, sklearn, scipy
 # 환경변수 경로체크! 가상환경 경로가 환경변수에 잘 있다면 없애도 됩니다.
-# 요런식으로 쓰면 됩니당
-# mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
 
 # 03.30 수정 1차 내용 
 # -> getKeyword return 값을 리스트로 줌
@@ -138,11 +147,14 @@ def extractTopic(videoId):
     accessKey = initTopic()
     # videoId를 통해 Keyword list를 받아온다.
     keywordList = models.Keywords.objects.filter(id = videoId).values_list('keyword', flat=True).distinct()
+    print("******************************************")
+    for k in keywordList :
+        print(k)
+    print("checked")
     getTopicSet=set()
     for i in range(0,5):
         getTopicSet|=getTopicService(accessKey[i], keywordList)
     result = ','.join(getTopicSet) # 리스트를 문자열로 변환
-    print(result)
     return result
 
 def getTopicService(accessKey, keywordList):

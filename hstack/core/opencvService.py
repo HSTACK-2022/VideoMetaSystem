@@ -1,3 +1,22 @@
+# opencvService.py
+#
+# opencv를 이용해 video에서 기본적인 metadata들을 추출합니다.
+# - type
+# - frame
+# - size (bytes)
+# - length (HH:MM:SS)
+# 
+# uses
+# - extBasicInfo(videoId)
+#
+# parameters
+# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# 
+# return
+# - True : 작업이 정상적으로 완료된 경우
+# - False : 중간에 오류가 발생한 경우
+
+
 import os
 import cv2
 import platform

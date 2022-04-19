@@ -55,14 +55,15 @@ class Metadata(models.Model):
     presenter = models.CharField(max_length=50, blank=True, null=True)
     topic = models.CharField(max_length=20, blank=True, null=True)
     narrative = models.CharField(max_length=30, blank=True, null=True)
-    method = models.CharField(max_length=10, blank=True, null=True)
-    voicesex = models.CharField(db_column='voiceSex', max_length=5, blank=True, null=True)  # Field name made lowercase.    
+    method = models.CharField(max_length=10, blank=True, null=True)   
     videolength = models.TimeField(db_column='videoLength', blank=True, null=True)  # Field name made lowercase.
     videoframe = models.CharField(db_column='videoFrame', max_length=10, blank=True, null=True)  # Field name made lowercase.
     videotype = models.CharField(db_column='videoType', max_length=5, blank=True, null=True)  # Field name made lowercase.  
     videosize = models.CharField(db_column='videoSize', max_length=10, blank=True, null=True)  # Field name made lowercase. 
     uploaddate = models.DateField(db_column='uploadDate', blank=True, null=True)  # Field name made lowercase.
     voicenum = models.IntegerField(db_column='voiceNum', blank=True, null=True)  # Field name made lowercase.
+    voicemanrate = models.FloatField(db_column='voiceManRate', blank=True, null=True)  # Field name made lowercase.
+    voicewomanrate = models.FloatField(db_column='voiceWomanRate', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
