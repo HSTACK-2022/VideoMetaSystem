@@ -2,6 +2,7 @@ import asyncio
 import os
 
 from . import models
+from urllib.parse import urlparse
 from django.shortcuts import render, redirect
 from core.extractMetadata import extractMetadata
 
@@ -24,12 +25,16 @@ def uploadFile(request):
             )
             document.save()
 
+            dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
+            file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
+            videopath = dir_name + file_name
+            
             # DB에 Video 저장
             models.Videopath.objects.create(
                 title = fileTitle,
-                videoaddr = document.uploadedFile.url
+                videoaddr = videopath
             )
-            videoId = models.Videopath.objects.get(videoaddr=document.uploadedFile.url).id
+            videoId = models.Videopath.objects.get(videoaddr=videopath).id
 
             models.Metadata.objects.create(
                 id = models.Videopath.objects.get(id=videoId),

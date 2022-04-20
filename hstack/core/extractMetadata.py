@@ -12,17 +12,37 @@
 # - True : 작업이 정상적으로 완료된 경우
 # - False : 중간에 오류가 발생한 경우
 
+import threading
+
+from core import keywordService
+
 from . import audioService
 from . import opencvService
 
 
 def extractMetadata(videoId):
-    #video 기본 정보 추출
-    bools = opencvService.extBasicInfo(videoId)
-    print(bools)
-    
-    #audio를 활용한 Service 호출
-    bools = audioService.doAudioService(videoId)
-    print(bools)
+    try:
+        threads = []
 
-    return bools
+        basic = threading.Thread(target=opencvService.extBasicInfo, args=([videoId]))
+        audio = threading.Thread(target=audioService.doAudioService, args=([videoId]))
+        video = threading.Thread(target=opencvService.doOpencvService, args=([videoId]))
+        
+        basic.start()
+        audio.start()
+        video.start()
+        
+        threads.append(basic)
+        threads.append(audio)
+        threads.append(video)
+
+        for thread in threads :
+            print(thread)
+            thread.join()
+
+        keywordService.doKeywordService(videoId)
+        return True
+
+    except:
+        print("### extractMetadata() : ERROR!! ###")
+        return False

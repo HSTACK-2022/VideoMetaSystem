@@ -63,22 +63,8 @@ def scriptThread(videoId):
     textFile = sttService.doSttService(videoId)
     if (textFile) :
         models.Videopath.objects.filter(id=videoId).update(textaddr = textFile)
-        keywords = keywordService.mergeKeyword(videoId, None, None)
-        if(keywords) :                
-            for keyword in keywords :
-                print(keyword, end='@')
-                models.Keywords.objects.create(
-                    id = models.Videopath.objects.get(id=videoId),
-                    keyword = keyword
-                )
-            topic = keywordService.extractTopic(videoId)
-            if(topic):
-                print("*************************************************")
-                print(topic)
-                models.Metadata.objects.filter(id = videoId).update(topic = topic)
-                return True    
+        return True    
     return False
-
 
 # 통 오디오 파일을 받아오는 함수
 def getFullAudioFile(videoId):
@@ -92,22 +78,21 @@ def getFullAudioFile(videoId):
 def video2audio(videoId):
     videoPathObj = models.Videopath.objects.get(id=videoId)     #DB에서 videoId에 해당하는 객체를 가져옴
     videoFilePath = videoPathObj.videoaddr              #DB에서 videoAddr 추출
-    WORK_DIR = getRealPath.getRealDirPath(videoFilePath)
 
     if OS == "Windows" : 
         videoName = os.path.basename(videoFilePath).replace("/", "\\")
         audioName = videoName.split('.')[0] + ".wav"
-        videoPath = WORK_DIR + videoName 
-        audioPath = WORK_DIR.split('Video\\')[0] + "Audio\\" + audioName
+        videoPath = videoFilePath + videoName 
+        audioPath = videoFilePath.split('Video\\')[0] + "Audio\\" + audioName
     else : 
         videoName = os.path.basename(videoFilePath)
         audioName = videoName.split('.')[0] + ".wav"
-        videoPath = WORK_DIR + videoName 
-        audioPath = WORK_DIR.split('Video/')[0] + "Audio/" + audioName
+        videoPath = videoFilePath + videoName 
+        audioPath = videoFilePath.split('Video/')[0] + "Audio/" + audioName
 
     #Sampling rate:16000 / mono channel 
     result = subprocess.Popen(['ffmpeg', '-y',
-        '-i', videoPath, '-vn', '-acodec', 'pcm_s16le', '-ar', '16k', '-ac', '1', '-ab', '128k', audioPath],
+        '-i', videoFilePath, '-vn', '-acodec', 'pcm_s16le', '-ar', '16k', '-ac', '1', '-ab', '128k', audioPath],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = result.communicate()
     exitcode = result.returncode
