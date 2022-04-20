@@ -126,7 +126,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False   #서울 시간 맞추려고 FALSE로 바꿈
 
 
 # Static files (CSS, JavaScript, Images)
