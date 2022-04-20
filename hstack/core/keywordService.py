@@ -1,10 +1,20 @@
-# getKeyword.py
-# 키워드 -> 전처리
+# keywordService.py
+#
+# keyword를 추출하고, 그 keyword를 통해 topic을 얻어냅니다.
+#
+# uses
+# - doKeywordService(videoId)
+# - mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
+# - extractTopic(videoId)
+
+# parameters
+# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# - audioScriptPath : audio에서 추출한 text 파일의 경로
+# - videoScriptPath : 
+# - videoIndexScriptPath : 
 
 # 필요 모듈 -> knolpy{JPype(파일 필요), numpy}, nltk, sklearn, scipy
 # 환경변수 경로체크! 가상환경 경로가 환경변수에 잘 있다면 없애도 됩니다.
-# 요런식으로 쓰면 됩니당
-# mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
 
 # 03.30 수정 1차 내용 
 # -> getKeyword return 값을 리스트로 줌
@@ -25,6 +35,35 @@ max_length = 10 # 단어의 최대 길이
 #videoScriptPath = '../cache/mytxt2.txt'
 #videoIndexScriptPath = '../cache/mytxt.txt'
 
+import os
+from . import models
+
+def doKeywordService(videoId):
+    videopath = models.Videopath.objects.get(id = videoId)
+    audioScript = videopath.textaddr
+    videoScript = os.path.join(videopath.imageaddr, "keyword.txt")
+    videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
+
+    if (os.path.isfile(videoScript) and os.path.isfile(videoIndexScript)) :
+        keywords = mergeKeyword(audioScript, videoScript, videoIndexScript)
+    else :
+        keywords = mergeKeyword(audioScript, None, None)
+
+    if(keywords) :                
+        for keyword in keywords :
+            print(keyword, end='@')
+            models.Keywords.objects.create(
+                id = models.Videopath.objects.get(id=videoId),
+                keyword = keyword
+            )
+        topic = extractTopic(videoId)
+        if(topic):
+            print("*************************************************")
+            print(topic)
+            models.Metadata.objects.filter(id = videoId).update(topic = topic)
+            return True
+    return False
+
 
 from krwordrank.word import KRWordRank
 from krwordrank.hangle import normalize
@@ -34,15 +73,12 @@ import konlpy
 import nltk
 import sys
 from konlpy.tag import Okt 
-from . import models
 
 # 환경변수가 제대로 안돼서 넣음
 #sys.path.append("C:\capstone\capstone\mhenv\Lib\site-packages")
 verbose = False # 프로그램 진행을 보이는 정도
 
-def getKeyword(videoId, min_count, max_length):
-    filePath = models.Videopath.objects.get(id = videoId).textaddr
-
+def getKeyword(filePath, min_count, max_length):
     wordrank_extractor = KRWordRank(min_count, max_length , verbose)
     beta = 0.85    # PageRank의 decaying factor beta
     max_iter = 10
@@ -102,7 +138,6 @@ def mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath):
 
 
 
-
 # https://aiopen.etri.re.kr/guide_wiseNLU.php#group03
 # -*- coding: utf-8 -*-
 from tkinter import E
@@ -111,7 +146,6 @@ from http.client import HTTPConnection, ImproperConnectionState
 
 import urllib3
 import json
-import os
  
 # 언어 분석 기술(문어)
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU"
@@ -138,11 +172,14 @@ def extractTopic(videoId):
     accessKey = initTopic()
     # videoId를 통해 Keyword list를 받아온다.
     keywordList = models.Keywords.objects.filter(id = videoId).values_list('keyword', flat=True).distinct()
+    print("******************************************")
+    for k in keywordList :
+        print(k)
+    print("checked")
     getTopicSet=set()
     for i in range(0,5):
         getTopicSet|=getTopicService(accessKey[i], keywordList)
     result = ','.join(getTopicSet) # 리스트를 문자열로 변환
-    print(result)
     return result
 
 def getTopicService(accessKey, keywordList):
@@ -166,7 +203,6 @@ def getTopicService(accessKey, keywordList):
     # print(str(response.data,"utf-8"))
     return getTopicFromJson(str(response.data, "utf-8"))
 
-
 def getTopicFromJson(responseData):
     # str = {"result":0,"return_object":{"doc_id":"","DCT":"","category":"","category_weight":0.0,"title":{"text":"","NE":""},"metaInfo":{},"paragraphInfo":[],"sentence":[{"id":0.0,"reserve_str":"","text":"단일,기능,메모리,실행,파일,커널,관리,프로,구조,자원,입출력","morp":[{"id":0.0,"lemma":"단일","type":"NNG","position":0.0,"weight":0.0389027},{"id":1.0,"lemma":",","type":"SP","position":6.0,"weight":1.0},{"id":2.0,"lemma":"기능","type":"NNG","position":7.0,"weight":0.0429483},{"id":3.0,"lemma":",","type":"SP","position":13.0,"weight":1.0},{"id":4.0,"lemma":"메모리","type":"NNG","position":14.0,"weight":0.089975},{"id":5.0,"lemma":",","type":"SP","position":23.0,"weight":1.0},{"id":6.0,"lemma":"실행","type":"NNG","position":24.0,"weight":0.0415775},{"id":7.0,"lemma":",","type":"SP","position":30.0,"weight":1.0},{"id":8.0,"lemma":"파일","type":"NNG","position":31.0,"weight":0.0572481},{"id":9.0,"lemma":",","type":"SP","position":37.0,"weight":1.0},{"id":10.0,"lemma":"커널","type":"NNG","position":38.0,"weight":0.0159203},{"id":11.0,"lemma":",","type":"SP","position":44.0,"weight":1.0},{"id":12.0,"lemma":"관리","type":"NNG","position":45.0,"weight":0.063389},{"id":13.0,"lemma":",","type":"SP","position":51.0,"weight":1.0},{"id":14.0,"lemma":"프로","type":"NNG","position":52.0,"weight":0.0491239},{"id":15.0,"lemma":",","type":"SP","position":58.0,"weight":1.0},{"id":16.0,"lemma":"구조","type":"NNG","position":59.0,"weight":0.0477435},{"id":17.0,"lemma":",","type":"SP","position":65.0,"weight":1.0},{"id":18.0,"lemma":"자원","type":"NNG","position":66.0,"weight":0.0393283},{"id":19.0,"lemma":",","type":"SP","position":72.0,"weight":1.0},{"id":20.0,"lemma":"입","type":"NNG","position":73.0,"weight":0.0382438},{"id":21.0,"lemma":"출력","type":"NNG","position":76.0,"weight":0.0382438}],"WSD":[{"id":0.0,"text":"단일","type":"NNG","scode":"01","weight":1.0,"position":0.0,"begin":0.0,"end":0.0},{"id":1.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":6.0,"begin":1.0,"end":1.0},{"id":2.0,"text":"기능","type":"NNG","scode":"03","weight":4.0,"position":7.0,"begin":2.0,"end":2.0},{"id":3.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":13.0,"begin":3.0,"end":3.0},{"id":4.0,"text":"메모리","type":"NNG","scode":"00","weight":0.0,"position":14.0,"begin":4.0,"end":4.0},{"id":5.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":23.0,"begin":5.0,"end":5.0},{"id":6.0,"text":"실행","type":"NNG","scode":"02","weight":2.0,"position":24.0,"begin":6.0,"end":6.0},{"id":7.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":30.0,"begin":7.0,"end":7.0},{"id":8.0,"text":"파일","type":"NNG","scode":"03","weight":2.0,"position":31.0,"begin":8.0,"end":8.0},{"id":9.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":37.0,"begin":9.0,"end":9.0},{"id":10.0,"text":"커널","type":"NNG","scode":"00","weight":0.0,"position":38.0,"begin":10.0,"end":10.0},{"id":11.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":44.0,"begin":11.0,"end":11.0},{"id":12.0,"text":"관리","type":"NNG","scode":"04","weight":6.0,"position":45.0,"begin":12.0,"end":12.0},{"id":13.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":51.0,"begin":13.0,"end":13.0},{"id":14.0,"text":"프로","type":"NNG","scode":"03","weight":1.0,"position":52.0,"begin":14.0,"end":14.0},{"id":15.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":58.0,"begin":15.0,"end":15.0},{"id":16.0,"text":"구조","type":"NNG","scode":"05","weight":2.5,"position":59.0,"begin":16.0,"end":16.0},{"id":17.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":65.0,"begin":17.0,"end":17.0},{"id":18.0,"text":"자원","type":"NNG","scode":"04","weight":2.0,"position":66.0,"begin":18.0,"end":18.0},{"id":19.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":72.0,"begin":19.0,"end":19.0},{"id":20.0,"text":"입출력","type":"NNG","scode":"00","weight":0.0,"position":73.0,"begin":20.0,"end":21.0}],"word":[{"id":0.0,"text":"단일,기능,메모리,실행,파일,커널,관\n리,프로,구조,자원,입출력","type":"","begin":0.0,"end":21.0}],"NE":[{"id":0.0,"text":"메모리","type":"TMI_HW","begin":4.0,"end":4.0,"weight":0.229931,"common_noun":0.0}],"NE_Link":[],"dependency":[],"SRL":[]}],"entity":[]}}
     str = responseData
@@ -179,7 +215,6 @@ def getTopicFromJson(responseData):
         returnTypes.add(i['type'])
 
     return topicClassification(returnTypes)
-
 
 def topicClassification(tagSet):
     # 참고 십진분류법: http://www.booktrade.or.kr/kdc/kdc.jsp
