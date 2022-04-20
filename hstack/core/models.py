@@ -21,7 +21,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return f'/player/category/{self.slug}/'
+        return f'/core/category/{self.slug}/'
 
     class Meta:
         verbose_name_plural = 'Categories'
