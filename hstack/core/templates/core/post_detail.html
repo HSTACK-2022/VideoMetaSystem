@@ -15,7 +15,7 @@
             <span class="badge badge=secondary float-right">미분류</span>
             {% endif %}
             <!-- Post header-->
-            <header class="mb-4">
+            <header class="mb-5">
                 <!-- Post title-->
                 <h1 class="fw-bolder mb-1">{{post.title}}</h1>
                 <h5 class="text-muted">{{ post.hook_text }}</h5> <!-- 요약문 -->
@@ -26,7 +26,7 @@
                 <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
             </header>
             <!-- Preview image figure-->
-            <figure class="mb-4">
+            <figure class="mb-5">
                 {% if post.head_video %}
                 <!--BOO! 사진 지정 안하면 일단 랜덤으로 사진 줌-->
                 <video id="myVideo" class="img-fluid rounded" src="{{post.head_video.url}}" alt="{{post.title}} head_video"

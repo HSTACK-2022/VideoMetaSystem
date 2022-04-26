@@ -23,6 +23,7 @@ import sys
 import io
 import os
 import math
+import subprocess
 
 keyword_list = []
 
@@ -35,43 +36,57 @@ def sceneText(videoId):
     global keyword_list
         
     # for encoding langs
-    sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8') 
-    sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
+    #sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8') 
+    #sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
     pytesseract.pytesseract.tesseract_cmd = "E:/tools/Tesseract/tesseract.exe"
     config = ('-l eng+kor --oem 3 --psm 4')
     video_info = dict()
 
     count = 0
+    pCount = 0
+    tCount = 0
+
     #test code
     for images in imagepath:
         imageName = images.split(".jpg")[0]
         images = os.path.join(dbimagepath, images)
 
-        #img = cv2.imread(sceneCutter.imgName[i], cv2.IMREAD_COLOR)
-        img = cv2.imread(images, cv2.IMREAD_COLOR)
-        img_gray = gray_scale(img)
-        img_threshold = image_threshold(img_gray)
-        img_range = range_scale(img_threshold)
-        img_string = pytesseract.image_to_string(img_range,config=config)
-        img_string2 = pytesseract.image_to_string(img_threshold,config=config)
+        # 이론, 실습을 체크해 이론인 경우에만 OCR
+        if imageName.startswith("P"):
+            pCount += 1
+            #img = cv2.imread(sceneCutter.imgName[i], cv2.IMREAD_COLOR)
+            img = cv2.imread(images, cv2.IMREAD_COLOR)
+            img_gray = gray_scale(img)
+            img_threshold = image_threshold(img_gray)
+            img_range = range_scale(img_threshold)
+            img_string = pytesseract.image_to_string(img_range,config=config)
+            img_string2 = pytesseract.image_to_string(img_threshold,config=config)
 
-        save_file_2Line(img_string, os.path.join(dbimagepath, "keyword_line.txt"))
-        save_file(img_string2, os.path.join(dbimagepath, "keyword.txt"))
+            save_file_2Line(img_string, os.path.join(dbimagepath, "keyword_line.txt"))
+            save_file(img_string2, os.path.join(dbimagepath, "keyword.txt"))
 
-        keyword_k = img_string.replace("\n", " ")
-        keyword = spaceText(keyword_k)
+            keyword_k = img_string.replace("\n", " ")
+            keyword = spaceText(keyword_k)
 
-        #time = changeTime(sceneCutter.videoTime[i])
-        print("time : ", imageName)
-        time = changeTime(imageName)
+            #time = changeTime(sceneCutter.videoTime[i])
+            imageName = imageName.split("P")[1]
+            print("time : ", imageName)
+            time = changeTime(imageName)
+            
+            video_info[time] = keyword_list[count]
+            count += 1
         
-        video_info[time] = keyword_list[count]
-        count += 1
+        else :
+            tCount += 1
 
     dic = no_dup(video_info)   
     print(dic)
-
     keyword_list.clear
+
+    if pCount > tCount:
+        return "P"
+    elif pCount < tCount:
+        return "T"
 
 def gray_scale(image):
     result = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
@@ -160,3 +175,20 @@ def no_dup(my_dict):
             seen.append(val)
             result[key] = val
     return result
+
+
+# 이론/실습 구분
+def sceneSeperate(videoId):
+    videopath = models.Videopath.objects.get(id=videoId)
+    imagepath = videopath.imageaddr
+
+    modelPath = os.path.join(os.getcwd(), "tensorflow\\ImageSeperate\\test.py")
+    
+    #>python tensorflow\ImageSeperate\test.py -f dirname
+    result = subprocess.Popen(['python', modelPath, '-f', imagepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = result.communicate()
+    exitcode = result.returncode
+    if exitcode != 0:
+        print(exitcode, out.decode('utf8'), err.decode('utf8'))
+    else:
+        print('Completed')

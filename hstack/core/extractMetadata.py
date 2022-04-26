@@ -43,6 +43,7 @@ def extractMetadata(videoId):
         keywordService.doKeywordService(videoId)
         return True
 
-    except:
+    except Exception as e:
+        print(e)
         print("### extractMetadata() : ERROR!! ###")
         return False

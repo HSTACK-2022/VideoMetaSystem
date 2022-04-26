@@ -71,7 +71,13 @@ def doOpencvService(videoId) :
     models.Videopath.objects.filter(id=videoId).update(imageaddr = imagePath)
 
     getImage(videoId)
-    sceneText.sceneText(videoId)
+    sceneText.sceneSeperate(videoId)
+    method = sceneText.sceneText(videoId)
+
+    if method == "P":
+        models.Metadata.objects.filter(id=videoId).update(method="PPT")
+    else:
+        models.Metadata.objects.filter(id=videoId).update(method="실습")
 
 def calSec2Time(sec):
     hour = sec // 3600
@@ -130,7 +136,7 @@ def getImage(videoId):
             psnrV = getPSNP(prevFrame, currFrame)
             # print("psnrV: ",psnrV)
             
-            if psnrV < CHANGE_DETECT_AUDIO:
+            if psnrV < CHANGE_DETECT_AUDIO and psnrV > 0:
                 changeFrame = currFrame.copy()
                 saveImage(imagepath, changeFrame, frameNum / fps)
                 
