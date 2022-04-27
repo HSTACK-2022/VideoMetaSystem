@@ -14,6 +14,8 @@
 
 
 from . import models
+from . import calTime
+
 from pykospacing import Spacing
 from pyrsistent import CheckedKeyTypeError
 from lib2to3 import pytree
@@ -26,6 +28,7 @@ import math
 import subprocess
 
 keyword_list = []
+checkIndexDup = []
 
 def sceneText(videoId):  
     videopath = models.Videopath.objects.get(id=videoId)
@@ -34,6 +37,7 @@ def sceneText(videoId):
     print(imagepath)
 
     global keyword_list
+    global checkIndexDup
         
     # for encoding langs
     #sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8') 
@@ -62,16 +66,17 @@ def sceneText(videoId):
             img_string = pytesseract.image_to_string(img_range,config=config)
             img_string2 = pytesseract.image_to_string(img_threshold,config=config)
 
-            save_file_2Line(img_string, os.path.join(dbimagepath, "keyword_line.txt"))
-            save_file(img_string2, os.path.join(dbimagepath, "keyword.txt"))
-
-            keyword_k = img_string.replace("\n", " ")
-            keyword = spaceText(keyword_k)
-
             #time = changeTime(sceneCutter.videoTime[i])
             imageName = imageName.split("P")[1]
             print("time : ", imageName)
-            time = changeTime(imageName)
+            time = calTime.calSec2Time(int(imageName))
+
+            save_file(img_string2, os.path.join(dbimagepath, "keyword.txt"))
+            save_file_2Line(time, img_string, os.path.join(dbimagepath, "keyword_line.txt"))
+            
+
+            keyword_k = img_string.replace("\n", " ")
+            keyword = spaceText(keyword_k)
             
             video_info[time] = keyword_list[count]
             count += 1
@@ -82,6 +87,7 @@ def sceneText(videoId):
     dic = no_dup(video_info)   
     print(dic)
     keyword_list.clear
+    checkIndexDup.clear
 
     if pCount > tCount:
         return "P"
@@ -117,22 +123,9 @@ def spaceText(text):
     kospacing_text = spacing(fixed_text) # 띄어쓰기 문법 수정
     return kospacing_text
 
-# 시간 변환
-def changeTime(time) :
-    sec = int(time)
-    if time == 0 :
-        result = "0:0:0"
-    else :
-        hour = sec // 3600
-        sec -= hour * 3600
-        min = sec // 60
-        sec -= min  * 60
-        result = str(math.trunc(hour))+':'+str(math.trunc(min))+':'+str(math.trunc(sec))
-    return result
-
 # 키워드 추출 text 저장
-def save_file_2Line(text, path):
-    global keyword, keyword_list
+def save_file_2Line(time, text, path):
+    global keyword, keyword_list, checkIndexDup
     list=text.split('\n')
     
     if(len(list)==1):
@@ -156,16 +149,28 @@ def save_file_2Line(text, path):
             keyword = list[0]+list[1]
         else:
             keyword = list[0]+list[1]+list[2]
-# keyword = list[0]+list[1]+list[2]
+    # keyword = list[0]+list[1]+list[2]
     
   
     print(keyword)
     
     spacing = spaceText(keyword)
     keyword_list.append(spacing)
-    f = open(path, 'a', encoding='UTF-8-sig')
-    f.write(spacing+"\n")
-    f.close()
+    count = len(checkIndexDup)
+    countIndex = 0
+    print(count)
+
+    for index in checkIndexDup :
+        if index == spacing : 
+            break
+        else:
+            countIndex += 1
+
+    if count == countIndex:
+        checkIndexDup.append(spacing)
+        f = open(path, 'a', encoding='UTF-8-sig')
+        f.write(time + ' :: ' + spacing+"\n")
+        f.close()
 
 def no_dup(my_dict):
     seen = []

@@ -92,13 +92,7 @@ def category_page(request, slug): #카테고리 분류 페이지
         )
 
 #video(file) upload
-def post_form(request):
-    print("*******************************************")
-    print("*******************************************")
-    print("*******************************************")
-    print("*******************************************")
-    print("*******************************************")
-    print("*******************************************")
+def uploadFile(request):
     if request.method == "POST":
         print("*******************************************")
         print("*******************************************")
@@ -108,9 +102,9 @@ def post_form(request):
         print("*******************************************")
         # Fetching the form data
         # Saving the information in the database
-        if request.FILES.get("head_video") :
-            fileTitle = request.POST["title"]
-            uploadedFile = request.FILES["head_video"]
+        if request.FILES.get("uploadedFile") :
+            fileTitle = request.POST["fileTitle"]
+            uploadedFile = request.FILES["uploadedFile"]
             document = models.Document(
                 title = fileTitle,
                 uploadedFile = uploadedFile

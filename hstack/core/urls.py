@@ -10,7 +10,7 @@ urlpatterns = [
     path('category/<str:slug>/', views.category_page),
     path('', views.PostList.as_view()),
     path('core/<int:pk>/', views.PostDetail.as_view()),
-    #path("", views.uploadFile, name="uploadFile")
+    path("test/", views.uploadFile, name="uploadFile")
 ]
 
 if settings.DEBUG: 
