@@ -2,6 +2,10 @@
 
 {% block main_area %}
 
+<a class="btn btn-info btn-sm float-right" href="/core/create_post/" role="button">
+<i class="fas fa-pen"></i>&nbsp;&nbsp;New Post</a>
+
+
 <h1>Player{% if category %}<span class="badge badge=secondary">{{category}}</span>{% endif %}</h1>
 
 {% if post_list.exists %}

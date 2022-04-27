@@ -46,7 +46,7 @@ class Post(models.Model):
         return f'[{self.pk}]{self.title}'
 
     def get_absolute_url(self):
-        return f'/player/{self.pk}/'
+        return f'/core/{self.pk}/'
 
 
 # This is an auto-generated Django model module.
