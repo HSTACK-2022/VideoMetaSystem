@@ -53,7 +53,7 @@ def search(searchTexts):
     a = Total()
     a.resultVideoIDList = set()
     a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
-    
+
     searchResultMeta = []
     
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
