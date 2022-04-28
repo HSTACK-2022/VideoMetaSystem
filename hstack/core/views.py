@@ -9,9 +9,8 @@ from unicodedata import category
 from urllib import response
 from django.shortcuts import render
 from django.views.generic import ListView , DetailView, CreateView, UpdateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Category
-from django.core.exceptions import PermissionDenied
 
 
 class PostList(ListView): #포스트 목록 페이지
@@ -58,17 +57,18 @@ class PostCreate(CreateView):
     #             form.instance.author = id_str
     #         return response
 
-class PostUpdate(LoginRequiredMixin, UpdateView):
+class PostUpdate(UpdateView):
 
     model = Post
     fields = ['title', 'hook_text', 'content', 'head_image', 'head_video', 'category']
 
-    def dispatch(self, request, *args, **kwargs) :
-        if request.user.is_authenticated and request.user == self.get_object().author:
-            return super(PostUpdate, self).dispatch(request, *args, **kwargs)
-        else:
-            raise PermissionDenied #로그인 한 회원과 사용자가 일치하지 않을 경우 허가 거부 
-
+    def dispatch(self, form): # 로그인 = 작성자 확인
+        current_user = self.request.user
+        if current_user.is_authenticated:
+            form.instance.author = current_user
+            return super(PostCreate, self).form_valid(form)
+        else: #로그인 하지 않은 회원이면
+            return super(PostCreate, self).form_valid(form)
 
 def category_page(request, slug): #카테고리 분류 페이지
         #category = Category.objects.get(slug=slug)
@@ -81,7 +81,7 @@ def category_page(request, slug): #카테고리 분류 페이지
 
         return render(
             request,
-            'player/post_list.html',
+            'core/post_list.html',
             {
                 'post_list' : post_list,
                 'categories' : Category.objects.all(),

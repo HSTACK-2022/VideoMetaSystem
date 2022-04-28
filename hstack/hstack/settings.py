@@ -44,6 +44,9 @@ INSTALLED_APPS = [
 
     #외부 library
     'crispy_forms',
+
+    #add myapp
+    #'main_pages',
 ]
 
 MIDDLEWARE = [
