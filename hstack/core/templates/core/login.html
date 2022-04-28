@@ -1,0 +1,23 @@
+{% load crispy_forms_tags %}
+
+
+{% load static %}
+{% include 'core/navbar.html'%}
+{% block main_area %}
+
+<div class="container my-5" style="text-align:center" >
+    <h1>로그인</h1>
+    <hr>
+    <div class="row">    
+        <div class="col">                
+            <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                <table>
+                    {{form | crispy}}
+                    <input type="submit" class="btn btn-primary" value="Login">
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
