@@ -25,7 +25,7 @@
                 <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
                 <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
                 {% if user.is_authenticated and user == post.author %}
-                <a class="btn btn-info btn-sm float-right" href="/player/update_post/{{post.pk}}/" role="button"></i> Edit post</a>
+                <a class="btn btn-info btn-sm float-right" href="/core/update_post/{{post.pk}}/" role="button"></i> Edit post</a>
                 {% endif %}
             </header>
             <!-- Preview image figure-->
