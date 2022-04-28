@@ -21,10 +21,8 @@ from pyrsistent import CheckedKeyTypeError
 from lib2to3 import pytree
 import cv2
 import pytesseract
-import sys
-import io
 import os
-import math
+import numpy
 import subprocess
 
 keyword_list = []
@@ -47,8 +45,7 @@ def sceneText(videoId):
     video_info = dict()
 
     count = 0
-    pCount = 0
-    tCount = 0
+    typeCount = [0, 0, 0, 0]        #순서대로 L, N, PPT, A
 
     #test code
     for images in imagepath:
@@ -57,7 +54,7 @@ def sceneText(videoId):
 
         # 이론, 실습을 체크해 이론인 경우에만 OCR
         if imageName.startswith("P"):
-            pCount += 1
+            typeCount[2] += 1
             #img = cv2.imread(sceneCutter.imgName[i], cv2.IMREAD_COLOR)
             img = cv2.imread(images, cv2.IMREAD_COLOR)
             img_gray = gray_scale(img)
@@ -81,18 +78,22 @@ def sceneText(videoId):
             video_info[time] = keyword_list[count]
             count += 1
         
-        else :
-            tCount += 1
+        elif imageName.startswith("A"):     typeCount[3] += 1
+        elif imageName.startswith("N"):     typeCount[1] += 1
+        elif imageName.startswith("L"):     typeCount[0] += 1
 
     dic = no_dup(video_info)   
     print(dic)
     keyword_list.clear
     checkIndexDup.clear
 
-    if pCount > tCount:
-        return "P"
-    elif pCount < tCount:
-        return "T"
+    #type에 따라 return값 변경
+    maxIndex = numpy.argmax(typeCount)
+    if maxIndex == 0:   return "L"
+    elif maxIndex == 1: return "N"
+    elif maxIndex == 2: return "P"
+    elif maxIndex == 3: return "A"
+    else:               return "E"
 
 def gray_scale(image):
     result = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)

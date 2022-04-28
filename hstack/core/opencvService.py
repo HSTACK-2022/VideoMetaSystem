@@ -72,12 +72,20 @@ def doOpencvService(videoId) :
 
     getImage(videoId)
     sceneText.sceneSeperate(videoId)
-    method = sceneText.sceneText(videoId)
+    type = sceneText.sceneText(videoId)
 
-    if method == "P":
+    # L, N, P, A
+    # method : PPT / others
+    # narrative : Application / others
+    if type == "P":
         models.Metadata.objects.filter(id=videoId).update(method="PPT")
     else:
         models.Metadata.objects.filter(id=videoId).update(method="실습")
+
+    if type == "A":
+        models.Metadata.objects.filter(id=videoId).update(narrative="Application")
+    else:
+        models.Metadata.objects.filter(id=videoId).update(narrative="Description")
 
 
 from . import models
