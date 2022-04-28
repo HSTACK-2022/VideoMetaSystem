@@ -61,4 +61,4 @@ def search(searchTexts):
         searchResultMeta.append(a.finalDict)
 
     print(searchResultMeta)
-    return list(searchResultMeta)
+    return searchResultMeta
