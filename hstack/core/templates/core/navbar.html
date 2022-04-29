@@ -43,6 +43,17 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Log In</a>
+<<<<<<< Updated upstream
+=======
+                    </li> 
+                    -->
+                    <li class="nav-item">
+                        {% if user.is_authenticated%}
+                        <a class="nav-link" href="/logout/">Logout</a>
+                        {% else %}
+                        <a class="nav-link" href="{% url "Core:login" %}">Log In</a>
+                        {% endif %}
+>>>>>>> Stashed changes
                     </li>
                 </ul>
             </div>

@@ -8,6 +8,7 @@
 <div class="container my-5" style="text-align:center" >
     <h1>로그인</h1>
     <hr>
+<<<<<<< Updated upstream
     <div class="row">    
         <div class="col">                
             <form method="POST" enctype="multipart/form-data">{% csrf_token %}
@@ -17,6 +18,22 @@
                 </table>
             </form>
         </div>
+=======
+    <div class="row">
+            <div class="col">                
+                <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                    <table>
+                        {{form | crispy}}
+                        
+                        <input type="submit" class="btn btn-primary" value="Login">
+                        <div class="col my-3">
+                            <a href="{%url "Core:signup"%}">회원가입</a>
+                        </div>
+                
+                    </table>
+                </form>
+            </div>
+>>>>>>> Stashed changes
     </div>
 </div>
 
