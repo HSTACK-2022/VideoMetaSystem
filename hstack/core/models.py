@@ -2,7 +2,10 @@ from tabnanny import verbose
 from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User # 다대일 관계 구현
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
 import os
+
 
 # Create your models here.
 class Document(models.Model):

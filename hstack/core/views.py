@@ -1,11 +1,15 @@
 import asyncio
+import imp
 import os
 
 from . import models
+from django import forms
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from urllib.parse import urlparse
 from django.shortcuts import render, redirect
 from core.extractMetadata import extractMetadata
-from unicodedata import category
 from urllib import response
 from django.shortcuts import render
 from django.views.generic import ListView , DetailView, CreateView, UpdateView
@@ -13,6 +17,23 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Category
 from django.core.exceptions import PermissionDenied
 
+class UserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ["username","password1",  "password2", "email"]
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder':'15자 이내로 입력 가능합니다.'}),
+            # 'password1' : forms.PasswordInput(attrs={'class': 'form-control'}),
+            # 'password2' : forms.PasswordInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'username': 'ID',
+            # 'password1': '패스워드',
+            # 'password2': '패스워드확인',
+            'email': '이메일',
+        }
+        
 
 
 class PostList(ListView): #포스트 목록 페이지
@@ -24,6 +45,7 @@ class PostList(ListView): #포스트 목록 페이지
         context['categories'] = Category.objects.all() #카테고리 있을 경우 카운트 같은거
         context['no_category_post_count'] = Post.objects.filter(category=None).count() #카테고리 없는 미분류 항목
         return context
+    
 
 class PostDetail(DetailView): #포스트 상세 페이지
     model = Post
@@ -90,6 +112,8 @@ def category_page(request, slug): #카테고리 분류 페이지
                 'category' : category,
             }
         )
+        
+
 
 #video(file) upload
 def uploadFile(request):
@@ -132,3 +156,22 @@ def uploadFile(request):
             return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
                         
     return render(request, "Core/upload.html") 
+
+
+def signup(request):
+
+    """
+    계정생성
+    """
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)  # 사용자 인증
+            login(request, user)  # 로그인
+            return redirect('/')
+    else:
+        form = UserForm()
+    return render(request, 'core/signup.html',{'form': form})

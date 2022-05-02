@@ -1,4 +1,4 @@
-{% extends 'core/base_detail.html' %}
+{% extends 'core/base.html' %}
 
 {% block head_title %}
 {{post.title}} - Blog
@@ -9,47 +9,33 @@
     <!-- Post content-->
     <div id="post-area">
         <article>
-            {% if post.category %}
-            <span class="badge badge=secondary float-right">{{post.category}}</span>
-            {% else %}
-            <span class="badge badge=secondary float-right">미분류</span>
-            {% endif %}
             <!-- Post header-->
-            <header class="mb-5">
+            <header class="mb-4">
                 <!-- Post title-->
                 <h1 class="fw-bolder mb-1">{{post.title}}</h1>
                 <h5 class="text-muted">{{ post.hook_text }}</h5> <!-- 요약문 -->
                 <!-- Post meta content-->
-                <div class="text-muted fst-italic mb-2">{{post.created_at}} by {{ post.author | upper }}</div>
+                <div class="text-muted fst-italic mb-2">{{post.created_at}} by {{post.author}}</div>
                 <!-- Post categories-->
                 <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
                 <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
-                {% if user.is_authenticated and user == post.author %}
-                <a class="btn btn-info btn-sm float-right" href="/core/update_post/{{post.pk}}/" role="button"></i> Edit post</a>
-                {% endif %}
             </header>
             <!-- Preview image figure-->
-            <figure class="mb-5">
+            <figure class="mb-4">
                 {% if post.head_video %}
                 <!--BOO! 사진 지정 안하면 일단 랜덤으로 사진 줌-->
-                <video id="myVideo" class="img-fluid rounded" src="{{post.head_video.url}}" alt="{{post.title}} head_video"
-                    controls autoplay="false"></video>
+                <video class="img-fluid rounded" src="{{post.head_video.url}}" alt="{{post.title}} head_video"
+                    controls></video>
                 {% else %}
                 <img class="img-fluid rounded" src="https://picsum.photos/seed/{{post.id}}/800/200" alt="random_image">
                 {% endif %}
-                <input type="button" value="move" onclick="inputMove()"/>
-                <script>
-                    var vid = document.getElementById("myVideo");
-                
-                    function inputMove() {
-                        vid.currentTime = 100;
-                        vid.play();
-                    }
-                </script>
             </figure>
             <!-- Post content-->
             <section class="mb-5">
                 <p>{{post.content}}</p>
+                <p>
+                    <button id="ts" onclick="">3:00</button> 
+                </p>
             </section>
         </article>
     </div>
