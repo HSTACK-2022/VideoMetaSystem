@@ -109,7 +109,7 @@ def detectSex(videoId):
     modelPath = os.path.join(os.getcwd(), "tensorflow\\AudioDetect\\test.py")
     
     #>python tensorflow\AudioDetect\test.py -f fff.mp3
-    result = subprocess.check_output(['python', modelPath, '-f', audio], universal_newlines=true)
+    result = subprocess.check_output(['python', modelPath, '-f', audio], universal_newlines=True)
     male_prop = result.split("*****")[1]
 
     return male_prop

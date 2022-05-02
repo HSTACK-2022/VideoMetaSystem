@@ -2,7 +2,10 @@ from tabnanny import verbose
 from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import User # 다대일 관계 구현
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
 import os
+
 
 # Create your models here.
 class Document(models.Model):
@@ -96,7 +99,7 @@ class Metadata(models.Model):
     id = models.ForeignKey(Videopath, db_column='id', primary_key=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     presenter = models.CharField(max_length=50, blank=True, null=True)
-    topic = models.CharField(max_length=20, blank=True, null=True)
+    category = models.CharField(max_length=20, blank=True, null=True)
     narrative = models.CharField(max_length=30, blank=True, null=True)
     method = models.CharField(max_length=10, blank=True, null=True)   
     videolength = models.TimeField(db_column='videoLength', blank=True, null=True)  # Field name made lowercase.
