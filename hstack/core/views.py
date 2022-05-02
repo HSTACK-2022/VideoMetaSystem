@@ -17,8 +17,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Category
 from django.core.exceptions import PermissionDenied
 
-<<<<<<< Updated upstream
-=======
 class UserForm(UserCreationForm):
     class Meta:
         model = User
@@ -36,7 +34,6 @@ class UserForm(UserCreationForm):
             'email': '이메일',
         }
         
->>>>>>> Stashed changes
 
 class PostList(ListView): #포스트 목록 페이지
     model = Post
@@ -157,9 +154,6 @@ def post_form(request):
             bools = extractMetadata(videoId)
             return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
                         
-<<<<<<< Updated upstream
-    return render(request, "Core/upload.html") 
-=======
     return render(request, "Core/upload.html") 
 
 
@@ -180,4 +174,3 @@ def signup(request):
     else:
         form = UserForm()
     return render(request, 'core/signup.html',{'form': form})
->>>>>>> Stashed changes
