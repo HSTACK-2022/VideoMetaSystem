@@ -149,3 +149,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# 로그인 후 이동하는 페이지
+LOGIN_REDIRECT_URL = '/'
+
+# 로그아웃 후 이동하는 페이지
+LOGOUT_REDIRECT_URL = '/'

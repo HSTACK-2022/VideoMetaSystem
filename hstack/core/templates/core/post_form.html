@@ -6,7 +6,7 @@ Create Post - Meta Player
 
 {% block main_area %}
 <h1>Create New Post</h1>
-<hr />
+<hr/>
 <form method="post" enctype="multipart/form-data">{% csrf_token %}
     <table>
         <!-- <tr>
@@ -15,9 +15,19 @@ Create Post - Meta Player
             <tr>
             <th><label for="loginpw">PASSWORD</label></th>
             <th><input type="password" name="pw_str" id="loginpw" placeholder="password"></th></tr> -->
-        {{form | crispy}}
-        <br/>
-    </table>
-    <button type="submit" class="btn btn-primary float-right">Submit</button>
+    {{form | crispy}}
+    
+    <div id="div_id_tags_str">
+      <label for="id_tags_str">Tags:</label>
+      <input
+        type="text"
+        name="tags_str"
+        id="id_tags_str"
+        class="textinput textInput form-control"
+      />
+    </div>
+    <br />
+  </table>
+  <button type="submit" class="btn btn-primary float-right">Submit</button>
 </form>
 {% endblock %}

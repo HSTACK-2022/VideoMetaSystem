@@ -14,17 +14,19 @@
 
 
 from . import models
+from . import calTime
+
 from pykospacing import Spacing
 from pyrsistent import CheckedKeyTypeError
 from lib2to3 import pytree
 import cv2
 import pytesseract
-import sys
-import io
 import os
-import math
+import numpy
+import subprocess
 
 keyword_list = []
+checkIndexDup = []
 
 def sceneText(videoId):  
     videopath = models.Videopath.objects.get(id=videoId)
@@ -33,45 +35,65 @@ def sceneText(videoId):
     print(imagepath)
 
     global keyword_list
+    global checkIndexDup
         
     # for encoding langs
-    sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8') 
-    sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
+    #sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8') 
+    #sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
     pytesseract.pytesseract.tesseract_cmd = "E:/tools/Tesseract/tesseract.exe"
     config = ('-l eng+kor --oem 3 --psm 4')
     video_info = dict()
 
     count = 0
+    typeCount = [0, 0, 0, 0]        #순서대로 L, N, PPT, A
+
     #test code
     for images in imagepath:
         imageName = images.split(".jpg")[0]
         images = os.path.join(dbimagepath, images)
 
-        #img = cv2.imread(sceneCutter.imgName[i], cv2.IMREAD_COLOR)
-        img = cv2.imread(images, cv2.IMREAD_COLOR)
-        img_gray = gray_scale(img)
-        img_threshold = image_threshold(img_gray)
-        img_range = range_scale(img_threshold)
-        img_string = pytesseract.image_to_string(img_range,config=config)
-        img_string2 = pytesseract.image_to_string(img_threshold,config=config)
+        # 이론, 실습을 체크해 이론인 경우에만 OCR
+        if imageName.startswith("P"):
+            typeCount[2] += 1
+            #img = cv2.imread(sceneCutter.imgName[i], cv2.IMREAD_COLOR)
+            img = cv2.imread(images, cv2.IMREAD_COLOR)
+            img_gray = gray_scale(img)
+            img_threshold = image_threshold(img_gray)
+            img_range = range_scale(img_threshold)
+            img_string = pytesseract.image_to_string(img_range,config=config)
+            img_string2 = pytesseract.image_to_string(img_threshold,config=config)
 
-        save_file_2Line(img_string, os.path.join(dbimagepath, "keyword_line.txt"))
-        save_file(img_string2, os.path.join(dbimagepath, "keyword.txt"))
+            #time = changeTime(sceneCutter.videoTime[i])
+            imageName = imageName.split("P")[1]
+            print("time : ", imageName)
+            time = calTime.calSec2Time(int(imageName))
 
-        keyword_k = img_string.replace("\n", " ")
-        keyword = spaceText(keyword_k)
+            save_file(img_string2, os.path.join(dbimagepath, "keyword.txt"))
+            save_file_2Line(time, img_string, os.path.join(dbimagepath, "keyword_line.txt"))
+            
 
-        #time = changeTime(sceneCutter.videoTime[i])
-        print("time : ", imageName)
-        time = changeTime(imageName)
+            keyword_k = img_string.replace("\n", " ")
+            keyword = spaceText(keyword_k)
+            
+            video_info[time] = keyword_list[count]
+            count += 1
         
-        video_info[time] = keyword_list[count]
-        count += 1
+        elif imageName.startswith("A"):     typeCount[3] += 1
+        elif imageName.startswith("N"):     typeCount[1] += 1
+        elif imageName.startswith("L"):     typeCount[0] += 1
 
     dic = no_dup(video_info)   
     print(dic)
-
     keyword_list.clear
+    checkIndexDup.clear
+
+    #type에 따라 return값 변경
+    maxIndex = numpy.argmax(typeCount)
+    if maxIndex == 0:   return "L"
+    elif maxIndex == 1: return "N"
+    elif maxIndex == 2: return "P"
+    elif maxIndex == 3: return "A"
+    else:               return "E"
 
 def gray_scale(image):
     result = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
@@ -102,22 +124,9 @@ def spaceText(text):
     kospacing_text = spacing(fixed_text) # 띄어쓰기 문법 수정
     return kospacing_text
 
-# 시간 변환
-def changeTime(time) :
-    sec = int(time)
-    if time == 0 :
-        result = "0:0:0"
-    else :
-        hour = sec // 3600
-        sec -= hour * 3600
-        min = sec // 60
-        sec -= min  * 60
-        result = str(math.trunc(hour))+':'+str(math.trunc(min))+':'+str(math.trunc(sec))
-    return result
-
 # 키워드 추출 text 저장
-def save_file_2Line(text, path):
-    global keyword, keyword_list
+def save_file_2Line(time, text, path):
+    global keyword, keyword_list, checkIndexDup
     list=text.split('\n')
     
     if(len(list)==1):
@@ -141,16 +150,28 @@ def save_file_2Line(text, path):
             keyword = list[0]+list[1]
         else:
             keyword = list[0]+list[1]+list[2]
-# keyword = list[0]+list[1]+list[2]
+    # keyword = list[0]+list[1]+list[2]
     
   
     print(keyword)
     
     spacing = spaceText(keyword)
     keyword_list.append(spacing)
-    f = open(path, 'a', encoding='UTF-8-sig')
-    f.write(spacing+"\n")
-    f.close()
+    count = len(checkIndexDup)
+    countIndex = 0
+    print(count)
+
+    for index in checkIndexDup :
+        if index == spacing : 
+            break
+        else:
+            countIndex += 1
+
+    if count == countIndex:
+        checkIndexDup.append(spacing)
+        f = open(path, 'a', encoding='UTF-8-sig')
+        f.write(time + ' :: ' + spacing+"\n")
+        f.close()
 
 def no_dup(my_dict):
     seen = []
@@ -160,3 +181,20 @@ def no_dup(my_dict):
             seen.append(val)
             result[key] = val
     return result
+
+
+# 이론/실습 구분
+def sceneSeperate(videoId):
+    videopath = models.Videopath.objects.get(id=videoId)
+    imagepath = videopath.imageaddr
+
+    modelPath = os.path.join(os.getcwd(), "tensorflow\\ImageSeperate\\test.py")
+    
+    #>python tensorflow\ImageSeperate\test.py -f dirname
+    result = subprocess.Popen(['python', modelPath, '-f', imagepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = result.communicate()
+    exitcode = result.returncode
+    if exitcode != 0:
+        print(exitcode, out.decode('utf8'), err.decode('utf8'))
+    else:
+        print('Completed')

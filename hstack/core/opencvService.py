@@ -18,15 +18,15 @@
 # - True : 작업이 정상적으로 완료된 경우
 # - False : 중간에 오류가 발생한 경우
 
-
 import os
 import cv2
 import platform
 from . import sceneText
 
 from . import models
-from . import getRealPath
+from . import calTime
 from datetime import datetime
+
 
 # 상수 설정
 OS = platform.system()
@@ -47,7 +47,7 @@ def extBasicInfo(videoId) :
 
     try :
         models.Metadata.objects.filter(id = videoId).update(
-            videolength = calSec2Time(length),
+            videolength = datetime.strptime(calTime.calSec2Time(length), '%H:%M:%S'),
             videoframe = str('%d*%d' %(wFrame, hFrame)),
             videosize = str(size),
             videotype = str(type)
@@ -71,17 +71,21 @@ def doOpencvService(videoId) :
     models.Videopath.objects.filter(id=videoId).update(imageaddr = imagePath)
 
     getImage(videoId)
-    sceneText.sceneText(videoId)
+    sceneText.sceneSeperate(videoId)
+    type = sceneText.sceneText(videoId)
 
-def calSec2Time(sec):
-    hour = sec // 3600
-    sec -= hour * 3600
-    min = sec // 60
-    sec -= min  * 60
-    dateStr = str('%d:%d:%d' %(hour, min, sec))
-    dateRes = datetime.strptime(dateStr, '%H:%M:%S')
-    
-    return dateRes
+    # L, N, P, A
+    # method : PPT / others
+    # narrative : Application / others
+    if type == "P":
+        models.Metadata.objects.filter(id=videoId).update(method="PPT")
+    else:
+        models.Metadata.objects.filter(id=videoId).update(method="실습")
+
+    if type == "A":
+        models.Metadata.objects.filter(id=videoId).update(narrative="Application")
+    else:
+        models.Metadata.objects.filter(id=videoId).update(narrative="Description")
 
 
 from . import models
@@ -130,7 +134,7 @@ def getImage(videoId):
             psnrV = getPSNP(prevFrame, currFrame)
             # print("psnrV: ",psnrV)
             
-            if psnrV < CHANGE_DETECT_AUDIO:
+            if psnrV < CHANGE_DETECT_AUDIO and psnrV > 0:
                 changeFrame = currFrame.copy()
                 saveImage(imagepath, changeFrame, frameNum / fps)
                 
