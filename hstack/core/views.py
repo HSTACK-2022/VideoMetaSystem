@@ -16,8 +16,11 @@ from django.views.generic import ListView , DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Category
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
-class UserForm(UserCreationForm):
+
+
+class UserForm(UserCreationForm): # 회원가입 페이지
     class Meta:
         model = User
         fields = ["username","password1",  "password2", "email"]
@@ -104,7 +107,7 @@ def category_page(request, slug): #카테고리 분류 페이지
 
         return render(
             request,
-            'player/post_list.html',
+            'core/post_list.html',
             {
                 'post_list' : post_list,
                 'categories' : Category.objects.all(),
@@ -175,3 +178,21 @@ def signup(request):
     else:
         form = UserForm()
     return render(request, 'core/signup.html',{'form': form})
+
+
+class PostSearch(PostList): #검색 창
+    paginate_by = None
+
+    def get_queryset(self):
+        q = self.kwargs['q']
+        post_list = Post.objects.filter(
+            Q(title__contains=q) | Q(content__contains=q)
+        ).distinct()
+        return post_list
+
+    def get_context_data(self, **kwargs):
+        context = super(PostSearch, self).get_context_data()
+        q = self.kwargs['q']
+        context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
+
+        return context
