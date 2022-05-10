@@ -1,12 +1,15 @@
-import asyncio
-import imp
 import os
+import asyncio
+import threading
+
+from asgiref.sync import sync_to_async
 
 from . import models
 from .models import Post, Category
 
 from django import forms
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
@@ -70,9 +73,11 @@ class PostCreate(CreateView):
 
     def get_success_url(self):
         pk = self.object.id
-        createMetadata(pk)
+        #loop = asyncio.new_event_loop()
+        #loop.run_in_executor(createMetadata(pk, callbacktest))
+        #loop.close()
         return f'/core/{pk}/'
-
+        #return redirect('core:detail', pk)
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
 
@@ -105,50 +110,28 @@ def category_page(request, slug): #카테고리 분류 페이지
         }
     )
         
+def signup(request):
 
-#video(file) upload
-def uploadFile(request):
+    """
+    계정생성
+    """
     if request.method == "POST":
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        # Fetching the form data
-        # Saving the information in the database
-        if request.FILES.get("uploadedFile") :
-            fileTitle = request.POST["fileTitle"]
-            uploadedFile = request.FILES["uploadedFile"]
-            document = models.Document(
-                title = fileTitle,
-                uploadedFile = uploadedFile
-            )
-            document.save()
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)  # 사용자 인증
+            login(request, user)  # 로그인
+            return redirect('/')
+    else:
+        form = UserForm()
+    return render(request, 'core/signup.html',{'form': form})
 
-            dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
-            file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
-            videopath = dir_name + file_name
-            
-            # DB에 Video 저장
-            models.Videopath.objects.create(
-                title = fileTitle,
-                videoaddr = videopath
-            )
-            videoId = models.Videopath.objects.get(videoaddr=videopath).id
 
-            models.Metadata.objects.create(
-                id = models.Videopath.objects.get(id=videoId),
-                title = fileTitle,
-                uploaddate = document.dateTimeOfUpload
-            )
-            
-            bools = extractMetadata(videoId)
-            return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
-                        
-    return render(request, "Core/upload.html") 
-
-def createMetadata(pk):
+# for backend.
+# video(file) upload
+def createMetadata(pk, callback):
     print("CREATEMETADATA()")
     postId = pk
     postModel = models.Post.objects.get(id = postId)
@@ -173,22 +156,11 @@ def createMetadata(pk):
     )
   
     bools = extractMetadata(videoId)
+    callback(bools)
     return bools
 
-def signup(request):
 
-    """
-    계정생성
-    """
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)  # 사용자 인증
-            login(request, user)  # 로그인
-            return redirect('/')
-    else:
-        form = UserForm()
-    return render(request, 'core/signup.html',{'form': form})
+def callbacktest(msg):
+    print("**************************************************************")
+    print(msg)
+    print("**************************************************************")
