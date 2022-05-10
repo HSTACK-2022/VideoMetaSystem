@@ -1,0 +1,55 @@
+#uploadBody {
+    width: 100%;
+    padding: 20px 10px;
+    display: grid;
+    place-content: center;
+}
+
+#uploadFileTitle {
+    width: 650px;
+    margin: auto;
+    padding: 50px 0px;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+#uploadFileTable {
+    width: 650px;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+.uploadFileTableTD {
+    height:70px;
+}
+
+#uploadFileSubmit {
+    text-align: right;
+}
+.tags {
+    width: 150px;
+    text-align: right;
+    padding-right: 20px;
+    font-size: 20px;
+}
+
+.inputText {
+    width: 450px;
+    height: 40px;
+    padding: 0px 20px;
+    border-radius: 20px;
+    border: 1px solid gray;
+}
+
+#inputSubmit {
+    height:30px;
+    width: 100px;
+    border: none;
+    border-radius: 20px;
+    background-color: #555555;
+    color: white;
+}
+
+#inputSubmit:hover{
+    background-color: #1191E1;
+}

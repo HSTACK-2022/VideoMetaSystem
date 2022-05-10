@@ -150,6 +150,59 @@ def signup(request):
 
 # for backend.
 # video(file) upload
+
+def home(request):
+    return render(request, "Core/test_home.html") 
+
+# search
+def searchFile(request):
+    if request.method == "POST":
+        print("search complete.")
+
+# video(file) upload
+def uploadFile(request):
+    if request.method == "POST":
+        print("*******************************************")
+        print("*******************************************")
+        print("*******************************************")
+        print("*******************************************")
+        print("*******************************************")
+        print("*******************************************")
+        # Fetching the form data
+        # Saving the information in the database
+        if request.FILES.get("uploadedFile") :
+            fileTitle = request.POST["fileTitle"]
+            uploadedFile = request.FILES["uploadedFile"]
+            document = models.Document(
+                title = fileTitle,
+                uploadedFile = uploadedFile
+            )
+            document.save()
+
+            dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
+            file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
+            videopath = dir_name + file_name
+            
+            # DB에 Video 저장
+            models.Videopath.objects.create(
+                title = fileTitle,
+                videoaddr = videopath
+            )
+            videoId = models.Videopath.objects.get(videoaddr=videopath).id
+
+            models.Metadata.objects.create(
+                id = models.Videopath.objects.get(id=videoId),
+                title = fileTitle,
+                uploaddate = document.dateTimeOfUpload
+            )
+            
+            bools = extractMetadata(videoId)
+            return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
+                        
+    return render(request, "Core/test_upload.html") 
+
+
+
 def createMetadata(pk, callback):
     print("CREATEMETADATA()")
     postId = pk
