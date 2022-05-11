@@ -168,6 +168,12 @@ def uploadFile(request):
         print("*******************************************")
         print("*******************************************")
         print("*******************************************")
+        fileName = request.POST["fileTitle"]
+        filePresenter = request.POST["presenter"]
+        file = request.FILES.get("uploadFile")
+        print(fileName == "")
+        print(filePresenter == "")
+        print(file == None)
         # Fetching the form data
         # Saving the information in the database
         if request.FILES.get("uploadedFile") :
@@ -236,3 +242,15 @@ def callbacktest(msg):
     print("**************************************************************")
     print(msg)
     print("**************************************************************")
+
+
+def test_minhwa(request):
+    return render(
+        request,
+        'Core/test.html',
+        {
+            'keywords' : models.Keywords.objects.filter(id = 14).all().values(),
+            'metadatas' : models.Metadata.objects.filter(id = 14).all().values(),
+            'timestamps' : models.Timestamp.objects.filter(id = 14).all().values(),
+        }
+    )
