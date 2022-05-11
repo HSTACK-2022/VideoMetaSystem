@@ -25,16 +25,16 @@ def extractMetadata(videoId):
         threads = []
 
         # Step1) 기본 Metadata 추출 : index, keyword 제외
-        basic = threading.Thread(target=opencvService.extBasicInfo, args=([videoId]))
-        audio = threading.Thread(target=audioService.doAudioService, args=([videoId]))
+        #basic = threading.Thread(target=opencvService.extBasicInfo, args=([videoId]))
+        #audio = threading.Thread(target=audioService.doAudioService, args=([videoId]))
         video = threading.Thread(target=opencvService.doOpencvService, args=([videoId]))
         
-        basic.start()
-        audio.start()
+        #basic.start()
+        #audio.start()
         video.start()
         
-        threads.append(basic)
-        threads.append(audio)
+        #threads.append(basic)
+        #threads.append(audio)
         threads.append(video)
 
         for thread in threads :
@@ -45,8 +45,8 @@ def extractMetadata(videoId):
 
         # Step2) keyword, index 추출
         # 둘다 konlpy 기반의 Service이므로 동시에 못돌림
-        keywordService.doKeywordService(videoId)
-        indexingService.doIndexingService(videoId)
+        #keywordService.doKeywordService(videoId)
+        #indexingService.doIndexingService(videoId)
 
         return True
 
