@@ -162,23 +162,32 @@ def searchFile(request):
 # video(file) upload
 def uploadFile(request):
     if request.method == "POST":
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        print("*******************************************")
-        fileName = request.POST["fileTitle"]
+        existError = {}
+        fileTitle = request.POST["fileTitle"]
         filePresenter = request.POST["presenter"]
-        file = request.FILES.get("uploadFile")
-        print(fileName == "")
-        print(filePresenter == "")
-        print(file == None)
+        uploadedFile = request.POST.get("videoFile", None)
+
+        if (fileTitle == ""):
+            existError['nameError'] = "영상 제목을 입력해주세요."
+        if (filePresenter == ""):
+            existError['presenterError'] = "영상 소유자를 입력해주세요."
+        if (uploadedFile == ""):
+            existError['fileError'] = "영상 파일을 첨부해주세요."
+        else:
+            uploadedFile = request.FILES["videoFile"]
+
+        if len(existError) != 0:
+            return render(request, "Core/test_upload.html", context={"error" : existError}) 
+
         # Fetching the form data
         # Saving the information in the database
-        if request.FILES.get("uploadedFile") :
-            fileTitle = request.POST["fileTitle"]
-            uploadedFile = request.FILES["uploadedFile"]
+        else :
+            print("*******************************************")
+            print("*******************************************")
+            print("*******************************************")
+            print("*******************************************")
+            print("*******************************************")
+            print("*******************************************")
             document = models.Document(
                 title = fileTitle,
                 uploadedFile = uploadedFile
@@ -199,9 +208,10 @@ def uploadFile(request):
             models.Metadata.objects.create(
                 id = models.Videopath.objects.get(id=videoId),
                 title = fileTitle,
+                presenter = filePresenter,
                 uploaddate = document.dateTimeOfUpload
             )
-            
+
             bools = extractMetadata(videoId)
             return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
                         
