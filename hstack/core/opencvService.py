@@ -47,7 +47,7 @@ def extBasicInfo(videoId) :
 
     try :
         models.Metadata.objects.filter(id = videoId).update(
-            videolength = datetime.strptime(calTime.calSec2Time(length), '%H:%M:%S'),
+            videolength = calTime.calSec2Time(length),
             videoframe = str('%d*%d' %(wFrame, hFrame)),
             videosize = str(size),
             videotype = str(type)

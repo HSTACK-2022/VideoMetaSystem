@@ -1,6 +1,15 @@
 @font-face {
     font-family : 'GmarketSans';
-    src : url('../font/GmarketSansTTFMedium.ttf')
+    src : url('../font/GmarketSansTTFMedium.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family : 'GmarketSans';
+    src : url('../font/GmarketSansTTFBold.ttf');
+    font-weight: bold;
+    font-style: normal;
 }
 
 *{
@@ -8,7 +17,7 @@
 }
 
 .bodyArea {
-    background-color: #fbfbfb;
+    background-color: #f6f6f6;
 }
 
 header {

@@ -20,8 +20,9 @@ urlpatterns = [
     path('test/', views.home, name="home"),
     path('test/upload/', views.uploadFile, name="uploadFile"),
     path('test/search/', views.searchFile, name="searchFile"),
+    path('test/success/', views.success, name="success"),
 
-    path('test/minhwa', views.test_minhwa)
+    path('test/minhwa', views.test_minhwa),
 ]
 
 if settings.DEBUG: 
