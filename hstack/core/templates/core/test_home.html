@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <title>HSTACK - Video File Upload</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body id="home_body">
+    <header>
+        <button id="upload" onclick="location.href='/test/upload/'"><img id="uploadBtnImg" src="{% static 'img/upload.png' %}"></button>
+    </header>
+    <table id="home_table">
+        <tr>
+            <td><img id="logo" src="{% static 'img/upload.png' %}"></td>
+        </tr>
+        <tr>
+            <td>
+                <div id="home_search">
+                    <form name="search" action="{% url 'Core:searchFile' %}" method="GET" enctype="multipart/form-data">
+                        <table id="home_search_input_table">
+                            <tr>
+                                <td>
+                                    <input class="searchInput" type="text" name="searchText" placeholder="검색어를 입력하세요!">
+                                </td>
+                                <td style="width:40px;">
+                                    {% csrf_token %}
+                                    <input class="searchInput" type="submit" value="">
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

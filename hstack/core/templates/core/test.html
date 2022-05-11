@@ -1,0 +1,34 @@
+
+
+
+
+
+
+
+<hr>
+keyword = <br>
+{% for keyword in keywords %}
+{{keyword.keyword}} 
+{% endfor %}
+
+<hr>
+
+metadata = <br>
+{% for metadata in metadatas %}
+{{metadata.title}}
+{{metadata.presenter}}
+{{metadata.category}}
+{{metadata.narrative}}
+{{metadata.method}}
+{{metadata.uploaddate}}
+{% endfor %}
+
+<hr>
+
+timestamp = <br>
+{% for timestamp in timestamps %}
+{{timestamp.time}} : 
+{{timestamp.subtitle}}
+<br>
+{% endfor %}
+

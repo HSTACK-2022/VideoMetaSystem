@@ -10,29 +10,32 @@
 </head>
 
 <body>
-
+    
     {% include 'core/navbar.html' %}
 
-    <div class="container my-3">
+    <!--<div class="container my-3">-->
+        <div class="container my-4">
         <div class="row">
-            <div class="col-md-8 col-lg-9" id='main-area'>
+            <div class="col-md-6 col-lg-7" id='main-area'>
                 {% block main_area %}
                 {% endblock %}
             </div>
 
-            <div class="col-md-9 col-lg-10">
+            <div class="col-md-2 col-lg-3">
                 <!-- Search Widget -->
                 <div class="card my-4">
                     <h5 class="card-header">Search</h5>
                     <div class="card-body">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for...">
+                            <input type="text" class="form-control" placeholder="Search for..." id="search-input">
                             <span class="input-group-btn">
-                                <button class="btn btn-secondary" type="button">Go!</button>
+                                <button class="btn btn-secondary" type="button" onclick="searchPost();">Go!</button>
                             </span>
                         </div>
                     </div>
                 </div>
+
+                
 
                 <!-- Categories Widget player메인 화면에서 오른쪽 카테고리 부분 -->
                 <div class="card my-4" id="categories-card">
@@ -55,6 +58,23 @@
             </div>
         </div>
     </div>
+    <script>
+        function searchPost() {
+            let searchValue = document.getElementById('search-input').value.trim();
+            if (searchValue.length > 1) {
+                location.href = "/core/search/" + searchValue + "/";
+            }
+            else {
+                alert('검색어(' + searchValue + ')가 너무 짧습니다.');
+            }
+        };
+
+        document.getElementById('search-input').addEventListener('keyup', function (event) {
+            if (event.key === 'Enter') {
+                searchPost();
+            }
+        });
+    </script>
     {% include 'core/footer.html' %}
 
 
