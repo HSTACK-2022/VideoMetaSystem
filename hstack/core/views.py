@@ -1,4 +1,5 @@
 import os
+import re
 import asyncio
 import threading
 
@@ -22,6 +23,7 @@ from django.views.generic import ListView , DetailView, CreateView, UpdateView
 from urllib import response
 from urllib.parse import urlparse
 
+from core import searchAll
 from core.extractMetadata import extractMetadata
 
 
@@ -149,15 +151,46 @@ def signup(request):
 
 
 # for backend.
-# video(file) upload
-
 def home(request):
     return render(request, "Core/test_home.html") 
 
 # search
 def searchFile(request):
-    if request.method == "POST":
-        print("search complete.")
+    if request.method == "GET":
+        word = request.GET["searchText"]
+        if word == "":
+            return render(request, 'Core/test_search.html',
+                context={
+                    'code': 404,
+                    'searchWord' : ""
+                })
+
+        else :
+            searchWords = []
+            words = re.split(r'[ ,:]', word)
+            for item in words:
+                if item != "": searchWords.append(item)
+
+            videoIdList = {}
+            videoIdList = searchAll.search(searchWords)
+
+            if not videoIdList :
+                return render(request, 'Core/test_search.html',
+                    context={
+                        'code' : 404,
+                        'searchWord' : word
+                    })
+            else :
+                for video in videoIdList:
+                    print("****")
+                    print(video['thumbnail'])
+
+                return render(request, 'Core/test_search.html',
+                    context={
+                        'code' : 200,
+                        'videoIdList' : videoIdList,
+                        'searchWord' : word
+                    })
 
 # video(file) upload
 def uploadFile(request):
@@ -176,18 +209,12 @@ def uploadFile(request):
         else:
             uploadedFile = request.FILES["videoFile"]
 
-        if len(existError) != 0:
+        if existError:
             return render(request, "Core/test_upload.html", context={"error" : existError}) 
 
         # Fetching the form data
         # Saving the information in the database
         else :
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
             document = models.Document(
                 title = fileTitle,
                 uploadedFile = uploadedFile
@@ -212,11 +239,12 @@ def uploadFile(request):
                 uploaddate = document.dateTimeOfUpload
             )
 
+            videoPathForPlay = videoPath = "../media" + videopath.split("media")[1]
+            print(videoPathForPlay)
             bools = extractMetadata(videoId)
-            return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
+            return render(request, "Core/success.html", context={"file" : videopath, "Metadata":bools})
                         
     return render(request, "Core/test_upload.html") 
-
 
 
 def createMetadata(pk, callback):
@@ -253,6 +281,12 @@ def callbacktest(msg):
     print(msg)
     print("**************************************************************")
 
+
+def success(request):
+    videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
+    videoPath = "../media" + videopath.split("media")[1]
+    print(videoPath)
+    return render(request, "Core/success.html", context={"videopath" : videoPath})
 
 def test_minhwa(request):
     return render(

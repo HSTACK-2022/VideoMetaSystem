@@ -1,6 +1,7 @@
 # 2022.04.28
 # search(searchTexts)로 실행 -> list로 메타데이터 가져옴
 
+import os
 from . import models
 
 class Total:
@@ -40,7 +41,11 @@ class Total:
         #timestamp = list(models.Timestamp.objects.filter(id = videoId).all().values())
         self.finalDict['id'] = videoId
         self.finalDict['metadata'] = metadataList 
-        self.finalDict['keyword']=keywordList
+        self.finalDict['keyword'] = keywordList
+
+        filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+        fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
+        self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
         #self.finalDict['filePath']=filePath
         #self.finalDict['timestamp']=timestamp
 

@@ -1,0 +1,78 @@
+.videoListTable {
+    width: 600px;
+    margin: 20px 10px;
+    background-color: #f4f4f4;
+}
+
+.videoTable {
+    width: 450px;
+    margin: 5px 20px;
+}
+
+.VT_thumbnail {
+    height: 150px;
+    margin-left: 20px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.VT_videoTitle {
+    height: 60px;
+    padding-bottom: 10px;
+    font-family: 'GmarketSans';
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.VT_category {
+    width: 90px;
+    height: 30px;
+    font-size: 15px;
+    display: inline-block;
+}
+
+.VT_narrative, .VT_method {
+    width: 150px;
+    height: 30px;
+    font-size: 15px;
+    display: inline-block;
+}
+
+.VT_keywords {
+    height: 30px;
+    margin-right: 30px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.VT_presenter {
+    width: 250px;
+    height: 35px;
+    margin-top: 10px;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.VT_uploadedDate{
+    width: 150px;
+    height: 35px;
+    margin-top: 10px;
+    font-size: 13px;
+    display: inline-block;
+    text-align: right;
+}
+
+#errorTable{
+    width: 600px;
+    height: 150px;
+    margin: 200px auto;
+}
+
+#errorTitle {
+    font-size: 35px;
+}
+
+#errorDetail{
+    font-size: 20px;
+
+}
