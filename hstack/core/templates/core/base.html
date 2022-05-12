@@ -10,10 +10,11 @@
 </head>
 
 <body>
-
+    
     {% include 'core/navbar.html' %}
 
-    <div class="container my-4">
+    <!--<div class="container my-3">-->
+        <div class="container my-4">
         <div class="row">
             <div class="col-md-6 col-lg-7" id='main-area'>
                 {% block main_area %}
@@ -33,6 +34,8 @@
                         </div>
                     </div>
                 </div>
+
+                
 
                 <!-- Categories Widget player메인 화면에서 오른쪽 카테고리 부분 -->
                 <div class="card my-4" id="categories-card">

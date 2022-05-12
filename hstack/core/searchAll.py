@@ -23,7 +23,7 @@ class Total:
                 self.resultVideoIDList.add(ti)
             for p in models.Metadata.objects.filter(presenter__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(p)
-            for to in models.Metadata.objects.filter(category = searchText).values_list('id', flat=True).distinct():
+            for to in models.Metadata.objects.filter(category__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(to)
         #return self.resultVideoIDList
 

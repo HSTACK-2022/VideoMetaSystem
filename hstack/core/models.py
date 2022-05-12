@@ -6,6 +6,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 import os
 
+# Create your models here.
+class Document(models.Model):
+    title = models.CharField(max_length = 200)
+    uploadedFile = models.FileField(upload_to = "Uploaded/Video")
+    dateTimeOfUpload = models.DateTimeField(auto_now = True)
+
+
 # For frontend.
 
 #카테고리

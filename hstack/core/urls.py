@@ -15,7 +15,13 @@ urlpatterns = [
     path('core/<int:pk>/', views.PostDetail.as_view()),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(template_name='core/login.html'), name='login'),
-    path('signup/',views.signup, name="signup")
+    path('signup/',views.signup, name="signup"),
+
+    path('test/', views.home, name="home"),
+    path('test/upload/', views.uploadFile, name="uploadFile"),
+    path('test/search/', views.searchFile, name="searchFile"),
+
+    path('test/minhwa', views.test_minhwa)
 ]
 
 if settings.DEBUG: 

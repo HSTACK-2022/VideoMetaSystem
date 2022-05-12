@@ -1,10 +1,89 @@
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>UPLOAD SUCCESSED</title>
-    </head>
-<body>
-    <video src="./media/{{file.uploadedFile}}" controls autoplay></video>  
-    <div>result : {{Metadata}}</div>
-</body>
-</html>
+{% extends 'core/upload_detail.html' %}
+
+{% block head_title %}
+{{post.title}} - Blog
+{% endblock %}
+
+{% block main_area %}
+
+<div class="col-lg-12">
+    <!-- Post content-->
+    <div id="post-area">
+        <article>
+            <!-- Post header-->
+            <header class="mb-4">
+                <!-- Post title-->
+                <h1 class="fw-bolder mb-1">{{post.title}}</h1>
+                <h5 class="text-muted">{{ post.hook_text }}</h5> <!-- 요약문 -->
+                <!-- Post meta content-->
+                <div class="text-muted fst-italic mb-2">{{post.created_at}} by {{post.author}}</div>
+                <!-- Post categories-->
+                <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
+                <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+                {% if user.is_authenticated and user == post.author %}
+                <a class="btn btn-info btn-sm float-right" href="/core/update_post/{{post.pk}}/" role="button"></i> Edit
+                    post</a>
+                {% endif %}
+            </header>
+            <!-- Preview image figure-->
+            <figure class="mb-4">
+                <video class="img-fluid rounded"
+                    src="../../../media/Uploaded/Video/algo_1.mp4"
+                    alt="{{post.title}} head_video" controls></video>
+            </figure>
+            <!-- Post content-->
+            <section class="mb-5">
+                <p>{{post.content}}</p>
+                <p>
+                    <button id="ts" onclick="">3:00</button>
+                </p>
+            </section>
+        </article>
+    </div>
+    <div id="search-area">
+        <!-- Comments section-->
+        <section class="mb-5">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <!-- search form-->
+                    <div class="input-group">
+                        <input type="text" class="form-control" rows="2" placeholder="Search for..." id="search-input">
+                        <span class="input-group-btn">
+                            <button class="btn btn-secondary" type="button" onclick="searchPost();">Go!</button>
+                        </span>
+                    <div class="d-flex mb-4">
+                        <!-- Parent comment-->
+                        운영체제의 목적에는 처리능력 향상, 사용 가능도 향상, 반환 시간 단축 등이 있다. 이 처리능력, 반환시간, 사용 가능도, 신뢰도는 운영체제의 성능을 평가하는 기준이 됩니다.
+                        처리능력(Throughput): 일정 시간 내에 시스템이 처리하는 일의 양
+                        반환시간(Turn Around Time): 시스템에 작업을 의뢰한 시간부터 처리가 완료될 때까지 걸린 시간      
+                        사용가능도(Availability): 시스템을 사용할 필요가 있을 때 즉시 사용 가능한 정도
+                        신뢰도(Reliabilty): 시스템이 주어진 문제를 정확하게 해결하는 정도
+                    </div>
+                    <script type="text/javascript">
+                        function searchPost() {
+                            var n = 0;
+                            var str = document.getElementById("search-input").value;
+                            if (navigator.userAgent.indexOf("rv:11") > -1) {
+                                var f, contents = document.body.createTextRange();
+                                for (var i = 0; i <= n && (f = contents.findText(str)) != false; i++) {
+                                    contents.moveStart('character');
+                                    contents.moveEnd('textedit');
+                                }
+                                if (f) {
+                                    contents.moveStart('character', -1);
+                                    contents.findText(str);
+                                    contents.select();
+                                    n++;
+                                }
+                            } else {
+                                window.find(str);
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+{% endblock %}
