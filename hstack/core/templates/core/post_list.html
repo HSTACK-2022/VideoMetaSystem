@@ -31,7 +31,7 @@
         <h5 class="text-muted">{{p.hook_text}}</h5>
         {% endif %}
         <p class="card-text">{{p.content | truncatewords:30}}</p>
-        <a href="{{p.get_absolute_url}}" class="btn btn-primary">Read More &rarr;</a>
+        <a href="{{p.get_url}}" class="btn btn-primary">Read More &rarr;</a>
     </div>
     <div class="card-footer text-muted">
         Posted on {{p.created_at}} by

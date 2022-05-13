@@ -3,6 +3,7 @@
 
 import os
 import platform
+from unicodedata import category
 from . import models
 
 # 상수 설정

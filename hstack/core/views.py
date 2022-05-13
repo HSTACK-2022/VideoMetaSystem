@@ -18,6 +18,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.views.generic import ListView , DetailView, CreateView, UpdateView
+from django.db.models import Q
 
 from urllib import response
 from urllib.parse import urlparse
@@ -85,10 +86,12 @@ class PostCreate(CreateView):
         return f'/core/{pk}/'
         #return redirect('core:detail', pk)
 
-class PostUpdate(LoginRequiredMixin, UpdateView):
-
+class PostUpdate(LoginRequiredMixin, UpdateView): #포스트 수정 기능
     model = Post
+
     fields = ['title', 'hook_text', 'content', 'head_image', 'head_video', 'category']
+
+    template_name = 'core/post_update_form.html'
 
     def dispatch(self, request, *args, **kwargs) :
         if request.user.is_authenticated and request.user == self.get_object().author:
