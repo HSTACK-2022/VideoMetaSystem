@@ -2,7 +2,11 @@
 # search(searchTexts)로 실행 -> list로 메타데이터 가져옴
 
 import os
+import platform
 from . import models
+
+# 상수 설정
+OS = platform.system()
 
 class Total:
 
@@ -43,7 +47,11 @@ class Total:
         self.finalDict['metadata'] = metadataList 
         self.finalDict['keyword'] = keywordList
 
-        filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+        if OS == 'Windows':
+            filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+        else :
+            filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+            
         fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
         self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
         #self.finalDict['filePath']=filePath

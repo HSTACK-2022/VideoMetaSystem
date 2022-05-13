@@ -1,7 +1,6 @@
 import os
 import re
-import asyncio
-import threading
+import platform
 
 from asgiref.sync import sync_to_async
 
@@ -26,6 +25,9 @@ from urllib.parse import urlparse
 from core import searchAll
 from core.extractMetadata import extractMetadata
 
+# 상수 설정
+OS = platform.system()
+renderAppName = "Core" if OS == 'Windows' else 'core'
 
 class UserForm(UserCreationForm): # 회원가입 페이지
     class Meta:
@@ -152,14 +154,14 @@ def signup(request):
 
 # for backend.
 def home(request):
-    return render(request, "Core/test_home.html") 
+    return render(request, renderAppName + '/test_home.html') 
 
 # search
 def searchFile(request):
     if request.method == "GET":
         word = request.GET["searchText"]
         if word == "":
-            return render(request, 'Core/test_search.html',
+            return render(request, renderAppName + '/test_search.html',
                 context={
                     'code': 404,
                     'searchWord' : ""
@@ -175,7 +177,7 @@ def searchFile(request):
             videoIdList = searchAll.search(searchWords)
 
             if not videoIdList :
-                return render(request, 'Core/test_search.html',
+                return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 404,
                         'searchWord' : word
@@ -185,7 +187,7 @@ def searchFile(request):
                     print("****")
                     print(video['thumbnail'])
 
-                return render(request, 'Core/test_search.html',
+                return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 200,
                         'videoIdList' : videoIdList,
@@ -210,7 +212,7 @@ def uploadFile(request):
             uploadedFile = request.FILES["videoFile"]
 
         if existError:
-            return render(request, "Core/test_upload.html", context={"error" : existError}) 
+            return render(request, renderAppName + '/test_upload.html', context={"error" : existError}) 
 
         # Fetching the form data
         # Saving the information in the database
@@ -221,9 +223,15 @@ def uploadFile(request):
             )
             document.save()
 
-            dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
-            file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
-            videopath = dir_name + file_name
+            if OS == "Windows" : 
+                dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
+                file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
+                videopath = dir_name + file_name
+
+            else : 
+                dir_name = os.path.dirname(os.path.abspath(__file__)).split("/core")[0]
+                file_name = urlparse(document.uploadedFile.url).path
+                videopath = dir_name + file_name
             
             # DB에 Video 저장
             models.Videopath.objects.create(
@@ -242,9 +250,9 @@ def uploadFile(request):
             videoPathForPlay = videoPath = "../media" + videopath.split("media")[1]
             print(videoPathForPlay)
             bools = extractMetadata(videoId)
-            return render(request, "Core/success.html", context={"file" : videopath, "Metadata":bools})
+            return render(request, renderAppName + '/success.html', context={"file" : videopath, "Metadata":bools})
                         
-    return render(request, "Core/test_upload.html") 
+    return render(request, renderAppName + '/test_upload.html') 
 
 
 def createMetadata(pk, callback):
@@ -286,12 +294,12 @@ def success(request):
     videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
     videoPath = "../media" + videopath.split("media")[1]
     print(videoPath)
-    return render(request, "Core/success.html", context={"videopath" : videoPath})
+    return render(request, renderAppName + '/success.html', context={"videopath" : videoPath})
 
 def test_minhwa(request):
     return render(
         request,
-        'Core/test.html',
+        renderAppName + '/test.html',
         {
             'keywords' : models.Keywords.objects.filter(id = 14).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = 14).all().values(),

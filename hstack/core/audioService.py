@@ -84,6 +84,7 @@ def video2audio(videoId):
         audioName = videoName.split('.')[0] + ".wav"
         videoPath = videoFilePath + videoName 
         audioPath = videoFilePath.split('Video\\')[0] + "Audio\\" + audioName
+        print(audioPath)
     else : 
         videoName = os.path.basename(videoFilePath)
         audioName = videoName.split('.')[0] + ".wav"
@@ -106,7 +107,10 @@ def video2audio(videoId):
 # AudioFile로 남/여를 구분한다.
 def detectSex(videoId):
     audio = getFullAudioFile(videoId)
-    modelPath = os.path.join(os.getcwd(), "tensorflow\\AudioDetect\\test.py")
+    if OS == "Windows" : 
+        modelPath = os.path.join(os.getcwd(), "tensorflow\\AudioDetect\\test.py")
+    else :
+        modelPath = os.path.join(os.getcwd(), "tensorflow/AudioDetect/test.py")
     
     #>python tensorflow\AudioDetect\test.py -f fff.mp3
     result = subprocess.check_output(['python', modelPath, '-f', audio], universal_newlines=True)
