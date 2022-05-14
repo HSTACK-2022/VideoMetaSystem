@@ -3,16 +3,12 @@
 <html>
 
 <head>
-    <title>{% block head_title %}Blog{% endblock %}</title>
-    <link rel="stylesheet" href="{%static 'core/bootstrap/bootstrap.min.css' %}" media="screen" />
-
+    <title></title>
     <script src="https://kit.fontawesome.com/726bbd6862.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    {% include 'core/navbar.html' %}
-
-    <div class="container my-3">
+    <div>
         <div class="row">
             <div class="col-md-7 col-lg-8" id="main-area">
                 {% block main_area %} {% endblock %}

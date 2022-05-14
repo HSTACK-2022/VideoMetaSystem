@@ -257,42 +257,40 @@ def uploadFile(request):
                         
     return render(request, renderAppName + '/test_upload.html') 
 
+# 각 영상의 상세페이지 (/test/detail/pk)
+def detailFile(request, pk):
+    videoPath = models.Videopath.objects.get(id = pk).videoaddr
+    if OS == 'Windows':
+        videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
+    else:
+        videoPath4Play = "../../../media" + videoPath.split("media")[1]
+    
+    textPath = models.Videopath.objects.get(id = pk).textaddr
+    try:
+        with open(textPath, 'r', encoding='UTF-8-sig') as f:
+            scripts = f.readlines()
+    except FileNotFoundError as err:
+        print(err)
+        scripts = []
 
-def createMetadata(pk, callback):
-    print("CREATEMETADATA()")
-    postId = pk
-    postModel = models.Post.objects.get(id = postId)
-    fileTitle = postModel.title
-    uploadedFile = postModel.head_video
-
-    dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
-    file_name = urlparse(uploadedFile.url).path.replace("/", "\\")
-    videopath = dir_name + file_name
-            
-    # DB에 Video 저장
-    models.Videopath.objects.create(
-        title = fileTitle,
-        videoaddr = videopath
+    return render(
+        request,
+        renderAppName + '/test_detail.html',
+        {
+            'videoaddr' : videoPath4Play,
+            'scripts' : scripts,
+            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
+            'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+        }
     )
-    videoId = models.Videopath.objects.get(videoaddr=videopath).id
-
-    models.Metadata.objects.create(
-        id = models.Videopath.objects.get(id=videoId),
-        title = fileTitle,
-        uploaddate = postModel.created_at
-    )
-  
-    bools = extractMetadata(videoId)
-    callback(bools)
-    return bools
 
 
-def callbacktest(msg):
-    print("**************************************************************")
-    print(msg)
-    print("**************************************************************")
 
 
+
+
+# for test.
 def success(request):
     videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
     videoPath = "../media" + videopath.split("media")[1]

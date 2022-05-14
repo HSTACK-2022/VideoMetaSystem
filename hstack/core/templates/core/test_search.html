@@ -12,9 +12,9 @@
         {% for meta in videoIdList %}
         <!-- video id:{{ii.id_id}} <br> -->
             {% for ii in meta.metadata %}
-            <table class="videoListTable">
+            <table class="videoListTable" onClick="location.href='/test/detail/{{ii.id_id}}'">
                 <tr>
-                    <td>
+                    <td style="width: 360px;">
                         <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
                     </td>
                     <td>
@@ -26,11 +26,11 @@
                                 <div class="VT_method">{{ii.method}}</div>
                             </td></tr>
                             <tr><td>
-                                <div class="VT_keywords">#{{meta.keyword.0}}</div>
-                                <div class="VT_keywords">#{{meta.keyword.1}}</div>
-                                <div class="VT_keywords">#{{meta.keyword.2}}</div>
-                                <div class="VT_keywords">#{{meta.keyword.3}}</div>
-                                <div class="VT_keywords">#{{meta.keyword.4}}</div>
+                                {% for key in meta.keyword %}
+                                    {% if key != "" and forloop.counter < 6 %}
+                                        <div class="VT_keywords">#{{key}}</div>
+                                    {% endif %}
+                                {% endfor %}
                             </td></tr>
                             <tr><td>
                                 <div class="VT_presenter">
