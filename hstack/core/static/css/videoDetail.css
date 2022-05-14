@@ -1,0 +1,147 @@
+.divParent {
+    width: 99%;
+    height: 100%;
+    padding: 20px;
+}
+
+.detailHeader {
+    width: 55%;
+    min-width: 500px;
+    padding-right: 20px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.detailMetadata {
+    width: 40%;
+    min-width: 500px;
+    vertical-align: top;
+    display: inline-block;
+}
+
+.videoPlayer {
+    width: 100%;
+}
+
+.videoTitle {
+    font-weight: bold;
+    font-size: 50px;
+    margin: 10px 0px;
+}
+
+.videoUploadDate {
+    display: inline-block;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.videoPresenter {
+    display: inline-block;
+    margin-left: 16px;
+    margin-bottom: 30px;
+}
+
+.metadataTable {
+    width: 100%;
+}
+
+.metadataTR {
+    width: 100%;
+    height: 35px;
+    margin: 1px 0px;
+    background-color: #dddddd;
+}
+
+.metadataTitle {
+    font-size: 18px;
+    width: 45%;
+    margin: 10px;
+    display: inline-block;
+}
+
+.metadataContent {
+    width: 46%;
+    font-size: 18px;
+    text-align: right;
+    display: inline-block;
+}
+
+.metadataDetailTR {
+    background-color: #f1f1f1;
+}
+
+.emptyTR {
+    height: 10px;
+}
+
+.keywordsBtn {
+    height: 25px;
+    margin: 2px 5px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 20px;
+    border: 1px solid #888888;
+    background-color: #f9f9f9;
+}
+
+.indexTime {
+    width: 70px;
+    height: 100%;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-right: 5px;
+    border: none;
+    color: #007bff;
+    vertical-align: top;
+    display: inline-block;
+    background-color: transparent;
+
+}
+
+.indexTime:hover{
+    color: #5856d6;
+    cursor: pointer;
+}
+
+.indexTitle {
+    width: auto;
+    min-width: 300px;
+    font-size: 14px;
+    margin: 5px 0px;
+    display: inline-block;
+}
+
+/* for detail */
+
+.innerSearch{
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid gray;
+    background-color: transparent;
+    margin-bottom: 20px;
+}
+
+#searchContent {
+    width: 85%;
+    height: 30px;
+    margin-left: 20px;
+    background-color: transparent;
+    border: none;
+}
+
+#searchContent:focus {
+    outline: none;
+}
+
+.searchBtn {
+    width: 30px;
+    margin: 5px;
+    float: right;
+    background-color:transparent;
+    background-image: url('../img/search.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}

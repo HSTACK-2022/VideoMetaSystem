@@ -1,23 +1,31 @@
 .videoListTable {
-    width: 600px;
+    width: 95%;
     margin: 20px 10px;
-    background-color: #f4f4f4;
+    border-radius: 20px;
+    background-color: #eeeeee;
 }
 
+.videoListTable:hover {
+    background-color: #dedede;
+    cursor: pointer;
+}
+
+
 .videoTable {
-    width: 450px;
-    margin: 5px 20px;
+    width: 100%;
+    min-width: 450px;
+    margin: 5px 0px;
+    padding: 10px 0px;
 }
 
 .VT_thumbnail {
-    height: 150px;
+    height: 180px;
     margin-left: 20px;
-    margin-right: 10px;
     display: inline-block;
 }
 
 .VT_videoTitle {
-    height: 60px;
+    height: 100%;
     padding-bottom: 10px;
     font-family: 'GmarketSans';
     font-weight: bold;
@@ -46,7 +54,8 @@
 }
 
 .VT_presenter {
-    width: 250px;
+    width: 50%;
+    min-width: 250px;
     height: 35px;
     margin-top: 10px;
     font-size: 13px;
@@ -54,7 +63,8 @@
 }
 
 .VT_uploadedDate{
-    width: 150px;
+    width: 40%;
+    min-width: 150px;
     height: 35px;
     margin-top: 10px;
     font-size: 13px;
@@ -62,6 +72,8 @@
     text-align: right;
 }
 
+
+/* for errMsg : notFound(404) */
 #errorTable{
     width: 600px;
     height: 150px;
