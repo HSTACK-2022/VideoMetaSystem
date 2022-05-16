@@ -23,7 +23,11 @@ import cv2
 import pytesseract
 import os
 import numpy
+import platform
 import subprocess
+
+# 상수 설정
+OS = platform.system()
 
 keyword_list = []
 checkIndexDup = []
@@ -40,7 +44,8 @@ def sceneText(videoId):
     # for encoding langs
     #sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8') 
     #sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
-    pytesseract.pytesseract.tesseract_cmd = "E:/tools/Tesseract/tesseract.exe"
+    if OS == 'Windows':
+        pytesseract.pytesseract.tesseract_cmd = "E:/tools/Tesseract/tesseract.exe" #경로지정 필요
     config = ('-l eng+kor --oem 3 --psm 4')
     video_info = dict()
 
@@ -188,7 +193,10 @@ def sceneSeperate(videoId):
     videopath = models.Videopath.objects.get(id=videoId)
     imagepath = videopath.imageaddr
 
-    modelPath = os.path.join(os.getcwd(), "tensorflow\\ImageSeperate\\test.py")
+    if OS == "Windows" : 
+        modelPath = os.path.join(os.getcwd(), "tensorflow\\ImageSeperate\\test.py")
+    else :
+        modelPath = os.path.join(os.getcwd(), "tensorflow/ImageSeperate/test.py")
     
     #>python tensorflow\ImageSeperate\test.py -f dirname
     result = subprocess.Popen(['python', modelPath, '-f', imagepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)

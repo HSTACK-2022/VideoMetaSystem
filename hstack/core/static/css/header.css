@@ -1,6 +1,15 @@
 @font-face {
     font-family : 'GmarketSans';
-    src : url('../font/GmarketSansTTFMedium.ttf')
+    src : url('../font/GmarketSansTTFMedium.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family : 'GmarketSans';
+    src : url('../font/GmarketSansTTFBold.ttf');
+    font-weight: bold;
+    font-style: normal;
 }
 
 *{
@@ -8,7 +17,7 @@
 }
 
 .bodyArea {
-    background-color: #fbfbfb;
+    background-color: #f6f6f6;
 }
 
 header {
@@ -30,7 +39,7 @@ header {
 }
 
 #header_upload{
-    width:100px;
+    width:10px;
     align-self: center;
     text-align: right;
 }
@@ -66,6 +75,7 @@ header {
 
 #logo {
     height: 30px;
+    margin-right: 20px;
 }
 
 #uploadBtnImg{

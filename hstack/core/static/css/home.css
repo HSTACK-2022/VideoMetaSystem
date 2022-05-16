@@ -1,12 +1,20 @@
 @font-face {
     font-family : 'GmarketSans';
-    src : url('../font/GmarketSansTTFMedium.ttf')
+    src : url('../font/GmarketSansTTFMedium.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family : 'GmarketSans';
+    src : url('../font/GmarketSansTTFBold.ttf');
+    font-weight: bold;
+    font-style: normal;
 }
 
 *{
     font-family: 'GmarketSans';
 }
-
 
 #home_body {
     width: 100%;
@@ -14,6 +22,7 @@
     padding: 20px;
     display: grid;
     place-content: center;
+    background-color: #ffffff;
 }
 
 #home_table {
@@ -66,8 +75,7 @@
 }
 
 #logo{
-    height: 100px;
-    margin: 50px 0px;
+    height: 80px;
 }
 
 #uploadBtnImg{

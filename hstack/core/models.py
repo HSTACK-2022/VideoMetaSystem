@@ -151,26 +151,26 @@ class AuthPermission(models.Model):
         unique_together = (('content_type', 'codename'),)
 
 
-class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField(blank=True, null=True)
-    is_superuser = models.IntegerField()
-    username = models.CharField(unique=True, max_length=150)
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
-    email = models.CharField(max_length=254)
-    is_staff = models.IntegerField()
-    is_active = models.IntegerField()
-    date_joined = models.DateTimeField()
+# class AuthUser(models.Model):
+#     password = models.CharField(max_length=128)
+#     last_login = models.DateTimeField(blank=True, null=True)
+#     is_superuser = models.IntegerField()
+#     username = models.CharField(unique=True, max_length=150)
+#     first_name = models.CharField(max_length=150)
+#     last_name = models.CharField(max_length=150)
+#     email = models.CharField(max_length=254)
+#     is_staff = models.IntegerField()
+#     is_active = models.IntegerField()
+#     date_joined = models.DateTimeField()
 
-    class Meta:
-        managed = False
-        db_table = 'auth_user'
+#     class Meta:
+#         managed = False
+#         db_table = 'auth_user'
 
 
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING)
     group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
 
     class Meta:
@@ -181,7 +181,7 @@ class AuthUserGroups(models.Model):
 
 class AuthUserUserPermissions(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING)
     permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
 
     class Meta:
@@ -197,7 +197,7 @@ class DjangoAdminLog(models.Model):
     action_flag = models.PositiveSmallIntegerField()
     change_message = models.TextField()
     content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    user = models.ForeignKey(User, models.DO_NOTHING)
 
     class Meta:
         managed = False
@@ -233,3 +233,51 @@ class DjangoSession(models.Model):
     class Meta:
         managed = False
         db_table = 'django_session'
+
+
+# For frontend.
+
+
+
+#카테고리
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True) #unique 트루는 카테고리 중복 안되게
+    slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return f'/core/category/{self.slug}/'
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+
+#for Frontend
+
+#포스트
+class Post(models.Model):
+    title = models.CharField(max_length=30)
+    hook_text = models.CharField(max_length=100, blank=True) #요약문
+    content = models.TextField()
+
+    head_image = models.ImageField(upload_to = "Uploaded Files/", blank=True, null=True)
+    head_video = models.FileField(upload_to = "Uploaded/Video", blank=True, null=True)
+    
+    #file_upload = models.FileField(upload_to= 'player/files/%Y/%m/%d/', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True) #작성시간 = 현재시간 고정
+    update_at = models.DateTimeField(auto_now=True) #얘로 업데이트 시간 ㅇㅇ
+
+    #author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # 작성자가 삭제되면 해당 게시물은 null
+    author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL) # 작성자가 삭제되면 해당 게시물은 null
+
+    category = models.ForeignKey(Category, null = True, blank=True, on_delete=models.SET_NULL) # 카테고리 지정 안하면 미분류
+
+    def __str__(self):
+        return f'[{self.pk}]{self.title}'
+
+    def get_absolute_url(self):
+        return f'/'
+    
+    def get_url(self):
+        return f'/core/{self.pk}/'

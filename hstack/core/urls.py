@@ -12,7 +12,7 @@ urlpatterns = [
     path('core/create_post/', views.PostCreate.as_view()),
     path('core/category/<str:slug>/', views.category_page),
     path('', views.PostList.as_view()),
-    path('core/<int:pk>/', views.PostDetail.as_view(), name="detail"),
+    path('core/<int:pk>/', views.PostDetail.as_view()),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(template_name='core/login.html'), name='login'),
     path('signup/',views.signup, name="signup"),
@@ -20,10 +20,11 @@ urlpatterns = [
     path('test/', views.home, name="home"),
     path('test/upload/', views.uploadFile, name="uploadFile"),
     path('test/search/', views.searchFile, name="searchFile"),
+    path('test/detail/<int:pk>', views.detailFile, name="detailFile"),
+
+    path('test/success/', views.success, name="success"),
 
     path('test/minhwa', views.test_minhwa),
-    path('test/minhwa2', views.test_minhwa2, name='category'),
-    #path('test/minhwa2/category/<str:category>/', views.test_minhwa2, name="category2"),
 ]
 
 if settings.DEBUG: 

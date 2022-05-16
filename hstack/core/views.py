@@ -1,6 +1,6 @@
 import os
-import asyncio
-import threading
+import re
+import platform
 
 from asgiref.sync import sync_to_async
 #from hstack.core.searchAll import search
@@ -20,12 +20,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.views.generic import ListView , DetailView, CreateView, UpdateView
+from django.db.models import Q
 
 from urllib import response
 from urllib.parse import urlparse
 
+from core import searchAll
 from core.extractMetadata import extractMetadata
 
+# 상수 설정
+OS = platform.system()
+renderAppName = "Core" if OS == 'Windows' else 'core'
 
 class UserForm(UserCreationForm): # 회원가입 페이지
     class Meta:
@@ -83,10 +88,12 @@ class PostCreate(CreateView):
         return f'/core/{pk}/'
         #return redirect('core:detail', pk)
 
-class PostUpdate(LoginRequiredMixin, UpdateView):
-
+class PostUpdate(LoginRequiredMixin, UpdateView): #포스트 수정 기능
     model = Post
+
     fields = ['title', 'hook_text', 'content', 'head_image', 'head_video', 'category']
+
+    template_name = 'core/post_update_form.html'
 
     def dispatch(self, request, *args, **kwargs) :
         if request.user.is_authenticated and request.user == self.get_object().author:
@@ -151,15 +158,46 @@ def signup(request):
 
 
 # for backend.
-# video(file) upload
-
 def home(request):
-    return render(request, "Core/test_home.html") 
+    return render(request, renderAppName + '/test_home.html') 
 
 # search
 def searchFile(request):
-    if request.method == "POST":
-        print("search complete.")
+    if request.method == "GET":
+        word = request.GET["searchText"]
+        if word == "":
+            return render(request, renderAppName + '/test_search.html',
+                context={
+                    'code': 404,
+                    'searchWord' : ""
+                })
+
+        else :
+            searchWords = []
+            words = re.split(r'[ ,:]', word)
+            for item in words:
+                if item != "": searchWords.append(item)
+
+            videoIdList = {}
+            videoIdList = searchAll.search(searchWords)
+
+            if not videoIdList :
+                return render(request, renderAppName + '/test_search.html',
+                    context={
+                        'code' : 404,
+                        'searchWord' : word
+                    })
+            else :
+                for video in videoIdList:
+                    print("****")
+                    print(video['thumbnail'])
+
+                return render(request, renderAppName + '/test_search.html',
+                    context={
+                        'code' : 200,
+                        'videoIdList' : videoIdList,
+                        'searchWord' : word
+                    })
 
 # video(file) upload
 def uploadFile(request):
@@ -178,27 +216,27 @@ def uploadFile(request):
         else:
             uploadedFile = request.FILES["videoFile"]
 
-        if len(existError) != 0:
-            return render(request, "Core/test_upload.html", context={"error" : existError}) 
+        if existError:
+            return render(request, renderAppName + '/test_upload.html', context={"error" : existError}) 
 
         # Fetching the form data
         # Saving the information in the database
         else :
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
-            print("*******************************************")
             document = models.Document(
                 title = fileTitle,
                 uploadedFile = uploadedFile
             )
             document.save()
 
-            dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
-            file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
-            videopath = dir_name + file_name
+            if OS == "Windows" : 
+                dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
+                file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
+                videopath = dir_name + file_name
+
+            else : 
+                dir_name = os.path.dirname(os.path.abspath(__file__)).split("/core")[0]
+                file_name = urlparse(document.uploadedFile.url).path
+                videopath = dir_name + file_name
             
             # DB에 Video 저장
             models.Videopath.objects.create(
@@ -214,52 +252,57 @@ def uploadFile(request):
                 uploaddate = document.dateTimeOfUpload
             )
 
+            videoPathForPlay = videoPath = "../media" + videopath.split("media")[1]
+            print(videoPathForPlay)
             bools = extractMetadata(videoId)
-            return render(request, "Core/success.html", context={"file" : document, "Metadata":bools})
+            return render(request, renderAppName + '/success.html', context={"file" : videopath, "Metadata":bools})
                         
-    return render(request, "Core/test_upload.html") 
+    return render(request, renderAppName + '/test_upload.html') 
 
+# 각 영상의 상세페이지 (/test/detail/pk)
+def detailFile(request, pk):
+    videoPath = models.Videopath.objects.get(id = pk).videoaddr
+    if OS == 'Windows':
+        videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
+    else:
+        videoPath4Play = "../../../media" + videoPath.split("media")[1]
+    
+    textPath = models.Videopath.objects.get(id = pk).textaddr
+    try:
+        with open(textPath, 'r', encoding='UTF-8-sig') as f:
+            scripts = f.readlines()
+    except FileNotFoundError as err:
+        print(err)
+        scripts = []
 
-
-def createMetadata(pk, callback):
-    print("CREATEMETADATA()")
-    postId = pk
-    postModel = models.Post.objects.get(id = postId)
-    fileTitle = postModel.title
-    uploadedFile = postModel.head_video
-
-    dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
-    file_name = urlparse(uploadedFile.url).path.replace("/", "\\")
-    videopath = dir_name + file_name
-            
-    # DB에 Video 저장
-    models.Videopath.objects.create(
-        title = fileTitle,
-        videoaddr = videopath
+    return render(
+        request,
+        renderAppName + '/test_detail.html',
+        {
+            'videoaddr' : videoPath4Play,
+            'scripts' : scripts,
+            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
+            'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+        }
     )
-    videoId = models.Videopath.objects.get(videoaddr=videopath).id
-
-    models.Metadata.objects.create(
-        id = models.Videopath.objects.get(id=videoId),
-        title = fileTitle,
-        uploaddate = postModel.created_at
-    )
-  
-    bools = extractMetadata(videoId)
-    callback(bools)
-    return bools
 
 
-def callbacktest(msg):
-    print("**************************************************************")
-    print(msg)
-    print("**************************************************************")
 
+
+
+
+# for test.
+def success(request):
+    videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
+    videoPath = "../media" + videopath.split("media")[1]
+    print(videoPath)
+    return render(request, renderAppName + '/success.html', context={"videopath" : videoPath})
 
 def test_minhwa(request):
     return render(
         request,
-        'Core/test.html',
+        renderAppName + '/test.html',
         {
             'keywords' : models.Keywords.objects.filter(id = 14).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = 14).all().values(),

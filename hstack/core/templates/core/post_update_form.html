@@ -1,0 +1,22 @@
+{% extends 'core/base_full_width.html' %}
+{% load crispy_forms_tags %}
+{% block head_title %}
+Edit Post - Meta Player
+{% endblock %}
+
+{% block main_area %}
+<h1>Edit Post</h1>
+<hr />
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <table>
+        <!-- <tr>
+            <th><label for="loginid">ID</label></th>
+            <th><input type="text" name="id_str" id="loginid" placeholder="id"></th></tr>
+            <tr>
+            <th><label for="loginpw">PASSWORD</label></th>
+            <th><input type="password" name="pw_str" id="loginpw" placeholder="password"></th></tr> -->
+        {{form | crispy}}
+    </table>
+    <button type="submit" class="btn btn-primary float-right">Submit</button>
+</form>
+{% endblock %}
