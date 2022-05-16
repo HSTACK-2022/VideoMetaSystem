@@ -5,11 +5,54 @@
         <title>VIFO - SEARCH {{searchWord}}</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoList.css' %}">
+
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script>
+            function searchDetail(search_type,search_detail_type){
+                document.getElementById("search_detail_type").value = search_detail_type;
+                document.getElementById("search_type").value = search_type;
+                document.getElementById("form").submit();
+            }
+            
+            function Change(){
+                //alert( $("#selectd_category option:selected").val());
+                selected = $("#selectd_category option:selected").val();
+                if(selected == "choose category")
+                    return;
+                else
+                    searchDetail("category",selected);
+            }
+        </script>
 </head>
 <body class="bodyArea">
+    
+    videoIdList = {% for id in videoIdList %}{{id}} {%endfor%} <br>
+    <form action="{% url 'Core:detailSearch'%}" method="POST" id="form">
+        {% csrf_token %}
+        <input type="hidden" name="videoIdList" value="{{videoIdList}}">
+        <input type="hidden" name="search_type" id="search_type">
+        <input type="hidden" name="search_detail_type" id="search_detail_type">
+
+        <select id=selectd_category onchange="Change()" >
+            <option selected>choose category</option>
+            <option>IT</option>
+            <option>식물</option>
+            <option>지리</option>
+            <option>경제</option>
+        </select>
+        <br>
+        <input type="button" value="IT" onclick="searchDetail('category','IT')">
+        <input type="button" value="식물" onclick="searchDetail('category','식물')">
+        <input type="button" value="지리" onclick="searchDetail('category','지리')">
+        <br>
+
+        <input type="button" id="method_t" value="실습" onclick="searchDetail('method','실습')">
+        <input type="button" id="method_p" value="이론" onclick="searchDetail('method','이론')">
+    </form>
+
     {% include 'core/test_header.html' %}
     {% if code == 200 %}
-        {% for meta in videoIdList %}
+        {% for meta in videoMetaList %}
         <!-- video id:{{ii.id_id}} <br> -->
             {% for ii in meta.metadata %}
             <table class="videoListTable" onClick="location.href='/test/detail/{{ii.id_id}}'">
