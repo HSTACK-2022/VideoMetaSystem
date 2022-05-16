@@ -292,7 +292,7 @@ def detailFile(request, pk):
 
 # for test.
 def success(request):
-    videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
+    videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4" #?
     videoPath = "../media" + videopath.split("media")[1]
     print(videoPath)
     return render(request, renderAppName + '/success.html', context={"videopath" : videoPath})
