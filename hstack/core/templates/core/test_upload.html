@@ -13,16 +13,36 @@
     <form action="{% url 'Core:uploadFile' %}" method="POST" enctype="multipart/form-data">
         <table id="uploadFileTable">
             <tr>
-                <td class="uploadFileTableTD"> <div class="tags">Title : </div> </td> 
-                <td class="uploadFileTableTD"> <input type="text" name="fileTitle" class="inputText" placeholder="Enter a title"> </td> 
+                <td> <div class="tags">Title : </div> </td> 
+                <td class="uploadFileTableTD">
+                    <input type="text" name="fileTitle" class="inputText" placeholder="Enter a title">
+                </td> 
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div class="errorMsg">{{error.nameError}}</div>
+                </td>
             </tr>
             <tr>
                 <td class="uploadFileTableTD"> <div class="tags">Presenter : </div> </td> 
-                <td class="uploadFileTableTD"> <input type="text" name="presenter" class="inputText" placeholder="HSTACK"> </td> 
+                <td class="uploadFileTableTD">
+                    <input type="text" name="presenter" class="inputText" placeholder="HSTACK">
+                </td> 
+            </tr>
+            <tr>
+                <td></td>
+                <td><div class="errorMsg">{{error.presenterError}}</div></td>
             </tr>
             <tr>
                 <td class="uploadFileTableTD"> <div class="tags">Video File : </div> </td> 
-                <td class="uploadFileTableTD"> <input type="file" name="uploadedFile"> </td> 
+                <td class="uploadFileTableTD">
+                    <input type="file" name="videoFile">
+                </td> 
+            </tr>
+            <tr>
+                <td></td>
+                <td><div class="errorMsg">{{error.fileError}}</div></td>
             </tr>
             <tr>
                 <td class="uploadFileTableTD"></td>

@@ -21,7 +21,9 @@ urlpatterns = [
     path('test/upload/', views.uploadFile, name="uploadFile"),
     path('test/search/', views.searchFile, name="searchFile"),
 
-    path('test/minhwa', views.test_minhwa)
+    path('test/minhwa', views.test_minhwa),
+    path('test/minhwa2', views.test_minhwa2, name='category'),
+    #path('test/minhwa2/category/<str:category>/', views.test_minhwa2, name="category2"),
 ]
 
 if settings.DEBUG: 

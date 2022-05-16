@@ -60,6 +60,9 @@ class Post(models.Model):
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 
+
+
+
 class Videopath(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=50)
@@ -99,7 +102,7 @@ class Metadata(models.Model):
     id = models.ForeignKey(Videopath, db_column='id', primary_key=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     presenter = models.CharField(max_length=50, blank=True, null=True)
-    category = models.CharField(max_length=20, blank=True, null=True)
+    category = models.CharField(db_column='category',max_length=20, blank=True, null=True)
     narrative = models.CharField(max_length=30, blank=True, null=True)
     method = models.CharField(max_length=10, blank=True, null=True)   
     videolength = models.TimeField(db_column='videoLength', blank=True, null=True)  # Field name made lowercase.
@@ -109,6 +112,9 @@ class Metadata(models.Model):
     uploaddate = models.DateField(db_column='uploadDate', blank=True, null=True)  # Field name made lowercase.
     voicemanrate = models.FloatField(db_column='voiceManRate', blank=True, null=True)  # Field name made lowercase.
     voicewomanrate = models.FloatField(db_column='voiceWomanRate', blank=True, null=True)  # Field name made lowercase.
+    
+    def get_absolute_url(self):
+        return f'/test/category/{self.category}/'
 
     class Meta:
         managed = False
