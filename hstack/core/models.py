@@ -63,10 +63,10 @@ class Post(models.Model):
 class Videopath(models.Model):
     id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=50)
-    videoaddr = models.CharField(db_column='videoAddr', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    audioaddr = models.CharField(db_column='audioAddr', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    textaddr = models.CharField(db_column='textAddr', max_length=100, blank=True, null=True)  # Field name made lowercase. 
-    imageaddr = models.CharField(db_column='imageAddr', max_length=100, blank=True, null=True)  # Field name made lowercase. 
+    videoaddr = models.CharField(db_column='videoAddr', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    audioaddr = models.CharField(db_column='audioAddr', max_length=200, blank=True, null=True)  # Field name made lowercase.
+    textaddr = models.CharField(db_column='textAddr', max_length=200, blank=True, null=True)  # Field name made lowercase. 
+    imageaddr = models.CharField(db_column='imageAddr', max_length=200, blank=True, null=True)  # Field name made lowercase. 
 
     class Meta:
         managed = False
