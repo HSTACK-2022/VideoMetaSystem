@@ -94,7 +94,6 @@ class Total:
         
 
         return finalDict
-        
 
 #searchTexts = ["황기", "메모리"]   
 def search(searchTexts):
@@ -109,12 +108,7 @@ def search(searchTexts):
         searchResultMeta.append(a.finalDict)
 
     print(searchResultMeta)
-
-    videoIdList = list(a.resultVideoIDList)
-    categoryList = extractCategories(videoIdList)
-
-    return (videoIdList, searchResultMeta, categoryList)
-
+    return (list(a.resultVideoIDList), searchResultMeta)
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
 def detailSearch(videoIdList, search_type, search_detail_type):
@@ -126,6 +120,7 @@ def detailSearch(videoIdList, search_type, search_detail_type):
             searchResultMeta.append(res)
             newVideoIdList.append(i)
     #print(searchResultMeta)
+<<<<<<< HEAD
     return (newVideoIdList, searchResultMeta)
 
 
@@ -138,3 +133,6 @@ def extractCategories(videoIdList):
         categoryList.add(category)
 
     return categoryList
+=======
+    return (newVideoIdList, searchResultMeta)
+>>>>>>> 153bc3ceb82d29a2eb4b73df9ac258e9a385de28

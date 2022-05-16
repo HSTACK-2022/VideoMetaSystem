@@ -54,23 +54,25 @@ def searchFile(request):
 
             videoMetaList = {}
             videoIdList = {}
-            categoryList = {}
-            videoIdList, videoMetaList, categoryList = searchAll.search(searchWords)
+            videoIdList, videoMetaList = searchAll.search(searchWords)
 
-            if not videoIdList :
+            if not videoMetaList :
                 return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 404,
                         'searchWord' : word
                     })
             else :
+                for video in videoMetaList:
+                    print("****")
+                    print(video['thumbnail'])
+
                 return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 200,
-                        'categoryList' : categoryList,
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
-                        'searchWord' : word
+                        'searchWord' : word,
                     })
 
 # video(file) upload
@@ -184,6 +186,25 @@ def test_minhwa(request):
         }
     )
 
+<<<<<<< HEAD
+=======
+from core import searchAll
+def test_minhwa2(request):
+    videoMetaList = searchAll.searchTest()
+    videoIdList = searchAll.searchTest2()
+    # for id in videoIdList:
+    #     res = {}
+    #     res[]
+    print(videoIdList)
+    return render(
+        request,
+        'Core/test2.html',
+        {
+            'videoMetaList' : videoMetaList,
+            'videoIdList' : videoIdList,
+        }
+    )
+>>>>>>> 153bc3ceb82d29a2eb4b73df9ac258e9a385de28
 def test_minhwa3(request):
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category
