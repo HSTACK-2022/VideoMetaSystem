@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+        <title>VIFO - SEARCH {{searchWord}}</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'css/videoList.css' %}">
+</head>
+<body class="bodyArea">
+    {% include 'core/test_header.html' %}
+    {% if code == 200 %}
+        {% for meta in videoIdList %}
+        <!-- video id:{{ii.id_id}} <br> -->
+            {% for ii in meta.metadata %}
+            <table class="videoListTable" onClick="location.href='/test/detail/{{ii.id_id}}'">
+                <tr>
+                    <td style="width: 360px;">
+                        <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
+                    </td>
+                    <td>
+                        <table class="videoTable">
+                            <tr><td class="VT_videoTitle">{{ii.title}}</td></tr>
+                            <tr><td>
+                                <div class="VT_category">{{ii.category}}</div>
+                                <div class="VT_narrative">{{ii.narrative}}</div>
+                                <div class="VT_method">{{ii.method}}</div>
+                            </td></tr>
+                            <tr><td>
+                                {% for key in meta.keyword %}
+                                    {% if key != "" and forloop.counter < 6 %}
+                                        <div class="VT_keywords">#{{key}}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </td></tr>
+                            <tr><td>
+                                <div class="VT_presenter">
+                                    <image src="{% static 'img/user.png' %}" style="height: 17px; align-items: center;"></image>
+                                    {{ii.presenter}}
+                                </div>
+                                <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
+                            </td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+    <table id="errorTable">
+        <tr><td>
+            <span id="errorTitle">
+                <span style="font-weight:bold; font-size:40px;">{{searchWord}}</span> 에 대한 검색결과가 없습니다.
+            </span>
+        </td></tr>
+        <tr><td>
+            <div class="errorDetail">
+                모든 단어의 맞춤법이 정확한지 확인하거나 다른 검색어로 다시 검색을 시도해주세요.<br>
+            </div>
+        </td></tr>
+    </table>
+    {% endif %}
+</body>
+</html>

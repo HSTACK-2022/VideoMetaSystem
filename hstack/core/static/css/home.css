@@ -1,0 +1,92 @@
+@font-face {
+    font-family : 'GmarketSans';
+    src : url('../font/GmarketSansTTFMedium.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family : 'GmarketSans';
+    src : url('../font/GmarketSansTTFBold.ttf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+*{
+    font-family: 'GmarketSans';
+}
+
+#home_body {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: grid;
+    place-content: center;
+    background-color: #ffffff;
+}
+
+#home_table {
+    width: 800px;
+    height: 100px;
+    margin: 0 auto;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+}
+
+#home_search{
+    height:50px;
+    width:100%;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 30px;
+    align-items: center;
+}
+
+
+#home_search_input_table{
+    width: 100%;
+}
+
+.searchInput:focus {
+    outline: none;
+}
+
+.searchInput[type=text] {
+    width:100%;
+    height:45x;
+    margin-left:20px;
+    background-color:transparent;
+    border: none;
+}
+
+.searchInput[type=submit] {
+    height: auto;
+    margin: auto;
+    text-align: right;
+    background-color:transparent;
+    background-image: url('../img/search.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-y:7px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+
+#logo{
+    height: 80px;
+}
+
+#uploadBtnImg{
+    height: 30px;
+}
+
+#upload {
+    background-color:transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 100px;
+}

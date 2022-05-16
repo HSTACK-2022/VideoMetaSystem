@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core'
+    'core',
+
+    #외부 library
+    'crispy_forms',
+
+    #add myapp
+    #'main_pages',
 ]
 
 MIDDLEWARE = [
@@ -126,13 +132,14 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False   #서울 시간 맞추려고 FALSE로 바꿈
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIR = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -142,3 +149,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Media file upload
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# 로그인 후 이동하는 페이지
+LOGIN_REDIRECT_URL = '/'
+
+# 로그아웃 후 이동하는 페이지
+LOGOUT_REDIRECT_URL = '/'

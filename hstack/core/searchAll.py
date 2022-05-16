@@ -1,7 +1,13 @@
 # 2022.04.28
 # search(searchTexts)로 실행 -> list로 메타데이터 가져옴
 
+import os
+import platform
+from unicodedata import category
 from . import models
+
+# 상수 설정
+OS = platform.system()
 
 class Total:
 
@@ -22,10 +28,9 @@ class Total:
                 self.resultVideoIDList.add(ti)
             for p in models.Metadata.objects.filter(presenter__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(p)
-            for to in models.Metadata.objects.filter(topic__contains = searchText).values_list('id', flat=True).distinct():
+            for to in models.Metadata.objects.filter(category__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(to)
         #return self.resultVideoIDList
-
 
     def getVideoMetadataFromID(self, videoId):
         # 아래는 단어찾은 비디오 id로 메타데이터 얻는 법
@@ -41,7 +46,15 @@ class Total:
         #timestamp = list(models.Timestamp.objects.filter(id = videoId).all().values())
         self.finalDict['id'] = videoId
         self.finalDict['metadata'] = metadataList 
-        self.finalDict['keyword']=keywordList
+        self.finalDict['keyword'] = keywordList
+
+        if OS == 'Windows':
+            filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+        else :
+            filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+            
+        fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
+        self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
         #self.finalDict['filePath']=filePath
         #self.finalDict['timestamp']=timestamp
 

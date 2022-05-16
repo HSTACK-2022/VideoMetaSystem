@@ -234,9 +234,8 @@ def threadWork(num):
     for i in range(0,len(threadAudioPath)):
         print(str(num) + ">>" + str(len(threadAudioPath)) + ">>" + str(threadAudioPath[i]))
         threadResult.append(audio2text(threadAudioPath[i],num)) # num -> keyNum
-        # result of Pcm2Text = 
-            # new Pcm2Text().pcm2text(String.valueOf(audioPath.get(i)),keys[number]
-        print("@@@@" + str(resultVector))
+        # result of Pcm2Text = new Pcm2Text().pcm2text(String.valueOf(audioPath.get(i)),keys[number]
+        # print("@@@@" + str(resultVector))
 
 # thread 결과물 textPath에 저장
 def resultFileWrite(textPath, endNum):

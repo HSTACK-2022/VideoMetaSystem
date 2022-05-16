@@ -1,10 +1,20 @@
-# getKeyword.py
-# 키워드 -> 전처리
+# keywordService.py
+#
+# keyword를 추출하고, 그 keyword를 통해 category을 얻어냅니다.
+#
+# uses
+# - doKeywordService(videoId)
+# - mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
+# - extractCategory(videoId)
+
+# parameters
+# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# - audioScriptPath : audio에서 추출한 text 파일의 경로
+# - videoScriptPath : 
+# - videoIndexScriptPath : 
 
 # 필요 모듈 -> knolpy{JPype(파일 필요), numpy}, nltk, sklearn, scipy
 # 환경변수 경로체크! 가상환경 경로가 환경변수에 잘 있다면 없애도 됩니다.
-# 요런식으로 쓰면 됩니당
-# mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
 
 # 03.30 수정 1차 내용 
 # -> getKeyword return 값을 리스트로 줌
@@ -25,6 +35,35 @@ max_length = 10 # 단어의 최대 길이
 #videoScriptPath = '../cache/mytxt2.txt'
 #videoIndexScriptPath = '../cache/mytxt.txt'
 
+import os
+from . import models
+
+def doKeywordService(videoId):
+    videopath = models.Videopath.objects.get(id = videoId)
+    audioScript = videopath.textaddr
+    videoScript = os.path.join(videopath.imageaddr, "keyword.txt")
+    videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
+
+    if (os.path.isfile(videoScript) and os.path.isfile(videoIndexScript)) :
+        keywords = mergeKeyword(audioScript, videoScript, videoIndexScript)
+    else :
+        keywords = mergeKeyword(audioScript, None, None)
+
+    if(keywords) :                
+        for keyword in keywords :
+            print(keyword, end='@')
+            models.Keywords.objects.create(
+                id = models.Videopath.objects.get(id=videoId),
+                keyword = keyword
+            )
+        category = extractCategory(videoId)
+        if(category):
+            print("*************************************************")
+            print(category)
+            models.Metadata.objects.filter(id = videoId).update(category = category)
+            return True
+    return False
+
 
 from krwordrank.word import KRWordRank
 from krwordrank.hangle import normalize
@@ -34,15 +73,12 @@ import konlpy
 import nltk
 import sys
 from konlpy.tag import Okt 
-from . import models
 
 # 환경변수가 제대로 안돼서 넣음
 #sys.path.append("C:\capstone\capstone\mhenv\Lib\site-packages")
 verbose = False # 프로그램 진행을 보이는 정도
 
-def getKeyword(videoId, min_count, max_length):
-    filePath = models.Videopath.objects.get(id = videoId).textaddr
-
+def getKeyword(filePath, min_count, max_length):
     wordrank_extractor = KRWordRank(min_count, max_length , verbose)
     beta = 0.85    # PageRank의 decaying factor beta
     max_iter = 10
@@ -102,7 +138,6 @@ def mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath):
 
 
 
-
 # https://aiopen.etri.re.kr/guide_wiseNLU.php#group03
 # -*- coding: utf-8 -*-
 from tkinter import E
@@ -111,14 +146,13 @@ from http.client import HTTPConnection, ImproperConnectionState
 
 import urllib3
 import json
-import os
  
 # 언어 분석 기술(문어)
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU"
 analysisCode = "ner"
 
 # API KEY 설정
-def initTopic():
+def initCategory():
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     secretFile = os.path.join(BASE_DIR, 'secrets.json')
     with open(secretFile) as f:
@@ -133,19 +167,22 @@ def initTopic():
 
     return get_secret("STT_API_KEY")
 
-def extractTopic(videoId):
+def extractCategory(videoId):
     global accessKey
-    accessKey = initTopic()
+    accessKey = initCategory()
     # videoId를 통해 Keyword list를 받아온다.
     keywordList = models.Keywords.objects.filter(id = videoId).values_list('keyword', flat=True).distinct()
-    getTopicSet=set()
+    print("******************************************")
+    for k in keywordList :
+        print(k)
+    print("checked")
+    getCategorySet=set()
     for i in range(0,5):
-        getTopicSet|=getTopicService(accessKey[i], keywordList)
-    result = ','.join(getTopicSet) # 리스트를 문자열로 변환
-    print(result)
+        getCategorySet|=getCategoryService(accessKey[i], keywordList)
+    result = ','.join(getCategorySet) # 리스트를 문자열로 변환
     return result
 
-def getTopicService(accessKey, keywordList):
+def getCategoryService(accessKey, keywordList):
     text = ','.join(keywordList) # 리스트를 문자열로 변환
     requestJson = {
         "access_key": accessKey,
@@ -164,10 +201,9 @@ def getTopicService(accessKey, keywordList):
     print("[responseCode] " + str(response.status))
     # print("[responBody]")
     # print(str(response.data,"utf-8"))
-    return getTopicFromJson(str(response.data, "utf-8"))
+    return getCategoryFromJson(str(response.data, "utf-8"))
 
-
-def getTopicFromJson(responseData):
+def getCategoryFromJson(responseData):
     # str = {"result":0,"return_object":{"doc_id":"","DCT":"","category":"","category_weight":0.0,"title":{"text":"","NE":""},"metaInfo":{},"paragraphInfo":[],"sentence":[{"id":0.0,"reserve_str":"","text":"단일,기능,메모리,실행,파일,커널,관리,프로,구조,자원,입출력","morp":[{"id":0.0,"lemma":"단일","type":"NNG","position":0.0,"weight":0.0389027},{"id":1.0,"lemma":",","type":"SP","position":6.0,"weight":1.0},{"id":2.0,"lemma":"기능","type":"NNG","position":7.0,"weight":0.0429483},{"id":3.0,"lemma":",","type":"SP","position":13.0,"weight":1.0},{"id":4.0,"lemma":"메모리","type":"NNG","position":14.0,"weight":0.089975},{"id":5.0,"lemma":",","type":"SP","position":23.0,"weight":1.0},{"id":6.0,"lemma":"실행","type":"NNG","position":24.0,"weight":0.0415775},{"id":7.0,"lemma":",","type":"SP","position":30.0,"weight":1.0},{"id":8.0,"lemma":"파일","type":"NNG","position":31.0,"weight":0.0572481},{"id":9.0,"lemma":",","type":"SP","position":37.0,"weight":1.0},{"id":10.0,"lemma":"커널","type":"NNG","position":38.0,"weight":0.0159203},{"id":11.0,"lemma":",","type":"SP","position":44.0,"weight":1.0},{"id":12.0,"lemma":"관리","type":"NNG","position":45.0,"weight":0.063389},{"id":13.0,"lemma":",","type":"SP","position":51.0,"weight":1.0},{"id":14.0,"lemma":"프로","type":"NNG","position":52.0,"weight":0.0491239},{"id":15.0,"lemma":",","type":"SP","position":58.0,"weight":1.0},{"id":16.0,"lemma":"구조","type":"NNG","position":59.0,"weight":0.0477435},{"id":17.0,"lemma":",","type":"SP","position":65.0,"weight":1.0},{"id":18.0,"lemma":"자원","type":"NNG","position":66.0,"weight":0.0393283},{"id":19.0,"lemma":",","type":"SP","position":72.0,"weight":1.0},{"id":20.0,"lemma":"입","type":"NNG","position":73.0,"weight":0.0382438},{"id":21.0,"lemma":"출력","type":"NNG","position":76.0,"weight":0.0382438}],"WSD":[{"id":0.0,"text":"단일","type":"NNG","scode":"01","weight":1.0,"position":0.0,"begin":0.0,"end":0.0},{"id":1.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":6.0,"begin":1.0,"end":1.0},{"id":2.0,"text":"기능","type":"NNG","scode":"03","weight":4.0,"position":7.0,"begin":2.0,"end":2.0},{"id":3.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":13.0,"begin":3.0,"end":3.0},{"id":4.0,"text":"메모리","type":"NNG","scode":"00","weight":0.0,"position":14.0,"begin":4.0,"end":4.0},{"id":5.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":23.0,"begin":5.0,"end":5.0},{"id":6.0,"text":"실행","type":"NNG","scode":"02","weight":2.0,"position":24.0,"begin":6.0,"end":6.0},{"id":7.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":30.0,"begin":7.0,"end":7.0},{"id":8.0,"text":"파일","type":"NNG","scode":"03","weight":2.0,"position":31.0,"begin":8.0,"end":8.0},{"id":9.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":37.0,"begin":9.0,"end":9.0},{"id":10.0,"text":"커널","type":"NNG","scode":"00","weight":0.0,"position":38.0,"begin":10.0,"end":10.0},{"id":11.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":44.0,"begin":11.0,"end":11.0},{"id":12.0,"text":"관리","type":"NNG","scode":"04","weight":6.0,"position":45.0,"begin":12.0,"end":12.0},{"id":13.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":51.0,"begin":13.0,"end":13.0},{"id":14.0,"text":"프로","type":"NNG","scode":"03","weight":1.0,"position":52.0,"begin":14.0,"end":14.0},{"id":15.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":58.0,"begin":15.0,"end":15.0},{"id":16.0,"text":"구조","type":"NNG","scode":"05","weight":2.5,"position":59.0,"begin":16.0,"end":16.0},{"id":17.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":65.0,"begin":17.0,"end":17.0},{"id":18.0,"text":"자원","type":"NNG","scode":"04","weight":2.0,"position":66.0,"begin":18.0,"end":18.0},{"id":19.0,"text":",","type":"SP","scode":"00","weight":1.0,"position":72.0,"begin":19.0,"end":19.0},{"id":20.0,"text":"입출력","type":"NNG","scode":"00","weight":0.0,"position":73.0,"begin":20.0,"end":21.0}],"word":[{"id":0.0,"text":"단일,기능,메모리,실행,파일,커널,관\n리,프로,구조,자원,입출력","type":"","begin":0.0,"end":21.0}],"NE":[{"id":0.0,"text":"메모리","type":"TMI_HW","begin":4.0,"end":4.0,"weight":0.229931,"common_noun":0.0}],"NE_Link":[],"dependency":[],"SRL":[]}],"entity":[]}}
     str = responseData
     json_obj = json.loads(str) # dumps - 파이썬 문자열을 json 형태로 변환
@@ -178,10 +214,9 @@ def getTopicFromJson(responseData):
         print(i['type'])
         returnTypes.add(i['type'])
 
-    return topicClassification(returnTypes)
+    return categoryClassification(returnTypes)
 
-
-def topicClassification(tagSet):
+def categoryClassification(tagSet):
     # 참고 십진분류법: http://www.booktrade.or.kr/kdc/kdc.jsp
     # 분류 ->
 
@@ -201,166 +236,166 @@ def topicClassification(tagSet):
     # 의학, 요리, 건축, 음악, 문화, 교통, 예술, 언어, 패션, 사회과학, 철학, 역사,
     # 자연, It, 게임
 
-    topic_list = set()
+    category_list = set()
     for each_tag in tagSet:
         #print(each_tag)
         #print('TM' in each_tag)
         if 'TM' in each_tag:
             if each_tag == 'TMI_HW' or each_tag == 'TMI_SW' or each_tag == 'TMI_SERVICE':
-                topic_list.add('IT')
+                category_list.add('IT')
             elif each_tag == 'TM_CLIMATE':
-                topic_list.add('지리')
+                category_list.add('지리')
             elif each_tag == 'TM_CELL_TISSUE':
-                topic_list.add('순수과학')
-                topic_list.add('생명과학')
-                topic_list.add('의학')
+                category_list.add('순수과학')
+                category_list.add('생명과학')
+                category_list.add('의학')
             elif each_tag == 'TMM_DISEASE' or each_tag == 'TMM_DRUG':
-                topic_list.add('의학')
+                category_list.add('의학')
             elif each_tag == 'TMIG_GENRE':
-                topic_list.add('게임')
+                category_list.add('게임')
             elif each_tag == 'TM_SPORTS':
-                topic_list.add('스포츠')
+                category_list.add('스포츠')
 
         elif 'LC' in each_tag:
-            topic_list.add('지리')
+            category_list.add('지리')
             # LC_SPACE   천체 명칭?? 우주 넣어야하나 아님 걍 지리로?
 
         elif 'OG' in each_tag:
             if each_tag == 'OGG_ECONOMY':
-                topic_list.add('경제')
+                category_list.add('경제')
             elif each_tag == 'OGG_EDUCATION':
-                topic_list.add('교육')
+                category_list.add('교육')
             elif each_tag == 'OGG_MILITARY':
-                topic_list.add('군사')
+                category_list.add('군사')
             elif each_tag == 'OGG_MEDIA':
-                topic_list.add('미디어')
+                category_list.add('미디어')
             elif each_tag == 'OGG_SPORTS':
-                topic_list.add('스포츠')
+                category_list.add('스포츠')
             elif each_tag == 'OGG_ART':
-                topic_list.add('예술')
+                category_list.add('예술')
             elif each_tag == 'OGG_MEDICINE':
-                topic_list.add('의학')
+                category_list.add('의학')
             elif each_tag == 'OGG_RELIGION':
-                topic_list.add('종교')
+                category_list.add('종교')
             elif each_tag == 'OGG_SCIENCE':
-                topic_list.add('과학')
+                category_list.add('과학')
             elif each_tag == 'OGG_LAW':
-                topic_list.add('법률/법학')
+                category_list.add('법률/법학')
             elif each_tag == 'OGG_POLITICS':
-                topic_list.add('행정')
+                category_list.add('행정')
             elif each_tag == 'OGG_FOOD':
-                topic_list.add('요리')
+                category_list.add('요리')
             elif each_tag == 'OGG_HOTEL':
-                topic_list.add('여행') #숙박관련업체
+                category_list.add('여행') #숙박관련업체
 
         elif 'AF' in each_tag:
             if each_tag == 'AF_CULTURAL_ASSET':
-                topic_list.add('문명/문화') #문화재
+                category_list.add('문명/문화') #문화재
             elif each_tag == 'AF_BUILDING':
-                topic_list.add('건축')
+                category_list.add('건축')
             elif each_tag == 'AF_MUSICAL_INSTRUMENT':
-                topic_list.add('음악')
+                category_list.add('음악')
             elif each_tag == 'AF_ROAD':
-                topic_list.add('지리')
+                category_list.add('지리')
             elif each_tag == 'AF_WEAPON':
-                topic_list.add('군사')
+                category_list.add('군사')
             elif each_tag == 'AF_TRANSPORT':
-                topic_list.add('교통') #교통수단/자동차/선박 모델 및 유형, 운송 수단, 놀이기구
+                category_list.add('교통') #교통수단/자동차/선박 모델 및 유형, 운송 수단, 놀이기구
             elif each_tag == 'AF_WORKS':
-                topic_list.add('예술')
-                topic_list.add('미술') #예술? 미술? /AFW의 세부 작품명에 해당하지 않는 기타 작품명
+                category_list.add('예술')
+                category_list.add('미술') #예술? 미술? /AFW의 세부 작품명에 해당하지 않는 기타 작품명
             elif each_tag == 'AFW_PERFORMANCE':
-                topic_list.add('예술')
+                category_list.add('예술')
             elif each_tag == 'AFW_VIDEO':
-                topic_list.add('미디어')
+                category_list.add('미디어')
             elif each_tag == 'AFW_ART_CRAFT':
-                topic_list.add('예술')
-                topic_list.add('미술')
+                category_list.add('예술')
+                category_list.add('미술')
             elif each_tag == 'AFW_MUSIC':
-                topic_list.add('음악')
+                category_list.add('음악')
 
         elif 'CV' in each_tag:
             if each_tag == 'CV_NAME':
-                topic_list.add('문명/문화')
+                category_list.add('문명/문화')
             elif each_tag == 'CV_TRIBE':
-                topic_list.add('문명/문화')
+                category_list.add('문명/문화')
             elif each_tag == 'CV_SPORTS':
-                topic_list.add('스포츠')
+                category_list.add('스포츠')
             elif each_tag == 'CV_SPORTS_INST':
-                topic_list.add('스포츠')
+                category_list.add('스포츠')
             elif each_tag == 'CV_POLICY':
-                topic_list.add('행정')
+                category_list.add('행정')
             elif each_tag == 'CV_TAX':
-                topic_list.add('행정')
+                category_list.add('행정')
             elif each_tag == 'CV_FUNDS':
-                topic_list.add('경제') 
+                category_list.add('경제') 
             elif each_tag == 'CV_LANGUAGE':
-                topic_list.add('언어') 
+                category_list.add('언어') 
             elif each_tag == 'CV_BUILDING_TYPE':
-                topic_list.add('건축')
+                category_list.add('건축')
             elif each_tag == 'CV_FOOD':
-                topic_list.add('요리')
+                category_list.add('요리')
             elif each_tag == 'CV_DRINK':
-                topic_list.add('요리')
+                category_list.add('요리')
             elif each_tag == 'CV_CLOTHING':
-                topic_list.add('패션')
+                category_list.add('패션')
             elif each_tag == 'CV_CURRENCY':
-                topic_list.add('경제')
+                category_list.add('경제')
             elif each_tag == 'CV_LAW':
-                topic_list.add('법률/법학')
+                category_list.add('법률/법학')
             elif each_tag == 'CV_FOOD_STYLE':
-                topic_list.add('요리')
+                category_list.add('요리')
   
         elif 'AM' in each_tag:
-            topic_list.add('동물')
+            category_list.add('동물')
 
         elif 'PT' in each_tag:
-            topic_list.add('식물')
+            category_list.add('식물')
 
         elif 'QT' in each_tag:
             if each_tag == 'QT_TEMPERATURE':
-                topic_list.add('날씨') #온도 날씨 넣어야하나????????
+                category_list.add('날씨') #온도 날씨 넣어야하나????????
 
         elif 'FD' in each_tag:
             if each_tag == 'FD_SCIENCE':
-                topic_list.add('과학')
+                category_list.add('과학')
             elif each_tag == 'FD_SOCIAL_SCIENCE':
-                topic_list.add('사회') #사회과학 학문 분야 및 학파, 정치/경제/사회와 관련된 분야
+                category_list.add('사회') #사회과학 학문 분야 및 학파, 정치/경제/사회와 관련된 분야
             elif each_tag == 'FD_MEDICINE':
-                topic_list.add('의학')
+                category_list.add('의학')
             elif each_tag == 'FD_ART':
-                topic_list.add('예술')
+                category_list.add('예술')
             elif each_tag == 'FD_PHILOSOPHY':
-                topic_list.add('철학')
+                category_list.add('철학')
     
         elif 'TR' in each_tag:
             if each_tag == 'TR_SCIENCE':
-                topic_list.add('과학')
+                category_list.add('과학')
             elif each_tag == 'TR_SOCIAL_SCIENCE':
-                topic_list.add('사회') #사회과학 이론/법칙/방법/원리/사상, 정치사상
+                category_list.add('사회') #사회과학 이론/법칙/방법/원리/사상, 정치사상
             elif each_tag == 'TR_MEDICINE':
-                topic_list.add('의학')
+                category_list.add('의학')
             elif each_tag == 'TR_ART':
-                topic_list.add('예술')
+                category_list.add('예술')
             elif each_tag == 'TR_PHILOSOPHY':
-                topic_list.add('철학')
+                category_list.add('철학')
 
         elif 'EV' in each_tag:
             if each_tag == 'EV_ACTIVITY':
-                topic_list.add('역사???') #사회운동 및 선언
+                category_list.add('역사???') #사회운동 및 선언
             elif each_tag == 'EV_WAR_REVOLUTION':
-                topic_list.add('역사') 
+                category_list.add('역사') 
             elif each_tag == 'EV_SPORTS':
-                topic_list.add('스포츠')
+                category_list.add('스포츠')
     
         elif 'MT' in each_tag:
-             topic_list.add('과학')
+             category_list.add('과학')
           
-    return topic_list
+    return category_list
 
 
 #example_list = {'입출력', '기능', '실행', '관리', '커널', '메모리', '구조', '자원', '프로', '파일', '단일'}
-#extractTopic(example_list)
+#extractCategory(example_list)
 
-#topic_list_example = {'TMM_DRUG','TM_CELL_TISSUE','TMI_SW','CV_POSITION'}
-#print(topicClassification(topic_list_example))
+#category_list_example = {'TMM_DRUG','TM_CELL_TISSUE','TMI_SW','CV_POSITION'}
+#print(categoryClassification(category_list_example))
