@@ -126,10 +126,14 @@ def uploadFile(request):
                 uploaddate = document.dateTimeOfUpload
             )
 
-            videoPathForPlay = videoPath = "../media" + videopath.split("media")[1]
-            print(videoPathForPlay)
+            if OS == 'Windows':
+                videoPath4Play = "..\\..\\..\\media" + videopath.split("media")[1]
+            else:
+                videoPath4Play = "../../../media" + videopath.split("media")[1]
+            print(videoPath4Play)
+
             bools = extractMetadata(videoId)
-            return render(request, renderAppName + '/success.html', context={"file" : videopath, "Metadata":bools})
+            return render(request, renderAppName + '/test_home.html')
                         
     return render(request, renderAppName + '/test_upload.html') 
 
@@ -171,7 +175,7 @@ def success(request):
     videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
     videoPath = "../media" + videopath.split("media")[1]
     print(videoPath)
-    return render(request, renderAppName + '/success.html', context={"videopath" : videoPath})
+    return render(request, renderAppName + '/dayeon.html', context={"videopath" : videoPath})
 
 def test_minhwa(request):
     return render(
