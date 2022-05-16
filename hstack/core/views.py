@@ -178,25 +178,27 @@ def searchFile(request):
             for item in words:
                 if item != "": searchWords.append(item)
 
+            videoMetaList = {}
             videoIdList = {}
-            videoIdList = searchAll.search(searchWords)
+            videoIdList, videoMetaList = searchAll.search(searchWords)
 
-            if not videoIdList :
+            if not videoMetaList :
                 return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 404,
                         'searchWord' : word
                     })
             else :
-                for video in videoIdList:
+                for video in videoMetaList:
                     print("****")
                     print(video['thumbnail'])
 
                 return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 200,
+                        'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
-                        'searchWord' : word
+                        'searchWord' : word,
                     })
 
 # video(file) upload
@@ -309,6 +311,7 @@ def test_minhwa(request):
             'timestamps' : models.Timestamp.objects.filter(id = 14).all().values(),
         }
     )
+<<<<<<< HEAD
     
     
     
@@ -347,3 +350,48 @@ def test_minhwa2(request):
     
     
 
+=======
+
+from core import searchAll
+def test_minhwa2(request):
+    videoMetaList = searchAll.searchTest()
+    videoIdList = searchAll.searchTest2()
+    # for id in videoIdList:
+    #     res = {}
+    #     res[]
+    print(videoIdList)
+    return render(
+        request,
+        'Core/test2.html',
+        {
+            'videoMetaList' : videoMetaList,
+            'videoIdList' : videoIdList,
+        }
+    )
+def test_minhwa3(request):
+    stringvideoIdList = request.POST['videoIdList']
+    search_type = request.POST['search_type']   # category
+    search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
+    #print(category_type)
+    #print(stringvideoIdList) # {14, 15, 16, 17, 18}
+    videoIdList = stringvideoIdList[1:-1]
+    videoIdList = videoIdList.replace(" ", "") # 공백 제거
+    videoIdList = videoIdList.replace("'", "") # 작은 따옴표 제거
+    videoIdList = videoIdList.split(',')
+    newVideoIdList = list()
+
+    newVideoIdList, videoMetaList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
+    
+    #print(videoIdList)
+
+    for video in videoMetaList:
+        print("****")
+        print(video['thumbnail'])
+        
+    return render(request, renderAppName + '/test_search.html',
+        context={
+            'code' : 200,
+            'videoMetaList' : videoMetaList,
+            'videoIdList' : newVideoIdList,
+        })
+>>>>>>> 153bc3ceb82d29a2eb4b73df9ac258e9a385de28

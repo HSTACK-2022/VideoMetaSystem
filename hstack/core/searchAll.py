@@ -61,6 +61,41 @@ class Total:
         
         return self.finalDict #해도 되고 밖에서 Total.finalDict 해도 되고 
 
+    # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
+    def getDetailVideoList(videoId, search_type, search_detail_type):
+        finalDict = {} # 초기화
+        if search_type == "category":
+            if models.Metadata.objects.filter(id = videoId).filter(category = search_detail_type).exists():
+                metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
+                keywordList = list(models.Keywords.objects.filter(id = videoId).all().values_list('keyword', flat=True).distinct())
+                finalDict['id'] = videoId
+                finalDict['metadata'] = metadataList 
+                finalDict['keyword']=keywordList
+                if OS == 'Windows':
+                    filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+                else :
+                    filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+                    
+                fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
+                finalDict['thumbnail'] = os.path.join(filePath, fileName)
+        elif search_type == "method":
+            if models.Metadata.objects.filter(id = videoId).filter(method = search_detail_type).exists():
+                metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
+                keywordList = list(models.Keywords.objects.filter(id = videoId).all().values_list('keyword', flat=True).distinct())
+                finalDict['id'] = videoId
+                finalDict['metadata'] = metadataList 
+                finalDict['keyword']=keywordList
+                if OS == 'Windows':
+                    filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+                else :
+                    filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+                    
+                fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
+                finalDict['thumbnail'] = os.path.join(filePath, fileName)
+        
+
+        return finalDict
+
 
 #searchTexts = ["황기", "메모리"]   
 def search(searchTexts):
@@ -93,14 +128,14 @@ def searchTest():
     #print("searchResultMeta : " , searchResultMeta[0]['metadata'][0]['title']) #searchResultMeta :  [{'id_id': 16, 'title': 'operating system111SA', 'presenter': 'hstack', 'category': None, 'narrative': None, 'method': None, 'videolength': None, 'videoframe': None, 'videotype': None, 'videosize': None, 'uploaddate': datetime.date(2022, 5, 11), 'voicemanrate': None, 'voicewomanrate': None}]
     return searchResultMeta
 
-def searchTest2(searchTexts):
-    #searchTexts = ["황기", "메모리", "seminar", "hstack"]  
-    a = Total()
-    a.resultVideoIDList = set() # 두번째를 위해 초기화
-    a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
-    
-    print("a.resultVideoIDList : " , a.resultVideoIDList)   #a.resultVideoIDList :  {16, 17, 18, 19}
-    print("finalDict : " ,a.finalDict)
-    return a.resultVideoIDList
-
-
+# 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
+def detailSearch(videoIdList, search_type, search_detail_type):
+    searchResultMeta = []
+    newVideoIdList = list()
+    for i in videoIdList:
+        res = Total.getDetailVideoList(i, search_type, search_detail_type)
+        if len(res) != 0: 
+            searchResultMeta.append(res)
+            newVideoIdList.append(i)
+    #print(searchResultMeta)
+    return (newVideoIdList, searchResultMeta)
