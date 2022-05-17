@@ -25,11 +25,12 @@ from urllib import response
 from urllib.parse import urlparse
 
 from core import searchAll
-from core.extractMetadata import extractMetadata
+from core import extractMetadata
 
 # 상수 설정
 OS = platform.system()
 renderAppName = "Core" if OS == 'Windows' else 'core'
+extractingId = {}
 
 # for backend.
 def home(request):
@@ -132,10 +133,44 @@ def uploadFile(request):
                 videoPath4Play = "../../../media" + videopath.split("media")[1]
             print(videoPath4Play)
 
-            bools = extractMetadata(videoId)
-            return render(request, renderAppName + '/test_home.html')
+            extractMetadata.extractMetadata(videoId)
+            extractingId[videoId] = False               # before user modify
+
+            return redirect('Core:home')
                         
     return render(request, renderAppName + '/test_upload.html') 
+
+# 업로드 후 ~ User 확인 전의 영상 목록들
+def uploadLists(request):
+    videoIdList = list()
+    categoryList = set()
+    videoMetaList = list()
+
+    for key, value in extractingId.items():
+        if value == True:
+            videoIdList.append(key)
+
+    categoryList = searchAll.extractCategories(videoIdList)
+
+    videoMetaList = list()
+    for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
+        videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+
+    print("********************")
+    print(videoIdList)
+    print(categoryList)
+    print(videoMetaList)
+    
+    if not videoIdList :
+        return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
+    else :
+        return render(request, renderAppName + '/test_uploadLists.html',
+            context={
+                'code' : 200,
+                'categoryList' : categoryList,
+                'videoMetaList' : videoMetaList,
+                'videoIdList' : videoIdList,
+            })
 
 # 각 영상의 상세페이지 (/test/detail/pk)
 def detailFile(request, pk):
