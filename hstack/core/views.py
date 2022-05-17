@@ -26,6 +26,7 @@ from urllib.parse import urlparse
 
 from core import searchAll
 from core.extractMetadata import extractMetadata
+from core import rankAlgo
 
 # 상수 설정
 OS = platform.system()
@@ -52,9 +53,10 @@ def searchFile(request):
             for item in words:
                 if item != "": searchWords.append(item)
 
-            videoMetaList = {}
+            videoMetaList = []
             videoIdList = {}
             videoIdList, videoMetaList = searchAll.search(searchWords)
+            print("asdfsafasdf1111111"+str(videoMetaList))
 
             if not videoMetaList :
                 return render(request, renderAppName + '/test_search.html',
@@ -66,6 +68,7 @@ def searchFile(request):
                 for video in videoMetaList:
                     print("****")
                     print(video['thumbnail'])
+#                    rankAlgo.rankAlgo()
 
                 return render(request, renderAppName + '/test_search.html',
                     context={
@@ -186,8 +189,6 @@ def test_minhwa(request):
         }
     )
 
-<<<<<<< HEAD
-=======
 from core import searchAll
 def test_minhwa2(request):
     videoMetaList = searchAll.searchTest()
@@ -204,7 +205,6 @@ def test_minhwa2(request):
             'videoIdList' : videoIdList,
         }
     )
->>>>>>> 153bc3ceb82d29a2eb4b73df9ac258e9a385de28
 def test_minhwa3(request):
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category

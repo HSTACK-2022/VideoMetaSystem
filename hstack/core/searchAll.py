@@ -3,7 +3,9 @@
 
 import os
 import platform
+from re import I
 from unicodedata import category
+
 from . import models
 
 # 상수 설정
@@ -13,6 +15,8 @@ class Total:
 
     resultVideoIDList = set()
     finalDict = {}
+    rankcount = {} #rank 알고리즘
+    metarank = []
 
     def searchWordFromDB(self,searchTexts):
         #resultVideoIDList = set()
@@ -20,17 +24,33 @@ class Total:
             # 쿼리셋.values('필드이름') : 해당 필드와 값들을 딕셔너리로 제공 ex : [{'id': 1234}, {'id': 5678}, {'id': 1212}]
             # 쿼리셋.values_list('필드이름') : 해당 필드의 값들을 튜플로 제공
             # 쿼리셋.values_list('필드이름', flat=True) : 해당 필드의 값들을 리스트로 제공
-            
+
             # [1234, 5678, 1212] << 이런 식으로 나올 것이라 예상
-            for k in models.Keywords.objects.filter(keyword__contains = searchText).values_list('id', flat=True).distinct():
+            for k in models.Keywords.objects.filter(keyword__contains = searchText).values_list('id', flat=True):
                 self.resultVideoIDList.add(k)    # id를 resultVideoIDList 집합에 저장
             for ti in models.Metadata.objects.filter(title__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(ti)
             for p in models.Metadata.objects.filter(presenter__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(p)
-            for to in models.Metadata.objects.filter(category__contains = searchText).values_list('id', flat=True).distinct():
-                self.resultVideoIDList.add(to)
-        #return self.resultVideoIDList
+            for to in models.Timestamp.objects.filter(subtitle__contains = searchText).values_list('id', flat=True):
+               self.resultVideoIDList.add(to)
+
+
+    #ranking 알고리즘
+    def getrank(self, searchTexts, videoId): #ranking algo
+        self.rankcount = {"keyword":0,"title":0,"present":0,"subtitle":0} #rank 알고리즘 초기화
+        for searchText in searchTexts:
+            for k in models.Keywords.objects.filter(id = videoId).filter(keyword__contains = searchText).values_list('id', flat=True):
+                self.rankcount["keyword"] += 5
+            for ti in models.Metadata.objects.filter(id = videoId).filter(title__contains = searchText).values_list('id', flat=True).distinct():
+                self.rankcount["title"] = 50
+            for p in models.Metadata.objects.filter(id = videoId).filter(presenter__contains = searchText).values_list('id', flat=True).distinct():
+                self.rankcount["present"] = 50
+            for to in models.Timestamp.objects.filter(id = videoId).filter(subtitle__contains = searchText).values_list('id', flat=True):
+                self.rankcount["subtitle"] += 5
+            print("정확도 (우선순위) : "+str(sum(self.rankcount.values())))
+        return(sum(self.rankcount.values()))
+
 
     def getVideoMetadataFromID(self, videoId):
         # 아래는 단어찾은 비디오 id로 메타데이터 얻는 법
@@ -45,14 +65,14 @@ class Total:
         #filePath = list(models.Videopath.objects.filter(id = videoId).all().values_list('videoaddr','imageaddr')) # imageaddr
         #timestamp = list(models.Timestamp.objects.filter(id = videoId).all().values())
         self.finalDict['id'] = videoId
-        self.finalDict['metadata'] = metadataList 
+        self.finalDict['metadata'] = metadataList
         self.finalDict['keyword'] = keywordList
 
         if OS == 'Windows':
             filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
         else :
             filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
-            
+
         fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
         self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
         #self.finalDict['filePath']=filePath
@@ -74,7 +94,7 @@ class Total:
                     filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
                 else :
                     filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
-                    
+
                 fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
                 finalDict['thumbnail'] = os.path.join(filePath, fileName)
         elif search_type == "method":
@@ -82,7 +102,7 @@ class Total:
                 metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
                 keywordList = list(models.Keywords.objects.filter(id = videoId).all().values_list('keyword', flat=True).distinct())
                 finalDict['id'] = videoId
-                finalDict['metadata'] = metadataList 
+                finalDict['metadata'] = metadataList
                 finalDict['keyword']=keywordList
                 if OS == 'Windows':
                     filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
@@ -91,7 +111,6 @@ class Total:
                     
                 fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
                 finalDict['thumbnail'] = os.path.join(filePath, fileName)
-        
 
         return finalDict
 
@@ -100,15 +119,29 @@ def search(searchTexts):
     a = Total()
     a.resultVideoIDList = set() # 두번째를 위해 초기화
     a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
-
+    
+    #resultVideoIDList
     searchResultMeta = []
 
+    #즉 여기서 searchWordFromDBfh 받아온 resultVideoIDList의 값을 변경해주면 됨
+    print(list(a.resultVideoIDList)) # [312, 313, 315] 여기서 순서를
+    metaRank = []
+    max = 0
+
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
-        a.getVideoMetadataFromID(i)
+        print(i) #id
+        a.getrank(searchTexts,i)
+        if a.getrank(searchTexts,i) > max:
+            metaRank.insert(0, i)
+            max = a.getrank(searchTexts,i)
+        else:
+            metaRank.append(i)
+    for j in metaRank:
+        a.getVideoMetadataFromID(j) #id 받아오기
         searchResultMeta.append(a.finalDict)
 
-    print(searchResultMeta)
-    return (list(a.resultVideoIDList), searchResultMeta)
+    return (list(a.resultVideoIDList), list(searchResultMeta))
+
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
 def detailSearch(videoIdList, search_type, search_detail_type):
@@ -120,19 +153,4 @@ def detailSearch(videoIdList, search_type, search_detail_type):
             searchResultMeta.append(res)
             newVideoIdList.append(i)
     #print(searchResultMeta)
-<<<<<<< HEAD
     return (newVideoIdList, searchResultMeta)
-
-
-# 각 videoId에서 Categories를 뽑아낸다.
-def extractCategories(videoIdList):
-    categoryList = set()
-    for videoId in videoIdList:
-        category = models.Metadata.objects.get(id = videoId).category
-        print(category)
-        categoryList.add(category)
-
-    return categoryList
-=======
-    return (newVideoIdList, searchResultMeta)
->>>>>>> 153bc3ceb82d29a2eb4b73df9ac258e9a385de28
