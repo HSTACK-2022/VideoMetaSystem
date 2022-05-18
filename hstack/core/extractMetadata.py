@@ -15,7 +15,7 @@
 import threading
 import background as bg
 
-from . import views
+from . import models
 from . import audioService
 from . import opencvService
 from . import indexingService
@@ -52,7 +52,7 @@ def extractMetadata(videoId):
         keywordService.doKeywordService(videoId)
         indexingService.doIndexingService(videoId)
 
-        views.extractingId[videoId] = True
+        models.Videopath.objects.filter(id=videoId).update(extracted = 1)
         return True
 
     except Exception as e:

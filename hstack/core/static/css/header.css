@@ -82,7 +82,7 @@ header {
     height: 30px;
 }
 
-#upload {
+.uploadShort {
     background-color:transparent;
     border: none;
     outline: none;

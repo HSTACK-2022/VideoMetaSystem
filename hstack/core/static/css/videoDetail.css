@@ -13,8 +13,8 @@
 }
 
 .detailMetadata {
-    width: 40%;
-    min-width: 500px;
+    width: 35%;
+    min-width: 200px;
     vertical-align: top;
     display: inline-block;
 }
@@ -25,7 +25,7 @@
 
 .videoTitle {
     font-weight: bold;
-    font-size: 50px;
+    font-size: 40px;
     margin: 10px 0px;
 }
 

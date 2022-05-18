@@ -105,8 +105,9 @@ def search(searchTexts):
     searchResultMeta = []
 
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
-        a.getVideoMetadataFromID(i)
-        searchResultMeta.append(a.finalDict)
+        if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
+            a.getVideoMetadataFromID(i)
+            searchResultMeta.append(a.finalDict)
 
     print(searchResultMeta)
 
@@ -121,10 +122,11 @@ def detailSearch(videoIdList, search_type, search_detail_type):
     searchResultMeta = []
     newVideoIdList = list()
     for i in videoIdList:
-        res = Total.getDetailVideoList(i, search_type, search_detail_type)
-        if len(res) != 0: 
-            searchResultMeta.append(res)
-            newVideoIdList.append(i)
+        if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
+            res = Total.getDetailVideoList(i, search_type, search_detail_type)
+            if len(res) != 0: 
+                searchResultMeta.append(res)
+                newVideoIdList.append(i)
     #print(searchResultMeta)
     return (newVideoIdList, searchResultMeta)
 

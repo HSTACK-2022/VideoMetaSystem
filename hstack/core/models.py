@@ -27,6 +27,7 @@ class Videopath(models.Model):
     audioaddr = models.CharField(db_column='audioAddr', max_length=200, blank=True, null=True)  # Field name made lowercase.
     textaddr = models.CharField(db_column='textAddr', max_length=200, blank=True, null=True)  # Field name made lowercase. 
     imageaddr = models.CharField(db_column='imageAddr', max_length=200, blank=True, null=True)  # Field name made lowercase. 
+    extracted = models.IntegerField(default=0)
 
     class Meta:
         managed = False

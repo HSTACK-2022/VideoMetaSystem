@@ -4,6 +4,7 @@ import platform
 from unicodedata import category
 
 from asgiref.sync import sync_to_async
+from numpy import extract
 
 from . import models
 from .models import Post, Category
@@ -134,7 +135,6 @@ def uploadFile(request):
             print(videoPath4Play)
 
             extractMetadata.extractMetadata(videoId)
-            extractingId[videoId] = False               # before user modify
 
             return redirect('Core:home')
                         
@@ -142,16 +142,8 @@ def uploadFile(request):
 
 # 업로드 후 ~ User 확인 전의 영상 목록들
 def uploadLists(request):
-    videoIdList = list()
-    categoryList = set()
-    videoMetaList = list()
-
-    for key, value in extractingId.items():
-        if value == True:
-            videoIdList.append(key)
-
+    videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
     categoryList = searchAll.extractCategories(videoIdList)
-
     videoMetaList = list()
     for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
