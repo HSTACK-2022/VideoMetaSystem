@@ -102,31 +102,16 @@ def search(searchTexts):
     a = Total()
     a.resultVideoIDList = set() # 두번째를 위해 초기화
     a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
-    
-    searchResultMeta = []
-
-    for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
-        a.getVideoMetadataFromID(i)
-        searchResultMeta.append(a.finalDict)
-
-    print("searchTest: ",searchResultMeta)
-    return searchResultMeta
-
-
-def searchTest():
-    searchTexts = ["황기", "메모리", "seminar", "hstack"]  
-    a = Total()
-    a.resultVideoIDList = set() # 두번째를 위해 초기화
-    a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
 
     searchResultMeta = []
 
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         a.getVideoMetadataFromID(i)
         searchResultMeta.append(a.finalDict)
-        
-    #print("searchResultMeta : " , searchResultMeta[0]['metadata'][0]['title']) #searchResultMeta :  [{'id_id': 16, 'title': 'operating system111SA', 'presenter': 'hstack', 'category': None, 'narrative': None, 'method': None, 'videolength': None, 'videoframe': None, 'videotype': None, 'videosize': None, 'uploaddate': datetime.date(2022, 5, 11), 'voicemanrate': None, 'voicewomanrate': None}]
-    return searchResultMeta
+
+    print(searchResultMeta)
+    return (list(a.resultVideoIDList), searchResultMeta)
+
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
 def detailSearch(videoIdList, search_type, search_detail_type):

@@ -1,90 +1,205 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-<head>
-        {% for metadata in metadatas %}
-        <title>VIFO - {{metadata.title}} </title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?after">
-</head>
-<body class="bodyArea">
-    {% include 'core/test_header.html' %}
-    <div class="divParent">
+    {% for metadata in metadatas %}
+    <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
+    <link
+        rel="stylesheet"
+        href="{%static 'core/bootstrap/bootstrap.min.css' %}"
+        media="screen"/>
 
-        <!-- Post content-->
-        <div class="detailHeader">
-            <!-- Preview image figure-->
-            <video class="videoPlayer" id = "video" src="{{videoaddr}}" controls></video>
-            <!--<div>result : {{Metadata}}</div>-->
+    <div class= footCon>
 
-            <!-- Post title-->
-            <div class = "videoTitle">{{ metadata.title }}</div>
-            <!-- Post meta content-->
-            <div class = "videoUploadDate">{{metadata.uploaddate}}</div>
-            <div class = "videoPresenter"> by {{metadata.presenter}}</div>
-            <hr style="width: 100%; margin-bottom: 50px;">
+            <title>VIFO -
+                {{metadata.title}}
+            </title>
+            <meta charset="UTF-8">
+            
+           
+            <script>
+                location.href = "#tab1";
+            </script>
+        </head>
 
-            <!-- detail search : only for detail -->
-            <div class="innerSearch">
-                <input type="text" placeholder="Search in &quot;{{ metadata.title }}&quot;" id="searchContent"></input>
-                <input type="submit" class="searchBtn" value="" onclick="searchPost({{scripts}});"></input>
-            </div>
-            <table id="searchResArea"></table>
-        </div> <!-- end of detail Header-->
+        <body class="bodyArea">
+           
+            {% include 'core/test_header.html' %}
+            <div class="divParent">
+                <!-- Post content-->
+                <div class="detailHeader">
+                    <!-- Preview image figure-->
 
-        <div class="detailMetadata">
-            <table class="metadataTable">
-                <!-- Basic metadata -->
-                <tr><td colspan="2"><div class="metadataTR">
-                    <div class="metadataTitle">CATEGORY</div>
-                    <div class="metadataContent">{{metadata.category}}</div>
-                </div></td></tr>
-                <tr><td colspan="2"><div class="metadataTR">
-                    <div class="metadataTitle">NARRATIVE</div>
-                    <div class="metadataContent">{{metadata.narrative}}</div>
-                </div></td></tr>
-                <tr><td colspan="2"><div class="metadataTR">
-                    <div class="metadataTitle">METHOD</div>
-                    <div class="metadataContent">{{metadata.method}}</div>
-                </div></td></tr>
-                <tr><td colspan="2"><div class="metadataTR">
-                    <div class="metadataTitle">VOICE</div>
-                    <div class="metadataContent">
-                        <!--
-                        <div style="background-color: blue; display: inline-block; width:{{metadata.voicemanrate}}%;" >M</div>
-                        <div style="background-color: red; display: inline-block; width:{{metadata.voicewomanrate}}%;" >W</div>
-                        -->
+                    <video
+                        height="450"
+                        class="videoPlayer"
+                        id="video"
+                        src="{{videoaddr}}"
+                        controls="controls"></video>
+                    <!--<div>result : {{Metadata}}</div>-->
+
+                    <div class="box">
+                        <div class="left">
+                            <!-- 키워드 3개만 수정@@@@@@@@@@@-->
+                            <div class="keyTag">
+                                {% for keyword in keywords %}
+                                    {% if keyword != "" and forloop.counter < 4 %}
+                                        #{{keyword.keyword}}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <!-- Post title-->
+                            <div class="videoTitle">{{ metadata.title }}</div>
+                            <!-- Post meta content-->
+                            <div class="videoUploadDate">{{metadata.uploaddate}}</div>
+                            <div class="videoPresenter">
+                                by
+                                {{metadata.presenter}}</div>
+
+                        </div>
+                        <!--end of the left div side-->
+
+                        <div class="right">
+                            <table class="metadataTable2">
+                                <!-- Basic metadata -->
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="metadataTR_bottom">
+                                            <div class="metadataTitle">🗸 CATEGORY</div>
+                                            <div class="metadataContent">{{metadata.category}}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="metadataTR_bottom">
+                                            <div class="metadataTitle">🗸 NARRATIVE</div>
+                                            <div class="metadataContent">{{metadata.narrative}}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="metadataTR_bottom">
+                                            <div class="metadataTitle">🗸 METHOD</div>
+                                            <div class="metadataContent">{{metadata.method}}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="metadataTR_bottom">
+                                            <div class="metadataTitle">🗸 VOICE</div>
+                                            <div class="metadataContent">
+                                                <!-- <div style="background-color: blue; display: inline-block;
+                                                width:{{metadata.voicemanrate}}%;" >M</div> <div style="background-color: red;
+                                                display: inline-block; width:{{metadata.voicewomanrate}}%;" >W</div> -->
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <!--end of the right div side-->
                     </div>
-                </div></td></tr>
-                <!-- Keywords -->
-                <tr><td colspan="2"><div class="metadataTR">
-                    <div class="metadataTitle">KEYWORDS</div>
-                </div></td></tr>
-                <tr class="metadataDetailTR"><td colspan="2">
-                    {% for keyword in keywords %}
-                    <button class="keywordsBtn">{{keyword.keyword}}</button>
-                    {% endfor %}
-                </td></tr>
-                <tr class="emptyTR"></tr>
-                 <!-- Keywords -->
-                 <tr><td colspan="2"><div class="metadataTR">
-                    <div class="metadataTitle">INDEX</div>
-                </div></td></tr>
-                {% for timestamp in timestamps %}
-                <tr class="metadataDetailTR">
-                    <!-- 수정 필요 -->
-                    <td>
-                        <button class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
-                    </td>
-                    <td>
-                        <div class="indexTitle">{{timestamp.subtitle}}</div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
+
+                </div>
+                <!-- end of detail Header-->
+
+                <div class="detailMetadata">
+                    <div class="tabmenu">
+                        <ul>
+                            <li id="tab1" class="btnCon">
+                                <a class="btn first" href="#tab1">metadata</a>
+                                <div class="tabCon">
+                                    <table class="metadataTable">
+                                        <!-- Keywords -->
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">KEYWORDS</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="metadataDetailTR">
+
+                                            <td colspan="2" class="metadataKeywordTD">
+                                                <div class = key>
+                                                {% for keyword in keywords %}
+                                                    <button class="keywordsBtn" style='cursor:default;'>{{keyword.keyword}}</button>
+                                                {% endfor %}
+                                            </div>
+
+                                            </td>
+                                        </tr>
+                                        <tr class="emptyTR"></tr>
+                                    </table>
+                                    <div class="searchScroll2">
+                                        <table class="metadataTable">
+                                            <!-- Keywords -->
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="metadataTR">
+                                                        <div class="metadataTitle2">INDEX</div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% for timestamp in timestamps %}
+
+                                                <tr class="metadataDetailTR">
+                                                    <!-- 수정 필요 -->
+
+                                                    <td colspan="2" class="metadataKeywordTD">
+
+                                                        <button class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
+                                                        <div class="indexTitle">{{timestamp.subtitle}}</div>
+
+                                                    </td>
+
+                                                </tr>
+
+                                            {% endfor %}
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li id="tab2" class="btnCon">
+                                <a class="btn second" href="#tab2">script</a>
+                                <div class="tabCon">
+
+                                    <!-- detail search : only for detail -->
+                                    <div class="innerSearch">
+                                        <input
+                                            type="text"
+                                            placeholder="Search in &quot;{{ metadata.title }}&quot;"
+                                            id="searchContent"></input>
+                                        <input
+                                            type="submit"
+                                            class="searchBtn"
+                                            value=""
+                                            onclick="searchPost({{scripts}});"></input>
+                                    </div>
+
+                                    <div class="searchScroll">
+                                        <table id="searchResArea" class=""></table>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            
+            <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+            
+        </body>
+        
     </div>
-    <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
-</body>
-{% endfor %}
+    {% include 'core/footer.html' %}
+   
+    {% endfor %}
+
 </html>

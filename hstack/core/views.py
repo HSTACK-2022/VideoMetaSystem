@@ -3,10 +3,9 @@ import re
 import platform
 
 from asgiref.sync import sync_to_async
-#from hstack.core.searchAll import search
 
 from . import models
-from .models import Metadata, Post, Category
+from .models import Post, Category
 
 from django import forms
 from django.db.models import Q
@@ -18,7 +17,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.views.generic import ListView , DetailView, CreateView, UpdateView
 from django.db.models import Q
 
@@ -311,46 +309,6 @@ def test_minhwa(request):
             'timestamps' : models.Timestamp.objects.filter(id = 14).all().values(),
         }
     )
-<<<<<<< HEAD
-    
-    
-    
-from core import searchAll
-def test_minhwa2(request):
-    
-    # for id in videoIdList:
-    #     res = {}
-    #     res[]
-    
-    if request.method == "POST":
-        
-        
-        searched = request.POST['searched']
-        searched_list = str(searched).split()
-        videoIdList = searchAll.searchTest2(searched_list)
-        videoMetaList = searchAll.search(searched_list)
-        
-        
-       
-        #print('\nvideoIdList : ', videoIdList)
-        #print('\nsearched : ', searched_word)
-        #videoMetaList = searchAll.search(searched_word)
-        print('\nvideoMetaList : ', videoMetaList)
-        return render(
-            request,
-            'Core/test2.html',
-            {
-                'searched' : searched,
-                'videoMetaList' : videoMetaList,
-                'videoIdList' : videoIdList,
-            }
-        )
-    else:
-       return render(request, 'Core/test2.html' )
-    
-    
-
-=======
 
 from core import searchAll
 def test_minhwa2(request):
@@ -394,4 +352,3 @@ def test_minhwa3(request):
             'videoMetaList' : videoMetaList,
             'videoIdList' : newVideoIdList,
         })
->>>>>>> 153bc3ceb82d29a2eb4b73df9ac258e9a385de28
