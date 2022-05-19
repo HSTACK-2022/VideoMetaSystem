@@ -15,8 +15,11 @@ class Total:
 
     resultVideoIDList = set()
     finalDict = {}
-    rankcount = {} #rank 알고리즘
-    metarank = []
+    rankcount = {} # 정확도 합 카운트
+    rankDict = {} #rank 딕셔너리
+    rankDetail = [] #정확도 detail 텍스트
+    detail = {}
+
 
     def searchWordFromDB(self,searchTexts):
         #resultVideoIDList = set()
@@ -26,7 +29,7 @@ class Total:
             # 쿼리셋.values_list('필드이름', flat=True) : 해당 필드의 값들을 리스트로 제공
 
             # [1234, 5678, 1212] << 이런 식으로 나올 것이라 예상
-            for k in models.Keywords.objects.filter(keyword__contains = searchText).values_list('id', flat=True):
+            for k in models.Keywords.objects.filter(keyword__contains = searchText).exclude(expose = 0).values_list('id', flat=True):
                 self.resultVideoIDList.add(k)    # id를 resultVideoIDList 집합에 저장
             for ti in models.Metadata.objects.filter(title__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(ti)
@@ -36,7 +39,7 @@ class Total:
                self.resultVideoIDList.add(to)
 
 
-    #ranking 알고리즘
+    # 입력 값 일치율대로 점수 부여
     def getrank(self, searchTexts, videoId): #ranking algo
         self.rankcount = {"keyword":0,"title":0,"present":0,"subtitle":0} #rank 알고리즘 초기화
         for searchText in searchTexts:
@@ -44,12 +47,15 @@ class Total:
                 self.rankcount["keyword"] += 5
             for ti in models.Metadata.objects.filter(id = videoId).filter(title__contains = searchText).values_list('id', flat=True).distinct():
                 self.rankcount["title"] = 50
+                self.rankDetail.append("제목일치")
             for p in models.Metadata.objects.filter(id = videoId).filter(presenter__contains = searchText).values_list('id', flat=True).distinct():
                 self.rankcount["present"] = 50
+                self.rankDetail.append("발표자일치")
             for to in models.Timestamp.objects.filter(id = videoId).filter(subtitle__contains = searchText).values_list('id', flat=True):
                 self.rankcount["subtitle"] += 5
-            print("정확도 (우선순위) : "+str(sum(self.rankcount.values())))
-        return(sum(self.rankcount.values()))
+
+        print("bbbbbbbbbbbbbbbb"+str(self.rankDetail)+str(sum(self.rankcount.values())))
+        return(sum(self.rankcount.values()), self.rankDetail)
 
 
     def getVideoMetadataFromID(self, videoId):
@@ -61,7 +67,7 @@ class Total:
         print(videoId)
         self.finalDict = {} # 초기화
         metadataList = list(models.Metadata.objects.filter(id = videoId).all().values()) # values_list()로 하면 key없는 list형태로 반환
-        keywordList = list(models.Keywords.objects.filter(id = videoId).all().values_list('keyword', flat=True).distinct()) # list형태
+        keywordList = list(models.Keywords.objects.filter(id = videoId).exclude(expose = 0).all().values_list('keyword', flat=True).distinct()) # list형태
         #filePath = list(models.Videopath.objects.filter(id = videoId).all().values_list('videoaddr','imageaddr')) # imageaddr
         #timestamp = list(models.Timestamp.objects.filter(id = videoId).all().values())
         self.finalDict['id'] = videoId
@@ -123,24 +129,35 @@ def search(searchTexts):
     #resultVideoIDList
     searchResultMeta = []
 
-    #즉 여기서 searchWordFromDBfh 받아온 resultVideoIDList의 값을 변경해주면 됨
-    print(list(a.resultVideoIDList)) # [312, 313, 315] 여기서 순서를
-    metaRank = []
-    max = 0
+    maxlist = [] # 알고리즘을 거친 후의 id 리스트
+    rankDict = {} # 정확도 보내는 딕셔너리
+    tttt = []
 
+    #ranking algorithm
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         print(i) #id
-        a.getrank(searchTexts,i)
-        if a.getrank(searchTexts,i) > max:
-            metaRank.insert(0, i)
-            max = a.getrank(searchTexts,i)
-        else:
-            metaRank.append(i)
-    for j in metaRank:
+        print(tttt)
+        a.getrank(searchTexts,i) #해당 videoId의 정확도
+        a.rankDetail = [] #초기화
+        rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
+        print(a.detail[i])
+        tttt.append(a.detail[i])
+
+
+    #value 큰 순서대로 딕셔너리 재배열
+    sdict = sorted(rankDict.items(), key=lambda x: x[1], reverse=True)
+
+
+    maxlist = dict(sdict) #list형태의 딕셔너리를 딕셔너리 형태로 전환
+    for j in maxlist:
         a.getVideoMetadataFromID(j) #id 받아오기
         searchResultMeta.append(a.finalDict)
+        rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
+        print(a.detail)
+        print(a.rankDetail)
 
-    return (list(a.resultVideoIDList), list(searchResultMeta))
+    print(str(a.detail))
+    return (list(a.resultVideoIDList), list(searchResultMeta), a.detail)
 
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임

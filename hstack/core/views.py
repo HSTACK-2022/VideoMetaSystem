@@ -55,8 +55,9 @@ def searchFile(request):
 
             videoMetaList = []
             videoIdList = {}
-            videoIdList, videoMetaList = searchAll.search(searchWords)
-            print("asdfsafasdf1111111"+str(videoMetaList))
+            videoIdList, videoMetaList, rankData = searchAll.search(searchWords)
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(videoIdList, videoMetaList, rankData)
 
             if not videoMetaList :
                 return render(request, renderAppName + '/test_search.html',
@@ -68,7 +69,6 @@ def searchFile(request):
                 for video in videoMetaList:
                     print("****")
                     print(video['thumbnail'])
-#                    rankAlgo.rankAlgo()
 
                 return render(request, renderAppName + '/test_search.html',
                     context={
@@ -76,6 +76,7 @@ def searchFile(request):
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
+                        'rankData': rankData,
                     })
 
 # video(file) upload
@@ -165,10 +166,6 @@ def detailFile(request, pk):
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
-
-
-
-
 
 
 # for test.
