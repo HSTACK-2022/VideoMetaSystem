@@ -27,6 +27,7 @@ urlpatterns = [
     path('test/minhwa', views.test_minhwa),
     #path('test/minhwa2/', views.test_minhwa2, name="minhwa"),
     path('test/minhwa2/detailSearch/', views.test_minhwa3, name="detailSearch"),
+    #path('test/success/finish/', views.test_successFinish, name="uploadFinish"),
 ]
 
 if settings.DEBUG: 
