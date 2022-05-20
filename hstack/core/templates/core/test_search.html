@@ -46,7 +46,7 @@
                 <tr>
                     <div class= list>
                     <td class="section">
-                        <p style="text-align:left; margin-left:35px;">- 검색결과는 {{videoIdList|length}}개 입니다</p>
+                        <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다</p>
                         {% for meta in videoMetaList %}
                             <!-- video id:{{ii.id_id}} <br> -->
                             {% for ii in meta.metadata %}
@@ -119,13 +119,13 @@
                                         <li>
                                             <label for="todo-02">
                                                 <input id="todo-02" type="checkbox" onclick="clickCheck(this)">
-                                                <span>업로드 최신 순</span>
+                                                <span>▪ 업로드 최신 순</span>
                                             </label>
                                         </li>
                                         <li>
                                             <label for="todo-03">
                                                 <input id="todo-03" type="checkbox" onclick="clickCheck(this)">
-                                                <span>업로드 과거 순</span>
+                                                <span>▪ 업로드 과거 순</span>
                                             </label>
                                         </li>
                                         
@@ -142,7 +142,7 @@
                                                     <label>
                                                         <span
                                                             value=  {{category}}
-                                                            onclick="searchDetail('category','{{category}}')">- {{category}}</span>
+                                                            onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
                                                     </label> 
                                                     
                                                 </li>
@@ -158,7 +158,7 @@
                                                     <label>
                                                         <span
                                                             value="{{category}}"
-                                                            onclick="searchDetail('category','{{category}}')">- {{category}}</span>
+                                                            onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
                                                     </label> 
                                                     
                                                 </li>
@@ -174,7 +174,7 @@
                                                     <label>
                                                         <span
                                                             value="{{category}}"
-                                                            onclick="searchDetail('category','{{category}}')">- {{category}}</span>
+                                                            onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
                                                     </label> 
                                                     
                                                 </li>
