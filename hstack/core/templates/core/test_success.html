@@ -75,7 +75,7 @@
                 <script>
                     var keywordButtonList = [];
                     $(document).ready(function(){
-                        $("span").on('click', function(e){
+                        $("button").on('click', function(e){
                             // 같은 레벨에서 몇번쨰
                             var i = $(this).index();  
                             console.log(i);  // 0번째
@@ -111,9 +111,9 @@
                 <tr class="metadataDetailTR"><td colspan="2">
                     {% for keyword in keywords %}
                         {% if keyword.expose == 1 %}
-                            <span id="keywordsBtn" class="keywordsBtn" >{{keyword.keyword}}</span>
+                            <button type="button" id="keywordsBtn" class="keywordsBtn" >{{keyword.keyword}}</button>
                         {% else %}
-                            <span  id="keywordsBtn" class="keywordsClickedBtn" >{{keyword.keyword}}</span>
+                            <button type="button"  id="keywordsBtn" class="keywordsClickedBtn" >{{keyword.keyword}}</button>
                         {% endif %}
                     {% endfor %}
                 
