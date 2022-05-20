@@ -16,7 +16,13 @@ urlpatterns = [
     path('test/success/', views.success, name="success"),
 
     path('test/minhwa', views.test_minhwa),
+<<<<<<< HEAD
     path('test/minhwa2/detailSearch/', views.test_minhwa3, name="detailSearch"),
+=======
+    #path('test/minhwa2/', views.test_minhwa2, name="minhwa"),
+    path('test/minhwa2/detailSearch/', views.test_minhwa3, name="detailSearch"),
+    #path('test/success/finish/', views.test_successFinish, name="uploadFinish"),
+>>>>>>> ef7b06d7f03380ea86b491bd6d823e363325972c
 ]
 
 if settings.DEBUG: 

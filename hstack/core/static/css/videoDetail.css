@@ -260,6 +260,18 @@ div.right {
     border-radius: 20px;
     border: 1px solid #888888;
     background-color: #f9f9f9;
+    display: inline-block;
+}
+
+.keywordsClickedBtn {
+    height: 25px;
+    margin: 2px 5px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 20px;
+    border: 1px solid #888888;
+    background-color: #737070;
+    display: inline-block;
 }
 
 .indexTime {

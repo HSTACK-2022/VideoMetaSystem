@@ -1,4 +1,5 @@
 <!-- extends 'core/upload_detail.html' %} -->
+<script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 <!DOCTYPE html>
 {% load static %}
 <html>
@@ -7,17 +8,37 @@
         <title>VIFO - {{metadata.title}} </title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?after">
+
+        <!-- submit check -->
+        
 </head>
 <body class="bodyArea">
+    <form onsubmit="return validCheck()" action="{% url 'Core:success'%}" method="POST" id="form">
+    {% csrf_token %}
+    <script>
+        
+        function validCheck() {
+            // alert(keywordButtonList);
+            // document.getElementById('keywordButtonList').value = keywordButtonList;
+            // console.log(document.getElementById('keywordButtonList').value);
+            //return false;   
+            var i = 0;
+            for(var key in keywordButtonList){
+                var kk = document.createElement('input');
+                kk.setAttribute("type","hidden");
+                kk.setAttribute("name","keywordButtonList");
+                kk.setAttribute("value",keywordButtonList[i]);
+                document.getElementById('form').append(kk);
+                i++;
+            }
+        }
+    </script>
     {% include 'core/test_header.html' %}
     <div class="divParent">
         <!-- Post content-->
         <div class="detailHeader">
             <!-- Preview image figure-->
-            <video class="videoPlayer" id = "video"
-                src="../media/Uploaded/Video/algo_Ol2IO64.mp4"
-                controls>
-            </video>
+            <video class="videoPlayer" id = "video" src="{{videoaddr}}" controls></video>
             <!--<div>result : {{Metadata}}</div>-->
 
             <!-- Post title-->
@@ -51,13 +72,51 @@
                     </div>
                 </div></td></tr>
                 <!-- Keywords -->
+                <script>
+                    var keywordButtonList = [];
+                    $(document).ready(function(){
+                        $("span").on('click', function(e){
+                            // 같은 레벨에서 몇번쨰
+                            var i = $(this).index();  
+                            console.log(i);  // 0번째
+
+                            if($(this).hasClass("keywordsBtn")){ // expose가 1인 경우
+                                $(this).removeClass('keywordsBtn');
+                                $(this).addClass('keywordsClickedBtn');
+                                keywordButtonList.splice(i , 1 , parseInt("0"));
+                            }else {
+                                $(this).removeClass('keywordsClickedBtn'); // expose가 0인 경우
+                                $(this).addClass('keywordsBtn');
+                                keywordButtonList.splice(i , 1 , parseInt("1"));
+                            }
+                            // 존재하는 모든 버튼을 기준으로 index
+                            // var j = $("button").index(this);  
+                            // console.log(j);
+
+                            console.log(keywordButtonList);
+                        });
+                    });
+                </script>
                 <tr><td colspan="2"><div class="metadataTR">
                     <div class="metadataTitle">KEYWORDS</div>
+                    {% for keyword in keywords %}
+                        <input type="hidden" value={{keyword.keyword}} name="keywordsBtn">
+                        {% if keyword.expose == 1 %}
+                            <script>keywordButtonList.push({{keyword.expose}})</script>
+                        {% else %}
+                            <script>keywordButtonList.push({{keyword.expose}})</script>
+                        {% endif %}
+                    {% endfor %}
                 </div></td></tr>
                 <tr class="metadataDetailTR"><td colspan="2">
                     {% for keyword in keywords %}
-                    <button class="keywordsBtn">{{keyword.keyword}}</button>
+                        {% if keyword.expose == 1 %}
+                            <span id="keywordsBtn" class="keywordsBtn" >{{keyword.keyword}}</span>
+                        {% else %}
+                            <span  id="keywordsBtn" class="keywordsClickedBtn" >{{keyword.keyword}}</span>
+                        {% endif %}
                     {% endfor %}
+                
                 </td></tr>
                 <tr class="emptyTR"></tr>
                  <!-- Keywords -->
@@ -68,7 +127,7 @@
                 <tr class="metadataDetailTR">
                     <!-- 수정 필요 -->
                     <td>
-                        <button class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
+                        <button type="button" class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
                     </td>
                     <td>
                         <div class="indexTitle">{{timestamp.subtitle}}</div>
@@ -76,6 +135,8 @@
                 </tr>
                 {% endfor %}
             </table>
+            
+            <input type="submit" value="저장">
         </div>
     </div>
     
@@ -88,6 +149,9 @@
             vid.play();
         }
     </script>
+
+
+    </form>
 </body>
 {% endfor %}
 </html>

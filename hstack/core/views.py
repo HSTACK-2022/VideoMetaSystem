@@ -59,7 +59,7 @@ def searchFile(request):
             categoryList = {}
             videoIdList, videoMetaList, categoryList = searchAll.search(searchWords)
 
-            if not videoIdList :
+            if not videoMetaList :
                 return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 404,
@@ -72,7 +72,7 @@ def searchFile(request):
                         'categoryList' : categoryList,
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
-                        'searchWord' : word
+                        'searchWord' : word,
                     })
 
 # video(file) upload
@@ -199,22 +199,77 @@ def detailFile(request, pk):
 
 # for test.
 def success(request):
-    videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
-    videoPath = "../media" + videopath.split("media")[1]
-    print(videoPath)
-    return render(request, renderAppName + '/dayeon.html', context={"videopath" : videoPath})
+    pk = 28     ######## 수정 필요
+
+    if request.method == "POST":
+        keywordButtonList = request.POST.getlist("keywordButtonList")
+        keywordsBtn = request.POST.getlist("keywordsBtn")
+        
+        print(">>>>>>>>>>>>>>>>>>>")
+        print(len(keywordButtonList))
+        print(len(keywordsBtn))
+
+        for i in range(len(keywordButtonList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtn[i]).update(expose=keywordButtonList[i])
+        
+
+
+    videoPath = models.Videopath.objects.get(id = pk).videoaddr
+    if OS == 'Windows':
+        videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
+    else:
+        videoPath4Play = "../../../media" + videoPath.split("media")[1]
+    
+    textPath = models.Videopath.objects.get(id = pk).textaddr
+    try:
+        with open(textPath, 'r', encoding='UTF-8-sig') as f:
+            scripts = f.readlines()
+    except FileNotFoundError as err:
+        print(err)
+        scripts = []
+
+    return render(
+        request,
+        renderAppName + '/test_success.html',
+        {
+            'videoaddr' : videoPath4Play,
+            'scripts' : scripts,
+            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
+            'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+        }
+    )
+def test_successFinish(request):
+    keywordButtonList = request.POST['keywordButtonList']
+    print(keywordButtonList)
 
 def test_minhwa(request):
     return render(
         request,
         renderAppName + '/test.html',
         {
-            'keywords' : models.Keywords.objects.filter(id = 14).all().values(),
-            'metadatas' : models.Metadata.objects.filter(id = 14).all().values(),
-            'timestamps' : models.Timestamp.objects.filter(id = 14).all().values(),
+            'keywords' : models.Keywords.objects.filter(id = 28).all().values(),
+            'metadatas' : models.Metadata.objects.filter(id = 28).all().values(),
+            'timestamps' : models.Timestamp.objects.filter(id = 28).all().values(),
         }
     )
 
+from core import searchAll
+def test_minhwa2(request):
+    videoMetaList = searchAll.searchTest()
+    videoIdList = searchAll.searchTest2()
+    # for id in videoIdList:
+    #     res = {}
+    #     res[]
+    print(videoIdList)
+    return render(
+        request,
+        'Core/test2.html',
+        {
+            'videoMetaList' : videoMetaList,
+            'videoIdList' : videoIdList,
+        }
+    )
 def test_minhwa3(request):
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category
