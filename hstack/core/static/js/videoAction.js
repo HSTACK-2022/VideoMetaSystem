@@ -5,6 +5,7 @@ function inputMove(time) {
     vid.currentTime = timeSec;
     vid.play();
 }
+
 function searchPost(scripts) {
     var str = document.getElementById("searchContent").value;
     var parent = document.getElementById("searchResArea");
@@ -37,6 +38,8 @@ function searchPost(scripts) {
         }
     });
 }
+
+
 function removeAllChild(tag){
     while (tag.hasChildNodes()) {
         tag.removeChild(tag.firstChild);

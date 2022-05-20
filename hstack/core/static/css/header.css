@@ -1,18 +1,40 @@
 @font-face {
-    font-family : 'GmarketSans';
-    src : url('../font/GmarketSansTTFMedium.ttf');
+    font-family: 'GmarketSans';
+    src: url('../font/GmarketSansTTFMedium.ttf');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family : 'GmarketSans';
-    src : url('../font/GmarketSansTTFBold.ttf');
+    font-family: 'GmarketSans';
+    src: url('../font/GmarketSansTTFBold.ttf');
     font-weight: bold;
     font-style: normal;
 }
 
-*{
+@font-face {
+    font-family: 'S-Core3';
+    src: url("../font/SCDREAM3.OTF");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-Core4';
+    src: url("../font/SCDREAM4.OTF");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-Core5';
+    src: url("../font/SCDREAM5.OTF");
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+* {
     font-family: 'GmarketSans';
 }
 
@@ -29,22 +51,22 @@ header {
     width: 100%;
 }
 
-#header_search{
-    height:40px;
-    width:90%;
+/* #header_search {
+    height: 40px;
+    width: 90%;
     background-color: white;
     border: 1px solid gray;
     border-radius: 20px;
     align-items: center;
-}
+} */
 
-#header_upload{
-    width:10px;
+#header_upload {
+    width: 10px;
     align-self: center;
     text-align: right;
 }
 
-#header_search_input_table{
+#header_search_input_table {
     width: 100%;
 }
 
@@ -52,25 +74,31 @@ header {
     outline: none;
 }
 
-.searchInput[type=text] {
-    width:100%;
-    height:40px;
-    margin-left:20px;
-    background-color:transparent;
+input, input:focus{
     border: none;
+    border-radius: 2pt;
+    box-shadow: 0 0 0 1pt grey;
+    outline: none;
+    transition: .1s;
+}
+
+.searchInput:focus {
+    box-shadow: 0 0 3pt 2pt #08355e;
+}
+ 
+
+.searchInput[type=text] {
+    font-family: 'S-Core4';
+    width: 100%;
+    vertical-align: middle;
+    margin-left: 20px;
+    /* background-color: darkblue; */
+    
 }
 
 .searchInput[type=submit] {
-    height: auto;
-    margin: auto;
-    text-align: right;
-    background-color:transparent;
-    background-image: url('../img/search.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    cursor: pointer;
-    outline: none;
-    border: none;
+    
+    
 }
 
 #logo {
@@ -78,12 +106,12 @@ header {
     margin-right: 20px;
 }
 
-#uploadBtnImg{
+#uploadBtnImg {
     height: 30px;
 }
 
-.uploadShort {
-    background-color:transparent;
+#upload {
+    background-color: transparent;
     border: none;
     outline: none;
     cursor: pointer;
@@ -91,7 +119,7 @@ header {
 }
 
 #home {
-    background-color:transparent;
+    background-color: transparent;
     border: none;
     outline: none;
     cursor: pointer;
