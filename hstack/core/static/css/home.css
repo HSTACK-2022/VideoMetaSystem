@@ -12,6 +12,19 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'na2';
+    src: url("../font/NanumSquareRoundEB.ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'na1';
+    src: url("../font/NanumSquareRoundR.ttf");
+    font-style: normal;
+}
+
+
 *{
     font-family: 'GmarketSans';
 }
@@ -38,9 +51,10 @@
     height:50px;
     width:100%;
     background-color: white;
-    border: 1px solid gray;
+    border: 2px solid rgb(48, 48, 48);
     border-radius: 30px;
     align-items: center;
+    
 }
 
 
@@ -54,11 +68,21 @@
 
 .searchInput[type=text] {
     width:100%;
-    height:45x;
+    margin-top: 15px;
     margin-left:20px;
     background-color:transparent;
     border: none;
+
+ 
+    font-size: 15px;
+  
+    
 }
+
+input::-webkit-input-placeholder {
+    color:rgb(48, 48, 48);
+
+  }
 
 .searchInput[type=submit] {
     height: auto;
@@ -75,11 +99,27 @@
 }
 
 #logo{
-    height: 80px;
+    height: 150px;
+    margin-bottom: 20px;
+    
 }
 
+#logo:hover{
+    height: 150px;
+    margin-bottom: 20px;
+    
+}
+
+#logo2{
+    height: 40px;
+    display: inline-block;
+}
+
+
 #uploadBtnImg{
-    height: 30px;
+    
+    height: 25px;
+
 }
 
 #upload {
@@ -87,6 +127,9 @@
     border: none;
     outline: none;
     cursor: pointer;
-    margin-right: 10px;
+    margin-top: 5px;
+    margin-right: -5px;
     margin-bottom: 100px;
+    float: right;
+    display: inline-block;
 }

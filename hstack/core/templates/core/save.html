@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    {% for metadata in metadatas %}
+
+        <head>
+
+            <title>VIFO -
+                {{metadata.title}}
+            </title>
+            <meta charset="UTF-8" content="no-cache">
+            <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?before">
+            <script>
+                location.href = "#tab1";
+            </script>
+        </head>
+
+        <body class="bodyArea">
+            {% include 'core/test_header.html' %}
+            <div class="divParent">
+
+                <!-- 비디오 하단 정보 left-->
+                <div class="left">
+                    <!-- Preview image figure-->
+                    <video
+                        height="500"
+                        class="videoPlayer"
+                        id="video"
+                        src="{{videoaddr}}"
+                        controls="controls"></video>
+                    <!--<div>result : {{Metadata}}</div>-->
+
+                    <!-- 키워드 3개만 수정@@@@@@@@@@@-->
+                    <div class="keyTag">
+
+                        {% for keyword in keywords %}
+                            {% if keyword != "" and forloop.counter < 4 %}
+                                #{{keyword.keyword}}
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+
+                    <!-- Post title-->
+                    <div class="videoTitle">{{ metadata.title }}</div>
+                    <!-- Post meta content-->
+                    <div class="videoUploadDate">{{metadata.uploaddate}}</div>
+                    <div class="videoPresenter">
+                        by
+                        {{metadata.presenter}}</div>
+                    <hr style="width: 100%; margin-bottom: 50px;">
+
+                </div>
+                <!-- 비디오 하단 정보 left 끝!-->
+
+                <!-- 비디오 하단 정보 right 끝!-->
+                <div class="right">
+                    <table class="metadataTable">
+                        <!-- Basic metadata -->
+                        <tr>
+                            <td colspan="2">
+                                <div class="metadataTR">
+                                    <div class="metadataTitle">CATEGORY</div>
+                                    <div class="metadataContent">{{metadata.category}}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="metadataTR">
+                                    <div class="metadataTitle">NARRATIVE</div>
+                                    <div class="metadataContent">{{metadata.narrative}}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="metadataTR">
+                                    <div class="metadataTitle">METHOD</div>
+                                    <div class="metadataContent">{{metadata.method}}</div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="metadataTR">
+                                    <div class="metadataTitle">VOICE</div>
+                                    <div class="metadataContent">
+                                        <!-- <div style="background-color: blue; display: inline-block;
+                                        width:{{metadata.voicemanrate}}%;" >M</div> <div style="background-color: red;
+                                        display: inline-block; width:{{metadata.voicewomanrate}}%;" >W</div> -->
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- 비디오 하단 정보 right 끝!-->
+
+            </div>
+
+            <!-- end of detail Header-->
+
+            <div class="detailMetadata">
+                <div class="tabmenu">
+                    <ul>
+                        <li id="tab1" class="btnCon">
+                            <a class="btn first" href="#tab1">metadata</a>
+                            <div class="tabCon">
+                                <table class="metadataTable">
+                                    <!-- Keywords -->
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="metadataTR">
+                                                <div class="metadataTitle">KEYWORDS</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="metadataDetailTR">
+                                        <td colspan="2">
+                                            {% for keyword in keywords %}
+                                                <button class="keywordsBtn">{{keyword.keyword}}</button>
+                                            {% endfor %}
+
+                                        </td>
+                                    </tr>
+                                    <tr class="emptyTR"></tr>
+                                    <!-- Keywords -->
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="metadataTR">
+                                                <div class="metadataTitle">INDEX</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% for timestamp in timestamps %}
+                                        <tr class="metadataDetailTR">
+                                            <!-- 수정 필요 -->
+                                            <td>
+                                                <button class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
+                                            </td>
+                                            <td>
+                                                <div class="indexTitle">{{timestamp.subtitle}}</div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </li>
+
+                        <li id="tab2" class="btnCon">
+                            <a class="btn second" href="#tab2">script</a>
+                            <div class="tabCon">
+
+                                <!-- detail search : only for detail -->
+                                <div class="innerSearch">
+                                    <input
+                                        type="text"
+                                        placeholder="Search in &quot;{{ metadata.title }}&quot;"
+                                        id="searchContent"></input>
+                                    <input
+                                        type="submit"
+                                        class="searchBtn"
+                                        value=""
+                                        onclick="searchPost({{scripts}});"></input>
+                                </div>
+
+                                <div style="height:500px; overflow-x:hidden; overflow-y:scroll; ;">
+                                    <table id="searchResArea"></table>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+
+    </body>
+{% endfor %}
+
+</html>

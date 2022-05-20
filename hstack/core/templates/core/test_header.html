@@ -1,31 +1,27 @@
 {% load static %}
 <header>
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css'%}">
     <table id="header_table">
         <tr>
             <td id="header_upload">
                 <button id="home" onclick="location.href='/test/'"><img id="logo" src="{% static 'img/logo_short.png' %}"></button>
             </td>
-            <td>
-                <div id="header_search">
+
+            <td >
+                
                     <form name="search" action="{% url 'Core:searchFile' %}" method="GET" enctype="multipart/form-data">
-                        <table id="header_search_input_table">
-                            <tr>
                                 <td>
-                                    <input class="searchInput" type="text" name="searchText" placeholder="검색어를 입력하세요!">
+                                    <input class="searchInput" type="text" name="searchText" placeholder="검색어를 입력하세요.">{% csrf_token %}<input class="searchInput2" type="submit" value=" ">
                                 </td>
-                                <td style="width:20px;">
-                                    {% csrf_token %}
-                                    <input class="searchInput" type="submit" value="">
-                                </td>
-                            </tr>
-                        </table>
                     </form>
-                </div>
+                
             </td>
+
+
             <td id="header_upload">
-                <button id="upload" onclick="location.href='/test/upload/'"><img id="uploadBtnImg" src="{% static 'img/upload.png' %}"></button>
+                <button id="upload" onclick="location.href='/test/upload/'"><img id="uploadBtnImg" src="{% static 'img/upload2.png' %}"></button>
             </td>
+
         </tr>
     </table>
 </header>
