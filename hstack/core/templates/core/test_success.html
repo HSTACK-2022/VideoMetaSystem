@@ -13,7 +13,7 @@
         
 </head>
 <body class="bodyArea">
-    <form onsubmit="return validCheck()" action="{% url 'Core:success'%}" method="POST" id="form">
+    <form onsubmit="return validCheck()" action="{% url 'Core:success' pk=pk%}" method="POST" id="form">
     {% csrf_token %}
     <script>
         

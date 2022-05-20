@@ -180,13 +180,17 @@ def detailFile(request, pk):
         print(err)
         scripts = []
 
+    keywordQ = Q()
+    keywordQ &= Q(id = pk)
+    keywordQ &= Q(expose=True)
+
     return render(
         request,
         renderAppName + '/test_detail.html',
         {
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
-            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
@@ -196,11 +200,8 @@ def detailFile(request, pk):
 
 
 
-
 # for test.
-def success(request):
-    pk = 28     ######## 수정 필요
-
+def success(request, pk):
     if request.method == "POST":
         keywordButtonList = request.POST.getlist("keywordButtonList")
         keywordsBtn = request.POST.getlist("keywordsBtn")
@@ -211,8 +212,6 @@ def success(request):
 
         for i in range(len(keywordButtonList)):
             models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtn[i]).update(expose=keywordButtonList[i])
-        
-
 
     videoPath = models.Videopath.objects.get(id = pk).videoaddr
     if OS == 'Windows':
@@ -232,6 +231,7 @@ def success(request):
         request,
         renderAppName + '/test_success.html',
         {
+            'pk' : pk,
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
             'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
@@ -239,9 +239,11 @@ def success(request):
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
+
 def test_successFinish(request):
     keywordButtonList = request.POST['keywordButtonList']
     print(keywordButtonList)
+
 
 def test_minhwa(request):
     return render(
@@ -254,22 +256,6 @@ def test_minhwa(request):
         }
     )
 
-from core import searchAll
-def test_minhwa2(request):
-    videoMetaList = searchAll.searchTest()
-    videoIdList = searchAll.searchTest2()
-    # for id in videoIdList:
-    #     res = {}
-    #     res[]
-    print(videoIdList)
-    return render(
-        request,
-        'Core/test2.html',
-        {
-            'videoMetaList' : videoMetaList,
-            'videoIdList' : videoIdList,
-        }
-    )
 def test_minhwa3(request):
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category
@@ -284,7 +270,6 @@ def test_minhwa3(request):
 
     newVideoIdList, videoMetaList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
     
-    #print(videoIdList)
 
     for video in videoMetaList:
         print("****")

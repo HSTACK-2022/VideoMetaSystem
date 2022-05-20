@@ -3,8 +3,10 @@
 
 import os
 import platform
-from unicodedata import category
 from . import models
+from unicodedata import category
+from django.db.models import Q
+
 
 # 상수 설정
 OS = platform.system()
@@ -40,8 +42,11 @@ class Total:
         # values_list() - [5, 6, 7]  # values_list('title', flat=True) - ['post #1', 'title #1', 'title #2']
         print(videoId)
         self.finalDict = {} # 초기화
+        keywordQ = Q()
+        keywordQ &= Q(id = videoId)
+        keywordQ &= Q(expose=True)
         metadataList = list(models.Metadata.objects.filter(id = videoId).all().values()) # values_list()로 하면 key없는 list형태로 반환
-        keywordList = list(models.Keywords.objects.filter(id = videoId).all().values_list('keyword', flat=True).distinct()) # list형태
+        keywordList = list(models.Keywords.objects.filter(keywordQ).all().values_list('keyword', flat=True).distinct()) # list형태
         #filePath = list(models.Videopath.objects.filter(id = videoId).all().values_list('videoaddr','imageaddr')) # imageaddr
         #timestamp = list(models.Timestamp.objects.filter(id = videoId).all().values())
         self.finalDict['id'] = videoId
@@ -63,10 +68,13 @@ class Total:
     # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
     def getDetailVideoList(videoId, search_type, search_detail_type):
         finalDict = {} # 초기화
+        keywordQ = Q()
+        keywordQ &= Q(id = videoId)
+        keywordQ &= Q(expose=True)
         if search_type == "category":
             if models.Metadata.objects.filter(id = videoId).filter(category = search_detail_type).exists():
                 metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
-                keywordList = list(models.Keywords.objects.filter(id = videoId).all().values_list('keyword', flat=True).distinct())
+                keywordList = list(models.Keywords.objects.filter(keywordQ).all().values_list('keyword', flat=True).distinct())
                 finalDict['id'] = videoId
                 finalDict['metadata'] = metadataList 
                 finalDict['keyword']=keywordList
@@ -80,7 +88,7 @@ class Total:
         elif search_type == "method":
             if models.Metadata.objects.filter(id = videoId).filter(method = search_detail_type).exists():
                 metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
-                keywordList = list(models.Keywords.objects.filter(id = videoId).all().values_list('keyword', flat=True).distinct())
+                keywordList = list(models.Keywords.objects.filter(keywordQ).all().values_list('keyword', flat=True).distinct())
                 finalDict['id'] = videoId
                 finalDict['metadata'] = metadataList 
                 finalDict['keyword']=keywordList
