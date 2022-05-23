@@ -88,10 +88,7 @@ Video Meta System (VMetaSys)는 영상의 메타데이터를 자동으로 구축
 ## 🖼 프로젝트 결과
 
 ### 1. 작품 사진
-   ![init](./img/VMSinit.png)
-   ![search](./img/VMSsearch.png)  
-   ![extract](./img/VMSextract.png)  
-   ![detail](./img/VMSdetail.png)
+   ![result](./img/VMSresult.png)
    
 <br/>
 
