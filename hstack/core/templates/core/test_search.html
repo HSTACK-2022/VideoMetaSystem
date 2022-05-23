@@ -2,8 +2,7 @@
 {% load static %}
 <html>
     <head>
-        <title>VIFO - SEARCH
-            {{searchWord}}</title>
+        <title>VMetaSys - SEARCH {{searchWord}}</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoList.css' %}?">
 
@@ -29,17 +28,13 @@
                 else 
                     searchDetail("category", selected);
                 }
-
-
             function clickCheck(target) {
-                document.querySelectorAll(`input[type=checkbox]`)
-                    .forEach(el => el.checked = false);
-            
+                document.querySelectorAll(`input[type=checkbox]`).forEach(el => el.checked = false);
                 target.checked = true;
             }
         </script>
     </head>
-    <body class="bodyArea">
+<body class="bodyArea">
 
         {% include 'core/test_header.html' %}
         {% if code == 200 %}
@@ -48,7 +43,7 @@
                 <tr>
                     <div class= list>
                     <td class="section">
-                        <p style="text-align:left; margin-left:35px;">검색결과는 {{videoIdList|length}}개 입니다.</p>
+                        <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다</p>
                         {% for meta in videoMetaList %}
                             <!-- video id:{{ii.id_id}} <br> -->
                             {% for ii in meta.metadata %}
@@ -61,19 +56,12 @@
                                         </td>
                                         <td>
                                             <table class="videoTable">
-                                        
                                                 <tr>
                                                     <td>
                                                         <div class="VT_category">{{ii.category}}</div>
                                                         <div class="VT_narrative">{{ii.narrative}}</div>
                                                         <div class="VT_method">{{ii.method}}</div>
-                                                        
-                                                        {% for rank, value in rankData.items %}
-                                                        {% if rank == ii.id_id %}
-                                                        <div id="rankdiv" >{{value|join:' '}}</div>
-                                                        {% endif %}
-                                                        {% endfor %}
-
+                                                        <div class="rank_data">detail은 (개발중..)% 입니다</div>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -99,7 +87,6 @@
                                                         <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
                                                     </td>
                                                 </tr>
-                                            
                                             </table>
                                         </td>
                                     </tr>
@@ -122,37 +109,39 @@
                                 <input type="hidden" name="videoIdList" value="{{videoIdList}}">
                                 <input type="hidden" name="search_type" id="search_type">
                                 <input type="hidden" name="search_detail_type" id="search_detail_type">
+                                <input type="hidden" name="searchWord" value="{{searchWord}}">
                                 <div class="category">
                                     <h2 class="todo-cmp__header">검색 정렬 방법</h2>
                                     
                                     <ul class="todo-cmp__list">
-                                        
+                                       
                                         <li>
                                             <label for="todo-02">
                                                 <input id="todo-02" type="checkbox" onclick="clickCheck(this)">
-                                                <span>업로드 최신 순</span>
+                                                <span>▪ 업로드 최신 순</span>
                                             </label>
                                         </li>
                                         <li>
                                             <label for="todo-03">
                                                 <input id="todo-03" type="checkbox" onclick="clickCheck(this)">
-                                                <span>업로드 과거 순</span>
+                                                <span>▪ 업로드 과거 순</span>
                                             </label>
                                         </li>
+                                        
                                         
                                     </ul>
 
                                     <h2 class="todo-cmp__header">검색 내 세부검색</h2>
                                     
                                     <ul class="todo-cmp__list">
-                                        <li>CATEGORY</li>
+                                        <li> CATEGORY</li>
                                         <ul class="todo-cmp__list">
                                             {% for category in categoryList %}
                                                 <li>
                                                     <label>
-                                                        <span
-                                                            value="{{category}}"
-                                                            onclick="searchDetail('category','{{category}}')">-{{category}}</span>
+                                                        <span style="font-family: 'pre1';"
+                                                            value=  {{category}}
+                                                            onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
                                                     </label> 
                                                     
                                                 </li>
@@ -163,12 +152,12 @@
                                     <ul class="todo-cmp__list">
                                         <li>TYPE</li>
                                         <ul class="todo-cmp__list">
-                                            {% for category in categoryList %}
+                                            {% for type in typeList %}
                                                 <li>
                                                     <label>
-                                                        <span
-                                                            value="{{category}}"
-                                                            onclick="searchDetail('category','{{category}}')">-{{category}}</span>
+                                                        <span style="font-family: 'pre1';"
+                                                            value="{{type}}"
+                                                            onclick="searchDetail('narrative','{{type}}')">▪ {{type}}</span>
                                                     </label> 
                                                     
                                                 </li>
@@ -179,13 +168,14 @@
                                     <ul class="todo-cmp__list">
                                         <li>DATA</li>
                                         <ul class="todo-cmp__list">
-                                            {% for category in categoryList %}
+                                            {% for data in dataList %}
                                                 <li>
                                                     <label>
-                                                        <span
-                                                            value="{{category}}"
-                                                            onclick="searchDetail('category','{{category}}')">-{{category}}</span>
-                                                    </label>      
+                                                        <span style="font-family: 'pre1';"
+                                                            value="{{data}}"
+                                                            onclick="searchDetail('data','{{data}}')">▪ {{data}}</span>
+                                                    </label> 
+                                                    
                                                 </li>
                                             {% endfor %}
                                         </ul>
@@ -218,7 +208,5 @@
                 </tr>
             </table>
         {% endif %}
-
-
     </body>
 </html>

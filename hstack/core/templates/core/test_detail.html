@@ -4,14 +4,9 @@
     <head>
         {% for metadata in metadatas %}
             <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
-            <title>VIFO -
-                {{metadata.title}}
+            <title>VMetaSys - {{metadata.title}}
             </title>
             <meta charset="UTF-8">
-            <script>
-                location.href = "#tab1";
-            </script>
-
 
         </head>
 
@@ -57,7 +52,7 @@
                                 <tr>
                                     <td colspan="2">
                                         <div class="metadataTR_bottom">
-                                            <div class="metadataTitle">🗸 CATEGORY</div>
+                                            <div class="metadataTitle">▪ CATEGORY</div>
                                             <div class="metadataContent">{{metadata.category}}</div>
                                         </div>
                                     </td>
@@ -65,7 +60,7 @@
                                 <tr>
                                     <td colspan="2">
                                         <div class="metadataTR_bottom">
-                                            <div class="metadataTitle">🗸 NARRATIVE</div>
+                                            <div class="metadataTitle">▪  NARRATIVE</div>
                                             <div class="metadataContent">{{metadata.narrative}}</div>
                                         </div>
                                     </td>
@@ -73,20 +68,8 @@
                                 <tr>
                                     <td colspan="2">
                                         <div class="metadataTR_bottom">
-                                            <div class="metadataTitle">🗸 METHOD</div>
+                                            <div class="metadataTitle">▪  METHOD</div>
                                             <div class="metadataContent">{{metadata.method}}</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <div class="metadataTR_bottom">
-                                            <div class="metadataTitle">🗸 VOICE</div>
-                                            <div class="metadataContent">
-                                                <!-- <div style="background-color: blue; display: inline-block;
-                                                width:{{metadata.voicemanrate}}%;" >M</div> <div style="background-color: red;
-                                                display: inline-block; width:{{metadata.voicewomanrate}}%;" >W</div> -->
-                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -105,7 +88,7 @@
                         <ul>
                             <!-- @@@@@@@@@@첫번째 탭 키워드/목차 -->
                             <li id="tab1" class="btnCon">
-                                <a class="btn first" href="#tab1">metadata</a>
+                                <a class="btn first" href="#tab1">Metadata</a>
                                 <div class="tabCon">
                                     <table class="metadataTable">
 
@@ -165,7 +148,7 @@
 
                             <!-- @@@@@@@@@두번째 탭 스크립트 -->
                             <li id="tab2" class="btnCon">
-                                <a class="btn second" href="#tab2">script</a>
+                                <a class="btn second" href="#tab2">Script</a>
                                 <div class="tabCon">
 
                                     <!-- detail search : only for detail -->
@@ -192,14 +175,14 @@
             </div>
 
             <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+            <script>
+                location.href = "#tab1";
+            </script>
 
-            
         </body>
 
     </div>
-    <!-- {% include 'core/footer.html' %} -->
 
-    
 
 {% endfor %}
 

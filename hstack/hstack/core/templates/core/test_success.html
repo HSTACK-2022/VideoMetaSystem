@@ -1,0 +1,329 @@
+<!-- extends 'core/upload_detail.html' %} -->
+<script
+    src="https://code.jquery.com/jquery-3.6.0.slim.js"
+    integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+    crossorigin="anonymous"></script>
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        {% for metadata in metadatas %}
+            <title>VIFO -
+                {{metadata.title}}
+            </title>
+            <meta charset="UTF-8">
+            <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?after">
+
+            <!-- submit check -->
+        </head>
+
+        <body class="bodyArea">
+            {% include 'core/test_header.html' %}
+            {% comment %} <form
+                onsubmit="return validCheck()"
+                action="{% url 'Core:success'%}"
+                method="POST"
+                id="form"> {% endcomment %}
+                {% csrf_token %}
+                <script>
+
+                    function validCheck() {
+                        // alert(keywordButtonList); document.getElementById('keywordButtonList').value
+                        // = keywordButtonList;
+                        // console.log(document.getElementById('keywordButtonList').value); return
+                        // false;
+                        var i = 0;
+                        for (var key in keywordButtonExposeList) {
+                            var kk = document.createElement('input');
+                            kk.setAttribute("type", "hidden");
+                            kk.setAttribute("name", "keywordButtonExposeList");
+                            kk.setAttribute("value", keywordButtonExposeList[i]);
+                            document
+                                .getElementById('form')
+                                .append(kk);
+                            i++;
+                        }
+                    }
+                </script>
+
+                <div class="divParent">
+                    <!-- Post content-->
+                    <div class="detailHeader">
+                        <!-- Preview image figure-->
+
+                        <video
+                            height="450"
+                            class="videoPlayer"
+                            id="video"
+                            src="{{videoaddr}}"
+                            controls="controls"></video>
+                        <!--<div>result : {{Metadata}}</div>-->
+                        <div class="box">
+                            <div class="left">
+                                <!-- 키워드 3개만 수정@@@@@@@@@@@-->
+                                <div class="keyTag">
+                                    {% for keyword in keywords %}
+                                        {% if keyword != "" and forloop.counter < 4 %}
+                                            #{{keyword.keyword}}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <!-- Post title-->
+                                <div class="videoTitle">{{ metadata.title }}</div>
+                                <!-- Post meta content-->
+                                <div class="videoUploadDate">{{metadata.uploaddate}}</div>
+                                <div class="videoPresenter">
+                                    by
+                                    {{metadata.presenter}}</div>
+                            </div>
+                            <!--end of the left div side-->
+
+                            <div class="right">
+                                <table class="metadataTable2">
+                                    <!-- Basic metadata -->
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="metadataTR_bottom">
+                                                <div class="metadataTitle">🗸 CATEGORY</div>
+                                                <div class="metadataContent">{{metadata.category}}</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="metadataTR_bottom">
+                                                <div class="metadataTitle">🗸 NARRATIVE</div>
+                                                <div class="metadataContent">{{metadata.narrative}}</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="metadataTR_bottom">
+                                                <div class="metadataTitle">🗸 METHOD</div>
+                                                <div class="metadataContent">{{metadata.method}}</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="metadataTR_bottom">
+                                                <div class="metadataTitle">🗸 VOICE</div>
+                                                <div class="metadataContent">
+                                                    <!-- <div style="background-color: blue; display: inline-block;
+                                                    width:{{metadata.voicemanrate}}%;" >M</div> <div style="background-color: red;
+                                                    display: inline-block; width:{{metadata.voicewomanrate}}%;" >W</div> -->
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!--end of the right div side-->
+                        </div>
+
+                        
+                    </div>
+
+
+                    <!-- @@@@@@@@@@@@@@@@@여기부터 왼쪽창 -->
+                    <div class="detailMetadata">
+                        <div class="tabmenu">
+                            <ul>
+                                <!-- @@@@@@@@@@첫번째 탭 키워드/목차 -->
+                                <li id="tab1" class="btnCon">
+                                    <a class="btn first" href="#tab1">metadata</a>
+                                    <div class="tabCon">
+                                        <table class="metadataTable">
+
+                                            <script>
+                                                var keywordButtonExposeList = [];
+                                                $(document).ready(function () {
+                                                    $("button").on('click', function (e) {
+                                                        // 같은 레벨에서 몇번쨰
+                                                        var i = $(this).index();
+
+                                                        if ($(this).hasClass("keywordsBtn111")) 
+                                                            i = i - 2; // 중간에 들어가는 br 태그 개수 2개
+                                                        
+                                                        console.log(i); // *번째
+
+                                                        if ($(this).hasClass("keywordsBtn")) { // expose가 1인 경우
+                                                            $(this).removeClass('keywordsBtn');
+                                                            $(this).addClass('keywordsClickedBtn');
+                                                            keywordButtonExposeList.splice(i - 1, 1, parseInt("0"));
+                                                        } else {
+                                                            $(this).removeClass('keywordsClickedBtn'); // expose가 0인 경우
+                                                            $(this).addClass('keywordsBtn');
+                                                            keywordButtonExposeList.splice(i - 1, 1, parseInt("1"));
+                                                        }
+
+                                                        // 존재하는 모든 버튼을 기준으로 index var j = $("button").index(this); console.log(j);
+
+                                                        console.log(keywordButtonExposeList);
+                                                    });
+                                                });
+                                            </script>
+
+                                            <!-- 키워드 -->
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="metadataTR">
+                                                        <div class="metadataTitle2">KEYWORDS</div>
+                                                        
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <input
+                                                        type="hidden"
+                                                        value={{keyword.keyword}}="}"
+                                                        name="keywordsBtnContentList">
+                                                    <script>
+                                                        {% for keyword in keywords %}
+                                                        keywordButtonExposeList.push({{keyword.expose}})
+                                                        {% endfor %}
+                                                    </script>
+    
+                                                </td>
+                                            </tr>
+
+                                            <tr class="metadataDetailTR">
+                                                <td colspan="2" class="metadataKeywordTD">
+                                                
+                                                <div class="metadataTitle2">- System Defined </div>
+                                                <div class="sysdefinedKeywords">
+                                                    {% for keyword in keywords %}
+                                                        {% if keyword.expose == 1 %}
+                                                            <button type="button" id="keywordsBtn" class="keywordsBtn" >{{keyword.keyword}}</button>
+                                                        {% else %}
+                                                            <button type="button"  id="keywordsBtn" class="keywordsClickedBtn" >{{keyword.keyword}}</button>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                
+                                                <hr>
+
+                                                <div class="metadataTitle2">- User Defined </div>
+                                                <input id ="save" type="submit" value="SAVE">
+                                                <div class="userdefinedKeywords">
+                                                    <button type="button" id="keywordsBtn" class="keywordsBtn111" >예제1</button>
+                                                    <button type="button" id="keywordsBtn" class="keywordsBtn111" >예제2</button>
+                                                    <!--<script>keywordButtonExposeList.push(1); keywordButtonExposeList.push(1);</script>-->
+                                                </div>
+
+
+
+                                                {% comment %} <br><input text = "text" placeholder="새로운 키워드 추가하기"><button type="button" class="keywordAddBtn">추가</button> {% endcomment %}
+                                                <!-- 키워드 추가 textfield-->
+                                                <!-- detail search : only for detail -->
+                                                <div class="innerKeyword">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="새로운 키워드 추가하기"
+                                                        id="searchContent"></input>
+                                                    <input
+                                                        type="submit"
+                                                        class="plusBtn"
+                                                        value=""
+                                                        onclick="searchPost({{scripts}});"></input>
+                                                </div>
+                                            
+                                            
+                                            
+                                                </td>
+                                            </tr>
+                                            <tr class="emptyTR"></tr>
+                                        </table>
+                                        <div class="searchScroll2">
+
+                                            <!-- 목차 -->
+                                            <table class="metadataTable">
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <div class="metadataTR">
+                                                            <div class="metadataTitle2">INDEX</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                {% for timestamp in timestamps %}
+
+                                                    <tr class="metadataDetailTR">
+                                                        <!-- 수정 필요 -->
+
+                                                        <td colspan="2" class="metadataKeywordTD">
+                                                            
+                                                            <button class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
+                                                            <div class="indexTitle">{{timestamp.subtitle}}</div>
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                {% endfor %}
+                                                {% comment %} <input type="submit" value="저장"> {% endcomment %}
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </li>
+
+
+
+
+                                <script>
+                                    var vid = document.getElementById("video");
+                                    function inputMove(time) {
+                                        timeStr = time.split(":");
+                                        timeSec = Number(timeStr[0] * 3600) + Number(timeStr[1] * 60) + Number(
+                                            timeStr[2]
+                                        );
+                                        vid.currentTime = timeSec;
+                                        vid.play();
+                                    }
+                                </script>
+
+
+
+
+                                <!-- @@@@@@@@@두번째 탭 스크립트 -->
+                                <li id="tab2" class="btnCon">
+                                    <a class="btn second" href="#tab2">script</a>
+                                    <div class="tabCon">
+
+                                        <!-- detail search : only for detail -->
+                                        <div class="innerSearch">
+                                            <input
+                                                type="text"
+                                                placeholder="Search in &quot;{{ metadata.title }}&quot;"
+                                                id="searchContent"></input>
+                                            <input
+                                                type="submit"
+                                                class="searchBtn"
+                                                value=""
+                                                onclick="searchPost({{scripts}});"></input>
+                                        </div>
+
+                                        <div class="searchScroll">
+                                            <table id="searchResArea" class=""></table>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+                    <script>
+                        location.href = "#tab1";
+                    </script>
+        
+
+                </body>
+
+            </div>
+            <!-- {% include 'core/footer.html' %} -->
+        {% endfor %}
+
+    </html>

@@ -33,9 +33,63 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'pre_L';
+    src: url("../font/Pretendard-Light.otf");
+
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pre1';
+    src: url("../font/Pretendard-Light.otf");
+
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'pre2';
+    src: url("../font/Pretendard-Regular.otf");
+
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pre3';
+    src: url("../font/Pretendard-Medium.otf");
+
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'jeju';
+    src: url("../font/JejuGothic.ttf");
+    unicode-range: U+0041-005A, U+0061-007A;
+
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'na2';
+    src: url("../font/NanumSquareRoundEB.ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'na1';
+    src: url("../font/NanumSquareRoundR.ttf");
+    font-style: normal;
+}
+
+
 
 body {
-    font-family: 'GmarketSans';
+    font-family: 'pre2';
+    color: rgb(59, 59, 59);
 }
 
 .bodyArea {
@@ -73,7 +127,7 @@ header {
 
 
 .searchInput[type=text] {
-    font-family: 'S-Core4';
+    font-family: 'pre2';
     width: 70%;
     vertical-align: middle;
 
@@ -81,7 +135,7 @@ header {
     height: 30px;
     border: none;
     border-radius: 20px;
-    box-shadow: 0 0 0 1pt grey;
+    box-shadow: 0 0 0 1pt rgb(48, 48, 48);
     outline: none;
     text-indent: 1em;
 
@@ -111,7 +165,8 @@ header {
 }
 
 #uploadBtnImg {
-    height: 30px;
+
+    height: 22px;
 }
 
 #upload {

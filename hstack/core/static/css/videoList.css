@@ -12,86 +12,110 @@
     cursor: pointer;
 }
 
-
 .videoTable {
     width: 100%;
     /* min-width: 450px; */
     margin: 10px 10px;
-    /* padding: 10px 0px; */
-
-
+    padding: 10px 0px;
 }
 
 .VT_thumbnail {
+    width: 240px;
     height: 180px;
     margin: 20px;
     display: inline-block;
 }
 
-.VT_videoTitle {
-    height: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-family: 'GmarketSans';
-    font-weight: bold;
-    font-size: 30px;
+
+.VT_category,
+.VT_narrative,
+.VT_method,
+.VT_presenter,
+.VT_uploadedDate {
+    font-family: "pre1";
+
+}
+
+.VT_category,
+.VT_narrative,
+.VT_method {
+    font-size: 15px;
+    height: 25px;
+    padding: 0px 10px;
+    line-height: 180%;
 }
 
 .VT_category {
     width: fit-content;
-    height: 25px;
-    font-size: 13px;
-    padding: 0 10px;
+
+
+
     display: inline-block;
     background-color: rgb(80, 37, 32);
     border-radius: 20px;
     color: white;
     text-align: center;
-    line-height: 220%;
+
 }
 
 .VT_narrative {
     width: fit-content;
-    height: 25px;
-    font-size: 13px;
-    padding: 0 10px;
+
     display: inline-block;
     background-color: rgb(30, 91, 52);
     border-radius: 20px;
     color: white;
     text-align: center;
-    line-height: 220%;
 
 }
 
 .VT_method {
     width: fit-content;
-    height: 25px;
-    font-size: 13px;
-    padding: 0 10px;
+
+
     display: inline-block;
     background-color: rgb(50, 46, 93);
     border-radius: 20px;
     color: white;
     text-align: center;
-    line-height: 220%;
+
 
 }
 
+.VT_videoTitle {
+    height: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    font-weight: bold;
+    font-size: 36px;
+    color: rgb(29, 29, 29);
+    letter-spacing: 2px;
+}
+
+
+
 .VT_keywords {
     height: auto;
-    margin-top: 10px;
+    margin-bottom: 5px;
+    margin-right: 2px;
 
-    margin-right: 10px;
-    font-size: 14px;
+    font-size: 17px;
     display: inline-block;
+    font-family: "pre2";
+    letter-spacing: -1px;
+
+
 }
 
 .VT_presenter {
     width: 50%;
     min-width: 250px;
+    height: 35px;
+    /* margin-top: 10px; */
     font-size: 13px;
     display: inline-block;
+    font-size: 16px;
 }
 
 .VT_uploadedDate {
@@ -99,7 +123,7 @@
     min-width: 150px;
     height: 35px;
     margin-top: 10px;
-    font-size: 13px;
+    font-size: 14px;
     display: inline-block;
     text-align: right;
 }
@@ -150,36 +174,6 @@
 }
 
 
-
-
-
-
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
-
-.frame {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 400px;
-    height: 400px;
-    margin-top: -200px;
-    margin-left: -20px;
-    border-radius: 2px;
-    box-shadow: 4px 8px 16px 0 rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    color: #333;
-    font-family: "Open Sans", Helvetica, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    /*http://colorzilla.com/gradient-editor */
-    background: #fda231;
-    background: -moz-linear-gradient(45deg, #fda231 0%, #fbb731 60%, #fdca31 100%);
-    background: -webkit-linear-gradient(45deg, #fda231 0%, #fbb731 60%, #fdca31 100%);
-    background: linear-gradient(45deg, #fda231 0%, #fbb731 60%, #fdca31 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fda231", endColorstr="#fdca31", GradientType=1);
-}
-
 .center {
     position: absolute;
     top: 50%;
@@ -197,9 +191,13 @@
 }
 
 .todo-cmp__header {
-    text-align: center;
-    padding: 10px 0;
+
+    padding: 10px 0 10px 10px;
     border-bottom: 1px solid #ddd;
+    font-family: "pre1";
+
+
+    font-size: 23px;
 }
 
 .todo-cmp__header h2 {
@@ -218,6 +216,7 @@
 .todo-cmp__list {
     list-style: none;
     padding: 0 15px;
+
 }
 
 .todo-cmp__list li {
@@ -225,13 +224,20 @@
     margin: 0;
     text-align: left;
     width: 100%;
+
+    font-size: 1.1rem;
+    font-family: "pre2";
+
+
 }
 
 .todo-cmp__list li label {
     cursor: pointer;
-    font-size: 1rem;
+
     width: 100%;
     display: block;
+    letter-spacing: 1px;
+
 }
 
 .todo-cmp__list li label input {
@@ -243,12 +249,14 @@
     position: relative;
     display: block;
     transition: all 550ms ease-in-out;
+
+    letter-spacing: -0.3px;
 }
 
 .todo-cmp__list li label input+span::after {
     content: "";
     display: block;
-    border: 1px solid #497081;
+    border: none;
     border-radius: 13px;
     height: 13px;
     width: 13px;
@@ -275,8 +283,11 @@
 }
 
 .todo-cmp__list li label input:checked+span {
-    color: #ccc;
+
     transition: all 550ms ease-in-out;
+    color: rgb(59, 59, 59);
+    ;
+
 }
 
 .todo-cmp__list li label input:checked+span::after {

@@ -1,8 +1,10 @@
 import os
 import re
 import platform
+from unicodedata import category
 
 from asgiref.sync import sync_to_async
+from numpy import extract
 
 from . import models
 from .models import Post, Category
@@ -24,180 +26,16 @@ from urllib import response
 from urllib.parse import urlparse
 
 from core import searchAll
-from core.extractMetadata import extractMetadata
+from core import extractMetadata
+from core import rankAlgo
 
 # 상수 설정
 OS = platform.system()
 renderAppName = "Core" if OS == 'Windows' else 'core'
 
-class UserForm(UserCreationForm): # 회원가입 페이지
-    class Meta:
-        model = User
-        fields = ["username","password1",  "password2", "email"]
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder':'15자 이내로 입력 가능합니다.'}),
-            # 'password1' : forms.PasswordInput(attrs={'class': 'form-control'}),
-            # 'password2' : forms.PasswordInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-        }
-        labels = {
-            'username': 'ID',
-            # 'password1': '패스워드',
-            # 'password2': '패스워드확인',
-            'email': '이메일',
-        }
-
-class PostList(ListView): #포스트 목록 페이지
-    model = Post
-    ordering = '-pk' #최신 글 순서대로
-
-    def get_context_data(self, **kwargs):
-        context = super(PostList, self).get_context_data()
-        context['categories'] = Category.objects.all() #카테고리 있을 경우 카운트 같은거
-        context['no_category_post_count'] = Post.objects.filter(category=None).count() #카테고리 없는 미분류 항목
-        return context
-    
-class PostDetail(DetailView): #포스트 상세 페이지
-    model = Post
-
-    def get_context_data(self, **kwargs):
-        context = super(PostDetail, self).get_context_data()
-        context['categories'] = Category.objects.all() #카테고리 있을 경우 카운트 같은거
-        context['no_category_post_count'] = Post.objects.filter(category=None).count() #카테고리 없는 미분류 항목
-        return context
-
-class PostCreate(CreateView):
-    model = Post
-    fields = ['title', 'hook_text', 'content', 'head_image', 'head_video', 'category']
-
-    def form_valid(self, form): # 로그인 = 작성자 확인
-        current_user = self.request.user
-        if current_user.is_authenticated:
-            form.instance.author = current_user #로그인 되어있으면 얘로 보내줌
-            return super(PostCreate, self).form_valid(form) #폼 리턴
-        else: #로그인 하지 않은 회원이면
-            return super(PostCreate, self).form_valid(form)
-
-    def get_success_url(self):
-        pk = self.object.id
-        #loop = asyncio.new_event_loop()
-        #loop.run_in_executor(createMetadata(pk, callbacktest))
-        #loop.close()
-        return f'/core/{pk}/'
-        #return redirect('core:detail', pk)
-
-class PostUpdate(LoginRequiredMixin, UpdateView): #포스트 수정 기능
-    model = Post
-
-    fields = ['title', 'hook_text', 'content', 'head_image', 'head_video', 'category']
-
-    template_name = 'core/post_update_form.html'
-
-    def dispatch(self, request, *args, **kwargs) :
-        if request.user.is_authenticated and request.user == self.get_object().author:
-            return super(PostUpdate, self).dispatch(request, *args, **kwargs)
-        else:
-            raise PermissionDenied #로그인 한 회원과 사용자가 일치하지 않을 경우 허가 거부 
-
-class PostSearch(PostList): #검색 창
-    paginate_by = None
-
-    def get_queryset(self):
-        q = self.kwargs['q']
-        post_list = Post.objects.filter(
-            Q(title__contains=q) | Q(content__contains=q)
-        ).distinct()
-        return post_list
-
-    def get_context_data(self, **kwargs):
-        context = super(PostSearch, self).get_context_data()
-        q = self.kwargs['q']
-        context['search_info'] = f'Search: {q} ({self.get_queryset().count()})'
-
-        return context
-
-def category_page(request, slug): #카테고리 분류 페이지
-    #category = Category.objects.get(slug=slug)
-    if slug == 'no_category' :
-        category = '미분류'
-        post_list = Post.objects.filter(category=None)
-    else:
-        category = Category.objects.get(slug=slug)
-        post_list = Post.objects.filter(category=category)
-
-        return render(
-            request,
-            'core/post_list.html',
-            {
-                'post_list' : post_list,
-                'categories' : Category.objects.all(),
-                'no_category_post_count' : Post.objects.filter(category=None).count(),
-                'category' : category,
-            }
-        )
-        
-def signup(request):
-
-    """
-    계정생성
-    """
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)  # 사용자 인증
-            login(request, user)  # 로그인
-            return redirect('/')
-    else:
-        form = UserForm()
-    return render(request, 'core/signup.html',{'form': form})
-
-
 # for backend.
 def home(request):
     return render(request, renderAppName + '/test_home.html') 
-
-# search
-def searchFile(request):
-    if request.method == "GET":
-        word = request.GET["searchText"]
-        if word == "":
-            return render(request, renderAppName + '/test_search.html',
-                context={
-                    'code': 404,
-                    'searchWord' : ""
-                    
-                })
-
-        else :
-            searchWords = []
-            words = re.split(r'[ ,:]', word)
-            for item in words:
-                if item != "": searchWords.append(item)
-
-            videoMetaList = {}
-            videoIdList = {}
-            categoryList = {}
-            videoIdList, videoMetaList, categoryList = searchAll.search(searchWords)
-
-            if not videoIdList :
-                return render(request, renderAppName + '/test_search.html',
-                    context={
-                        'code' : 404,
-                        'searchWord' : word
-                    })
-            else :
-                return render(request, renderAppName + '/test_search.html',
-                    context={
-                        'code' : 200,
-                        'categoryList' : categoryList,
-                        'videoMetaList' : videoMetaList,
-                        'videoIdList' : videoIdList,
-                        'searchWord' : word,
-                        'rankData' : {1: ['제목 일치'], 3: ['제목 일치', '발표자 일치'], 5: ['제목 일치']},
-                    })
 
 # video(file) upload
 def uploadFile(request):
@@ -252,12 +90,41 @@ def uploadFile(request):
                 uploaddate = document.dateTimeOfUpload
             )
 
-            videoPathForPlay = videoPath = "../media" + videopath.split("media")[1]
-            print(videoPathForPlay)
-            bools = extractMetadata(videoId)
-            return render(request, renderAppName + '/success.html', context={"file" : videopath, "Metadata":bools})
+            if OS == 'Windows':
+                videoPath4Play = "..\\..\\..\\media" + videopath.split("media")[1]
+            else:
+                videoPath4Play = "../../../media" + videopath.split("media")[1]
+            print(videoPath4Play)
+
+            extractMetadata.extractMetadata(videoId)
+
+            return redirect('Core:home')
                         
     return render(request, renderAppName + '/test_upload.html') 
+
+# 업로드 후 ~ User 확인 전의 영상 목록들
+def uploadLists(request):
+    videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
+    categoryList = searchAll.extractCategories(videoIdList)
+    videoMetaList = list()
+    for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
+        videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+
+    print("********************")
+    print(videoIdList)
+    print(categoryList)
+    print(videoMetaList)
+    
+    if not videoIdList :
+        return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
+    else :
+        return render(request, renderAppName + '/test_uploadLists.html',
+            context={
+                'code' : 200,
+                'categoryList' : categoryList,
+                'videoMetaList' : videoMetaList,
+                'videoIdList' : videoIdList,
+            })
 
 # 각 영상의 상세페이지 (/test/detail/pk)
 def detailFile(request, pk):
@@ -275,37 +142,46 @@ def detailFile(request, pk):
         print(err)
         scripts = []
 
+    keywordQ = Q()
+    keywordQ &= Q(id = pk)
+    keywordQ &= Q(expose=True)
+
     return render(
         request,
         renderAppName + '/test_detail.html',
         {
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
-            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
 
-
-
-
-
-
-# for test.
-def success(request):
-    pk = 1     ######## 수정 필요
-
+# 업로드 완료 된 영상의 상세페이지 (/test/success/pk)
+def success(request, pk):
     if request.method == "POST":
-        keywordButtonExposeList = request.POST.getlist("keywordButtonExposeList")
-        keywordsBtnContentList = request.POST.getlist("keywordsBtnContentList")
-        
-        print(">>>>>>>>>>>>>>>>>>>")
-        print(len(keywordButtonExposeList))
-        print(len(keywordsBtnContentList))
+        sysKEList = request.POST.getlist("sysKEList")
+        sysKCList = request.POST.getlist("sysKCList")
 
-        for i in range(len(keywordButtonExposeList)):
-            models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtnContentList[i]).update(expose=keywordButtonExposeList[i])
+        newUserKEList = request.POST.getlist("newUserKEList")
+        newUserKCList = request.POST.getlist("newUserKCList")
+        userKEList = request.POST.getlist("userKEList")
+        userKCList = request.POST.getlist("userKCList")
+
+        print(userKEList)
+
+        for i in range(len(sysKEList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = sysKCList[i], sysdef=1).update(expose=sysKEList[i])
+        for i in range(len(userKEList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = userKCList[i], sysdef=0).update(expose=userKEList[i])
+        for i in range(len(newUserKCList)):
+            models.Keywords.objects.create(
+                id = models.Videopath.objects.get(id=pk),
+                keyword = newUserKCList[i],
+                expose = newUserKEList[i],
+                sysdef = 0
+            )
         
 
 
@@ -329,42 +205,65 @@ def success(request):
         {
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
-            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
+            'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
 
-def test_minhwa(request):
-    return render(
-        request,
-        renderAppName + '/test.html',
-        {
-            'keywords' : models.Keywords.objects.filter(id = 14).all().values(),
-            'metadatas' : models.Metadata.objects.filter(id = 14).all().values(),
-            'timestamps' : models.Timestamp.objects.filter(id = 14).all().values(),
-        }
-    )
+# search
+def searchFile(request):
+    if request.method == "GET":
+        word = request.GET["searchText"]
+        if word == "":
+            return render(request, renderAppName + '/test_search.html',
+                context={
+                    'code': 404,
+                    'searchWord' : ""
+                })
 
-from core import searchAll
-def test_minhwa2(request):
-    videoMetaList = searchAll.searchTest()
-    videoIdList = searchAll.searchTest2()
-    # for id in videoIdList:
-    #     res = {}
-    #     res[]
-    print(videoIdList)
-    return render(
-        request,
-        'Core/test2.html',
-        {
-            'videoMetaList' : videoMetaList,
-            'videoIdList' : videoIdList,
-        }
-    )
-def test_minhwa3(request):
+        else :
+            searchWords = []
+            words = re.split(r'[ ,:]', word)
+            for item in words:
+                if item != "": searchWords.append(item)
+
+            videoMetaList = []
+            videoIdList = {}
+
+            # before
+            categoryList = {}
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(searchWords)
+
+            #after
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(videoIdList, videoMetaList, categoryList, typeList, dataList,  rankData)
+
+            if not videoIdList :
+                return render(request, renderAppName + '/test_search.html',
+                    context={
+                        'code' : 404,
+                        'searchWord' : word
+                    })
+            else :
+                return render(request, renderAppName + '/test_search.html',
+                    context={
+                        'code' : 200,
+                        'categoryList' : categoryList,
+                        "typeList" : typeList,
+                        "dataList" : dataList,
+                        'videoMetaList' : videoMetaList,
+                        'videoIdList' : videoIdList,
+                        'searchWord' : word,
+                        'rankData': rankData,
+                    })
+
+# category detail search
+def detailSearch(request):
+    word = request.POST['searchWord']
     stringvideoIdList = request.POST['videoIdList']
-    search_type = request.POST['search_type']   # category
+    search_type = request.POST['search_type']   # category , method, narrative
     search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
     #print(category_type)
     #print(stringvideoIdList) # {14, 15, 16, 17, 18}
@@ -374,9 +273,7 @@ def test_minhwa3(request):
     videoIdList = videoIdList.split(',')
     newVideoIdList = list()
 
-    newVideoIdList, videoMetaList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
-    
-    #print(videoIdList)
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
 
     for video in videoMetaList:
         print("****")
@@ -387,4 +284,9 @@ def test_minhwa3(request):
             'code' : 200,
             'videoMetaList' : videoMetaList,
             'videoIdList' : newVideoIdList,
+            'categoryList' : categoryList,
+            "typeList" : typeList,
+            "dataList" : dataList,
+            'searchWord' : word,
+            #'rankData': rankData,
         })

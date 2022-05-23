@@ -1,0 +1,197 @@
+<!-- test_uploadLists.html -->
+
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+        <title>VMetaSys - SEARCH {{searchWord}}</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'css/videoList.css' %}?after">
+
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script>
+            function searchDetail(search_type,search_detail_type){
+                document.getElementById("search_detail_type").value = search_detail_type;
+                document.getElementById("search_type").value = search_type;
+                document.getElementById("form").submit();
+            }
+            
+            function Change(){
+                //alert( $("#selectd_category option:selected").val());
+                selected = $("#selectd_category option:selected").val();
+                if(selected == "choose category")
+                    return;
+                else
+                    searchDetail("category",selected);
+            }
+        </script>
+</head>
+<body class="bodyArea">
+    
+    {% include 'core/test_header.html' %}
+    {% if code == 200 %}
+    <table class="bodyTable">
+        <tr>
+            <div class= list>
+            <td class="section">
+                <p style="text-align:left; margin-left:35px;">✔ {{videoIdList|length}}개의 동영상을 수정할 수 있습니다.</p>
+                {% for meta in videoMetaList %}
+                    <!-- video id:{{ii.id_id}} <br> -->
+                    {% for ii in meta.metadata %}
+                        <table
+                            class="videoListTable"
+                            onclick="location.href='/test/success/{{ii.id_id}}'">
+                            <tr>
+                                <td style="width: 300px;">
+                                    <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
+                                </td>
+                                <td>
+                                    <table class="videoTable">
+                                        <tr>
+                                            <td>
+                                                <div class="VT_category">{{ii.category}}</div>
+                                                <div class="VT_narrative">{{ii.narrative}}</div>
+                                                <div class="VT_method">{{ii.method}}</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="VT_videoTitle">{{ii.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {% for key in meta.keyword %}
+                                                    {% if key != "" and forloop.counter < 6 %}
+                                                        <div class="VT_keywords">#{{key}}</div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="VT_presenter">
+                                                    <image
+                                                        src="{% static 'img/user.png' %}"
+                                                        style="height: 17px; align-items: center;"></image>
+                                                    {{ii.presenter}}
+                                                </div>
+                                                <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    {% endfor %}
+                {% endfor %}
+            </td>
+        </div>
+
+            <div class= side>
+            <td class="aside">
+                {% comment %} 
+                videoIdList = 
+                {% for id in videoIdList %}
+                {{id}}
+                {%endfor%} {% endcomment %}
+                    
+                    <form action="{% url 'Core:detailSearch'%}" method="POST" id="form">
+                        {% csrf_token %}
+                        <input type="hidden" name="videoIdList" value="{{videoIdList}}">
+                        <input type="hidden" name="search_type" id="search_type">
+                        <input type="hidden" name="search_detail_type" id="search_detail_type">
+                        <div class="category">
+                            <h2 class="todo-cmp__header">검색 정렬 방법</h2>
+                            
+                            <ul class="todo-cmp__list">
+                               
+                                <li>
+                                    <label for="todo-02">
+                                        <input id="todo-02" type="checkbox" onclick="clickCheck(this)">
+                                        <span>▪ 업로드 최신 순</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label for="todo-03">
+                                        <input id="todo-03" type="checkbox" onclick="clickCheck(this)">
+                                        <span>▪ 업로드 과거 순</span>
+                                    </label>
+                                </li>
+                                
+                                
+                            </ul>
+
+                            <h2 class="todo-cmp__header">검색 내 세부검색</h2>
+                            
+                            <ul class="todo-cmp__list">
+                                <li> CATEGORY</li>
+                                <ul class="todo-cmp__list">
+                                    {% for category in categoryList %}
+                                        <li>
+                                            <label>
+                                                <span style="font-family: 'pre1';"
+                                                    value=  {{category}}
+                                                    onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
+                                            </label> 
+                                            
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </ul>
+
+                            <ul class="todo-cmp__list">
+                                <li>TYPE</li>
+                                <ul class="todo-cmp__list">
+                                    {% for category in categoryList %}
+                                        <li>
+                                            <label>
+                                                <span style="font-family: 'pre1';"
+                                                    value="{{category}}"
+                                                    onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
+                                            </label> 
+                                            
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </ul>
+
+                            <ul class="todo-cmp__list">
+                                <li>DATA</li>
+                                <ul class="todo-cmp__list">
+                                    {% for category in categoryList %}
+                                        <li>
+                                            <label>
+                                                <span style="font-family: 'pre1';"
+                                                    value="{{category}}"
+                                                    onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
+                                            </label> 
+                                            
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </td>
+        </div>
+        </tr>
+    
+    </table>
+
+    {% else %}
+    <table id="errorTable">
+        <tr><td>
+            <span id="errorTitle">
+                Video Not Found.
+            </span>
+        </td></tr>
+        <tr><td>
+            <div class="errorDetail">
+                아직 변환이 완료된 비디오가 없습니다. <br>
+                잠시 후 다시 시도해주세요.
+            </div>
+        </td></tr>
+    </table>
+    {% endif %}
+</body>
+</html>
