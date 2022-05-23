@@ -234,11 +234,11 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList, rankData = searchAll.search(searchWords)
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(searchWords)
 
             #after
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print(videoIdList, videoMetaList, categoryList, rankData)
+            print(videoIdList, videoMetaList, categoryList, typeList, dataList,  rankData)
 
             if not videoIdList :
                 return render(request, renderAppName + '/test_search.html',
@@ -251,6 +251,8 @@ def searchFile(request):
                     context={
                         'code' : 200,
                         'categoryList' : categoryList,
+                        "typeList" : typeList,
+                        "dataList" : dataList,
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
@@ -259,8 +261,9 @@ def searchFile(request):
 
 # category detail search
 def detailSearch(request):
+    word = request.POST['searchWord']
     stringvideoIdList = request.POST['videoIdList']
-    search_type = request.POST['search_type']   # category
+    search_type = request.POST['search_type']   # category , method, narrative
     search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
     #print(category_type)
     #print(stringvideoIdList) # {14, 15, 16, 17, 18}
@@ -270,8 +273,7 @@ def detailSearch(request):
     videoIdList = videoIdList.split(',')
     newVideoIdList = list()
 
-    newVideoIdList, videoMetaList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
-    categoryList = list(search_detail_type)
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
 
     for video in videoMetaList:
         print("****")
@@ -283,5 +285,8 @@ def detailSearch(request):
             'videoMetaList' : videoMetaList,
             'videoIdList' : newVideoIdList,
             'categoryList' : categoryList,
+            "typeList" : typeList,
+            "dataList" : dataList,
+            'searchWord' : word,
             #'rankData': rankData,
         })

@@ -109,6 +109,7 @@
                                 <input type="hidden" name="videoIdList" value="{{videoIdList}}">
                                 <input type="hidden" name="search_type" id="search_type">
                                 <input type="hidden" name="search_detail_type" id="search_detail_type">
+                                <input type="hidden" name="searchWord" value="{{searchWord}}">
                                 <div class="category">
                                     <h2 class="todo-cmp__header">검색 정렬 방법</h2>
                                     
@@ -151,12 +152,12 @@
                                     <ul class="todo-cmp__list">
                                         <li>TYPE</li>
                                         <ul class="todo-cmp__list">
-                                            {% for category in categoryList %}
+                                            {% for type in typeList %}
                                                 <li>
                                                     <label>
                                                         <span style="font-family: 'pre1';"
-                                                            value="{{category}}"
-                                                            onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
+                                                            value="{{type}}"
+                                                            onclick="searchDetail('narrative','{{type}}')">▪ {{type}}</span>
                                                     </label> 
                                                     
                                                 </li>
@@ -167,12 +168,12 @@
                                     <ul class="todo-cmp__list">
                                         <li>DATA</li>
                                         <ul class="todo-cmp__list">
-                                            {% for category in categoryList %}
+                                            {% for data in dataList %}
                                                 <li>
                                                     <label>
                                                         <span style="font-family: 'pre1';"
-                                                            value="{{category}}"
-                                                            onclick="searchDetail('category','{{category}}')">▪ {{category}}</span>
+                                                            value="{{data}}"
+                                                            onclick="searchDetail('data','{{data}}')">▪ {{data}}</span>
                                                     </label> 
                                                     
                                                 </li>
