@@ -27,6 +27,7 @@ from urllib.parse import urlparse
 
 from core import searchAll
 from core import extractMetadata
+from core import rankAlgo
 
 # 상수 설정
 OS = platform.system()
@@ -54,10 +55,16 @@ def searchFile(request):
             for item in words:
                 if item != "": searchWords.append(item)
 
-            videoMetaList = {}
+            videoMetaList = []
             videoIdList = {}
+
+            # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList = searchAll.search(searchWords)
+            videoIdList, videoMetaList, categoryList, rankData = searchAll.search(searchWords)
+
+            #after
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(videoIdList, videoMetaList, categoryList, rankData)
 
             if not videoMetaList :
                 return render(request, renderAppName + '/test_search.html',
@@ -73,6 +80,7 @@ def searchFile(request):
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
+                        'rankData': rankData,
                     })
 
 # video(file) upload
@@ -195,8 +203,6 @@ def detailFile(request, pk):
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
-
-
 
 
 
