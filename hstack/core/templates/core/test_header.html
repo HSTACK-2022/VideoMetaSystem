@@ -7,9 +7,9 @@
                 <button type="button" id="home" onclick="location.href='/test/'"><img id="logo" src="{% static 'img/logo_short.png' %}"></button>
             </td>
 
-            <td >
+            <td>
                 
-                    <form name="search" action="{% url 'Core:searchFile' %}" method="GET" enctype="multipart/form-data">
+                    <form name="search" method="GET" onSubmit="search()" enctype="multipart/form-data">
                                 <td>
                                     <input class="searchInput" type="text" name="searchText" placeholder="검색어를 입력하세요.">{% csrf_token %}<input class="searchInput2" type="submit" value=" ">
                                 </td>
@@ -19,10 +19,10 @@
 
 
             <td id="header_upload">
-                <button id="upload" onclick="location.href='/test/upload/'"><img id="uploadBtnImg" src="{% static 'img/upload2.png' %}"></button>
+                <button id="upload" type="button" onclick="location.href='/test/upload/'"><img id="uploadBtnImg" src="{% static 'img/upload2.png' %}"></button>
             </td>
             <td id ="header_upload">
-                <button id="upload" onclick="location.href='/test/upload/lists'"><img id="uploadBtnImg" src="{% static 'img/uploadList.png' %}"></button>
+                <button id="upload" type="button" onclick="location.href='/test/upload/lists'"><img id="uploadBtnImg" src="{% static 'img/uploadList.png' %}"></button>
             </td>
         </tr>
     </table>

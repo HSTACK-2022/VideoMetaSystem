@@ -203,6 +203,7 @@ def success(request, pk):
         request,
         renderAppName + '/test_success.html',
         {
+            'pk' : pk,
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
             'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
