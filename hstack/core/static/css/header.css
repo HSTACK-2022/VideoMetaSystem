@@ -1,19 +1,95 @@
 @font-face {
-    font-family : 'GmarketSans';
-    src : url('../font/GmarketSansTTFMedium.ttf');
+    font-family: 'GmarketSans';
+    src: url('../font/GmarketSansTTFMedium.ttf');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family : 'GmarketSans';
-    src : url('../font/GmarketSansTTFBold.ttf');
+    font-family: 'GmarketSans';
+    src: url('../font/GmarketSansTTFBold.ttf');
     font-weight: bold;
     font-style: normal;
 }
 
-*{
-    font-family: 'GmarketSans';
+@font-face {
+    font-family: 'S-Core3';
+    src: url("../font/SCDREAM3.OTF");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-Core4';
+    src: url("../font/SCDREAM4.OTF");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-Core5';
+    src: url("../font/SCDREAM5.OTF");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pre_L';
+    src: url("../font/Pretendard-Light.otf");
+  
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pre1';
+    src: url("../font/Pretendard-Light.otf");
+  
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'pre2';
+    src: url("../font/Pretendard-Regular.otf");
+  
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pre3';
+    src: url("../font/Pretendard-Medium.otf");
+  
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'jeju';
+    src: url("../font/JejuGothic.ttf");
+    unicode-range: U+0041-005A, U+0061-007A;
+  
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'na2';
+    src: url("../font/NanumSquareRoundEB.ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'na1';
+    src: url("../font/NanumSquareRoundR.ttf");
+    font-style: normal;
+}
+
+
+
+body {
+    font-family: 'pre2';
+    color: rgb(59, 59, 59);
 }
 
 .bodyArea {
@@ -29,48 +105,57 @@ header {
     width: 100%;
 }
 
-#header_search{
-    height:40px;
-    width:90%;
+/* #header_search {
+    height: 40px;
+    width: 90%;
     background-color: white;
     border: 1px solid gray;
     border-radius: 20px;
     align-items: center;
-}
+} */
 
-#header_upload{
-    width:10px;
+#header_upload {
+    width: 10px;
     align-self: center;
     text-align: right;
 }
 
-#header_search_input_table{
+#header_search_input_table {
     width: 100%;
 }
 
-.searchInput:focus {
-    outline: none;
-}
 
 .searchInput[type=text] {
-    width:100%;
-    height:40px;
-    margin-left:20px;
-    background-color:transparent;
+    font-family: 'pre2';
+    width: 70%;
+    vertical-align: middle;
+
+    
+    height: 30px;
     border: none;
+    border-radius: 20px;
+    box-shadow: 0 0 0 1pt rgb(48, 48, 48);
+    outline: none;
+    text-indent: 1em;
+    
 }
 
-.searchInput[type=submit] {
-    height: auto;
-    margin: auto;
-    text-align: right;
-    background-color:transparent;
+.searchInput2[type=submit] {
+
+    height: 30px;
+    width: 30px;
+    margin: 5px;
+   
+    background-color: transparent;
+    background-position: center;
     background-image: url('../img/search.png');
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: 20px 20px;
     cursor: pointer;
     outline: none;
     border: none;
+    
+    
 }
 
 #logo {
@@ -78,12 +163,13 @@ header {
     margin-right: 20px;
 }
 
-#uploadBtnImg{
-    height: 30px;
+#uploadBtnImg {
+    
+    height: 22px;
 }
 
 #upload {
-    background-color:transparent;
+    background-color: transparent;
     border: none;
     outline: none;
     cursor: pointer;
@@ -91,7 +177,7 @@ header {
 }
 
 #home {
-    background-color:transparent;
+    background-color: transparent;
     border: none;
     outline: none;
     cursor: pointer;

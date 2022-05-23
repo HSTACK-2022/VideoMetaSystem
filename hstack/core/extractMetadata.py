@@ -13,13 +13,17 @@
 # - False : 중간에 오류가 발생한 경우
 
 import threading
+import background as bg
 
-from core import indexingService, keywordService
-
+from . import models
 from . import audioService
 from . import opencvService
+from . import indexingService
+from . import keywordService
 
+from sqlite3 import threadsafety
 
+@bg.task
 def extractMetadata(videoId):
     try:
         threads = []
@@ -28,15 +32,15 @@ def extractMetadata(videoId):
         basic = threading.Thread(target=opencvService.extBasicInfo, args=([videoId]))
         audio = threading.Thread(target=audioService.doAudioService, args=([videoId]))
         video = threading.Thread(target=opencvService.doOpencvService, args=([videoId]))
+
+        threads.append(basic)
+        threads.append(audio)
+        threads.append(video)
         
         basic.start()
         audio.start()
         video.start()
         
-        threads.append(basic)
-        threads.append(audio)
-        threads.append(video)
-
         for thread in threads :
             print(thread)
             thread.join()
@@ -48,6 +52,7 @@ def extractMetadata(videoId):
         keywordService.doKeywordService(videoId)
         indexingService.doIndexingService(videoId)
 
+        models.Videopath.objects.filter(id=videoId).update(extracted = 1)
         return True
 
     except Exception as e:

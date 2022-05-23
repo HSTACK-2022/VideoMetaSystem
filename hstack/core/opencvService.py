@@ -75,9 +75,9 @@ def doOpencvService(videoId) :
     type = sceneText.sceneText(videoId)
 
     # L, N, P, A
-    # method : PPT / others
+    # method : PPT, lecture / others
     # narrative : Application / others
-    if type == "P":
+    if type == "P" and type == "L":
         models.Metadata.objects.filter(id=videoId).update(method="PPT")
     else:
         models.Metadata.objects.filter(id=videoId).update(method="실습")

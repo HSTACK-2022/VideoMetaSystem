@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     #외부 library
     'crispy_forms',
+    'background_task',
 
     #add myapp
     #'main_pages',
