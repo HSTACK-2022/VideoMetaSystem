@@ -11,9 +11,11 @@
 
         <!-- submit check -->
         
+        
 </head>
+{% include 'core/test_header.html' %}
 <body class="bodyArea">
-    <form onsubmit="return validCheck()" method="POST" id="form">
+    <form name="modify" method="POST" id="form">
     {% csrf_token %}
     <script>
         
@@ -57,10 +59,10 @@
                 document.getElementById('form').append(kk);
                 i++;
             }
-            location.href='/test/success/{{ii.id_id}}'
+            document.modify.action = "{% url 'Core:success' pk=pk %}"
+            document.modify.submit();
         }
     </script>
-    {% include 'core/test_header.html' %}
     <div class="divParent">
         <!-- Post content-->
         <div class="detailHeader">
@@ -218,7 +220,8 @@
                 {% endfor %}
             </table>
             
-            <input type="submit" value="저장">
+            <button type="button" value="저장" onclick="validCheck()">
+            </form>
         </div>
     </div>
     
