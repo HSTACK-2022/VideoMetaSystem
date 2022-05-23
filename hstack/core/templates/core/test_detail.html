@@ -1,28 +1,21 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-    {% for metadata in metadatas %}
-    <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
-    <link
-        rel="stylesheet"
-        href="{%static 'core/bootstrap/bootstrap.min.css' %}"
-        media="screen"/>
-
-    <div class= footCon>
-
+    <head>
+        {% for metadata in metadatas %}
+            <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
             <title>VIFO -
                 {{metadata.title}}
             </title>
             <meta charset="UTF-8">
-            
-           
             <script>
                 location.href = "#tab1";
             </script>
+
+
         </head>
 
         <body class="bodyArea">
-           
             {% include 'core/test_header.html' %}
             <div class="divParent">
                 <!-- Post content-->
@@ -106,14 +99,17 @@
                 </div>
                 <!-- end of detail Header-->
 
+                <!-- @@@@@@@@@@@@@@@@@@@@@@2여기부터 왼쪽창 -->
                 <div class="detailMetadata">
                     <div class="tabmenu">
                         <ul>
+                            <!-- @@@@@@@@@@첫번째 탭 키워드/목차 -->
                             <li id="tab1" class="btnCon">
                                 <a class="btn first" href="#tab1">metadata</a>
                                 <div class="tabCon">
                                     <table class="metadataTable">
-                                        <!-- Keywords -->
+
+                                        <!--키워드 -->
                                         <tr>
                                             <td colspan="2">
                                                 <div class="metadataTR">
@@ -121,22 +117,23 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr class="metadataDetailTR">
 
+                                        <tr class="metadataDetailTR">
                                             <td colspan="2" class="metadataKeywordTD">
-                                                <div class = key>
-                                                {% for keyword in keywords %}
-                                                    <button class="keywordsBtn" style='cursor:default;'>{{keyword.keyword}}</button>
-                                                {% endfor %}
-                                            </div>
+                                                <div class="key">
+                                                    {% for keyword in keywords %}
+                                                        <button class="keywordsBtn" style='cursor:default;'>{{keyword.keyword}}</button>
+                                                    {% endfor %}
+                                                </div>
 
                                             </td>
                                         </tr>
                                         <tr class="emptyTR"></tr>
                                     </table>
                                     <div class="searchScroll2">
+
+                                        <!-- 목차 -->
                                         <table class="metadataTable">
-                                            <!-- Keywords -->
                                             <tr>
                                                 <td colspan="2">
                                                     <div class="metadataTR">
@@ -165,6 +162,8 @@
                                 </div>
                             </li>
 
+
+                            <!-- @@@@@@@@@두번째 탭 스크립트 -->
                             <li id="tab2" class="btnCon">
                                 <a class="btn second" href="#tab2">script</a>
                                 <div class="tabCon">
@@ -183,7 +182,7 @@
                                     </div>
 
                                     <div class="searchScroll">
-                                        <table id="searchResArea" class=""></table>
+                                        <table id="searchResArea" class="" ></table>
                                     </div>
                                 </div>
                             </li>
@@ -192,14 +191,16 @@
                 </div>
             </div>
 
-            
             <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+
             
         </body>
-        
+
     </div>
-    {% include 'core/footer.html' %}
-   
-    {% endfor %}
+    <!-- {% include 'core/footer.html' %} -->
+
+    
+
+{% endfor %}
 
 </html>

@@ -38,6 +38,13 @@
     font-family: 'S-Core3';
 }
 
+hr {
+    width: 100%;
+    color: #ccc;
+
+    background-color: #ccc;
+    /* 크롬, 모질라 등, 기타 브라우저 */
+}
 
 .divParent {
     width: 99%;
@@ -50,6 +57,7 @@
 .detailHeader {
     width: 55%;
     min-width: 500px;
+    padding-top: 20px;
     padding-right: 20px;
     vertical-align: top;
     display: inline-block;
@@ -57,16 +65,16 @@
 }
 
 .box {
-    width: 100%;
+    width: 98.9%;
     height: 180px;
 
-    background-color: #fff;
+    background-color: #ffffff;
     margin-top: -10px;
     margin-bottom: 5%;
 
     padding-left: 10px;
     padding-top: 10px;
-    
+
 }
 
 /* 수정부분 */
@@ -103,6 +111,7 @@ ul {
     display: block;
     /*tabbar text position*/
     line-height: 30px;
+    padding-top: 5px;
     font-size: large;
     height: 40px;
     text-decoration: none;
@@ -116,9 +125,9 @@ ul {
     position: absolute;
     left: 40px;
     top: 40px;
-    box-sizing: content-box ;
+    box-sizing: content-box;
     width: 100%;
-   
+
 
 }
 
@@ -208,19 +217,19 @@ div.right {
 .metadataTable {
     width: 100%;
     border-spacing: 5px;
-    border-collapse: separate  ;
- 
+    border-collapse: separate;
 
-    
+
+
 }
 
 .metadataTable2 {
-    
+
     width: 100%;
     border-spacing: 0px;
     border-collapse: separate;
-    
-  
+
+
 
 
 }
@@ -274,7 +283,6 @@ div.right {
     background-color: #f1f1f1;
     padding: 10px;
     border-radius: 30px;
-
 }
 
 .metadataKeywordTD {
@@ -292,10 +300,20 @@ div.right {
     height: 10px;
 }
 
-.key{
+.key {
     /* align :center; */
     margin: 5px 5px 10px 10px;
     /* background-color: #ff5959; */
+}
+
+
+.sysdefinedKeywords {
+    padding: 10px 10px;
+
+}
+
+.userdefinedKeywords {
+    padding: 10px 10px;
 }
 
 .keywordsBtn {
@@ -306,6 +324,29 @@ div.right {
     border-radius: 20px;
     border: 1px solid #888888;
     background-color: #f9f9f9;
+    display: inline-block;
+}
+
+.keywordsBtn111 {
+    height: 25px;
+    margin: 2px 0px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 20px;
+    border: 1px solid #888888;
+    background-color: #f9f9f9;
+    display: inline-block;
+}
+
+.keywordsClickedBtn {
+    height: 25px;
+    margin: 2px 0px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 20px;
+    border: 1px solid #888888;
+    background-color: #737070;
+    display: inline-block;
 }
 
 .indexTime {
@@ -339,6 +380,18 @@ div.right {
 
 /* for detail */
 
+.innerKeyword {
+    font-family: 'S-Core3';
+    width: 96%;
+    border-radius: 20px;
+    border: 1px solid gray;
+    background-color: #ffffff;
+    margin: 0px 10px 15px 10px;
+    align-content: center;
+    vertical-align: center;
+
+}
+
 .innerSearch {
     font-family: 'S-Core3';
     width: 100%;
@@ -347,7 +400,7 @@ div.right {
     background-color: transparent;
     margin-bottom: 20px;
     vertical-align: center;
-    
+
 }
 
 #searchContent {
@@ -356,13 +409,30 @@ div.right {
     margin-left: 20px;
     background-color: transparent;
     border: none;
+    font-family: "pre1";
 }
 
 #searchContent:focus {
     outline: none;
 }
 
+#searchResArea {
+    border-spacing: 0px;
 
+}
+
+.plusBtn {
+    width: 30px;
+    margin: 5px;
+    float: right;
+    background-color: transparent;
+    background-image: url('../img/plus.png');
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
 
 
 .searchBtn {
@@ -387,6 +457,7 @@ div.right {
     overflow-y: scroll;
     border-radius: 20px;
 }
+
 /* 아래의 모든 코드는 영역::코드로 사용 */
 
 .searchScroll::-webkit-scrollbar {
@@ -418,6 +489,7 @@ div.right {
     overflow-y: scroll;
     border-radius: 20px;
 }
+
 /* 아래의 모든 코드는 영역::코드로 사용 */
 
 .searchScroll2::-webkit-scrollbar {
@@ -439,17 +511,34 @@ div.right {
     /*스크롤바 뒷 배경 색상*/
 }
 
-html, body {
+html,
+body {
     height: 100%
 }
 
 .footer {
     font-family: "S-Core3" !important;
     font-style: italic;
-  
+
     text-align: center;
     color: #ffffff;
-    background-color: #0a4275;
-  
-    
+    background-color: #2F5597;
+
+
+}
+
+#save {
+
+    margin: 5px 15px;
+
+    font-size: 15px;
+    padding: 5px 13px 5px 13px;
+    float: right;
+    border-radius: 12px;
+    border: none;
+    background-color: #007bff;
+    color: #ffffff;
+    font-family: "pre1";
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+
 }

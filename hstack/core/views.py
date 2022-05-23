@@ -168,6 +168,7 @@ def searchFile(request):
                 context={
                     'code': 404,
                     'searchWord' : ""
+                    
                 })
 
         else :
@@ -178,25 +179,24 @@ def searchFile(request):
 
             videoMetaList = {}
             videoIdList = {}
-            videoIdList, videoMetaList = searchAll.search(searchWords)
+            categoryList = {}
+            videoIdList, videoMetaList, categoryList = searchAll.search(searchWords)
 
-            if not videoMetaList :
+            if not videoIdList :
                 return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 404,
                         'searchWord' : word
                     })
             else :
-                for video in videoMetaList:
-                    print("****")
-                    print(video['thumbnail'])
-
                 return render(request, renderAppName + '/test_search.html',
                     context={
                         'code' : 200,
+                        'categoryList' : categoryList,
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
+                        'rankData' : {1: ['제목 일치'], 3: ['제목 일치', '발표자 일치'], 5: ['제목 일치']},
                     })
 
 # video(file) upload
@@ -294,10 +294,46 @@ def detailFile(request, pk):
 
 # for test.
 def success(request):
-    videopath ="E:/Capstone/hstack/media/Uploaded/Video/algo_CNSt8Gk.mp4"
-    videoPath = "../media" + videopath.split("media")[1]
-    print(videoPath)
-    return render(request, renderAppName + '/success.html', context={"videopath" : videoPath})
+    pk = 1     ######## 수정 필요
+
+    if request.method == "POST":
+        keywordButtonExposeList = request.POST.getlist("keywordButtonExposeList")
+        keywordsBtnContentList = request.POST.getlist("keywordsBtnContentList")
+        
+        print(">>>>>>>>>>>>>>>>>>>")
+        print(len(keywordButtonExposeList))
+        print(len(keywordsBtnContentList))
+
+        for i in range(len(keywordButtonExposeList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtnContentList[i]).update(expose=keywordButtonExposeList[i])
+        
+
+
+    videoPath = models.Videopath.objects.get(id = pk).videoaddr
+    if OS == 'Windows':
+        videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
+    else:
+        videoPath4Play = "../../../media" + videoPath.split("media")[1]
+    
+    textPath = models.Videopath.objects.get(id = pk).textaddr
+    try:
+        with open(textPath, 'r', encoding='UTF-8-sig') as f:
+            scripts = f.readlines()
+    except FileNotFoundError as err:
+        print(err)
+        scripts = []
+
+    return render(
+        request,
+        renderAppName + '/test_success.html',
+        {
+            'videoaddr' : videoPath4Play,
+            'scripts' : scripts,
+            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
+            'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+        }
+    )
 
 def test_minhwa(request):
     return render(

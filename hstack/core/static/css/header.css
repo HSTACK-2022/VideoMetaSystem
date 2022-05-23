@@ -45,6 +45,7 @@ body {
 header {
     padding: 20px;
     background-color: #ffffff;
+
 }
 
 #header_table {
@@ -76,14 +77,14 @@ header {
     width: 70%;
     vertical-align: middle;
 
-    
+
     height: 30px;
     border: none;
     border-radius: 20px;
     box-shadow: 0 0 0 1pt grey;
     outline: none;
     text-indent: 1em;
-    
+
 }
 
 .searchInput2[type=submit] {
@@ -91,7 +92,7 @@ header {
     height: 30px;
     width: 30px;
     margin: 5px;
-   
+
     background-color: transparent;
     background-position: center;
     background-image: url('../img/search.png');
@@ -100,8 +101,8 @@ header {
     cursor: pointer;
     outline: none;
     border: none;
-    
-    
+
+
 }
 
 #logo {

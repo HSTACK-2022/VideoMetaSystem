@@ -11,9 +11,9 @@ OS = platform.system()
 
 class Total:
 
-    resultVideoIDList = set()      # ex){16, 17, 18, 19}
+    resultVideoIDList = set()
     finalDict = {}
-    category = ''
+
     def searchWordFromDB(self,searchTexts):
         #resultVideoIDList = set()
         for searchText in searchTexts:
@@ -30,7 +30,6 @@ class Total:
                 self.resultVideoIDList.add(p)
             for to in models.Metadata.objects.filter(category__contains = searchText).values_list('id', flat=True).distinct():
                 self.resultVideoIDList.add(to)
-            
         #return self.resultVideoIDList
 
     def getVideoMetadataFromID(self, videoId):
@@ -58,7 +57,7 @@ class Total:
         self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
         #self.finalDict['filePath']=filePath
         #self.finalDict['timestamp']=timestamp
-        
+
         return self.finalDict #해도 되고 밖에서 Total.finalDict 해도 되고 
 
     # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
@@ -95,7 +94,7 @@ class Total:
         
 
         return finalDict
-
+        
 
 #searchTexts = ["황기", "메모리"]   
 def search(searchTexts):
@@ -110,7 +109,11 @@ def search(searchTexts):
         searchResultMeta.append(a.finalDict)
 
     print(searchResultMeta)
-    return (list(a.resultVideoIDList), searchResultMeta)
+
+    videoIdList = list(a.resultVideoIDList)
+    categoryList = extractCategories(videoIdList)
+
+    return (videoIdList, searchResultMeta, categoryList)
 
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
@@ -124,3 +127,14 @@ def detailSearch(videoIdList, search_type, search_detail_type):
             newVideoIdList.append(i)
     #print(searchResultMeta)
     return (newVideoIdList, searchResultMeta)
+
+
+# 각 videoId에서 Categories를 뽑아낸다.
+def extractCategories(videoIdList):
+    categoryList = set()
+    for videoId in videoIdList:
+        category = models.Metadata.objects.get(id = videoId).category
+        print(category)
+        categoryList.add(category)
+
+    return categoryList
