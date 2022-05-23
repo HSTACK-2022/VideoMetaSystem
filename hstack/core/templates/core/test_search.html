@@ -61,7 +61,11 @@
                                                         <div class="VT_category">{{ii.category}}</div>
                                                         <div class="VT_narrative">{{ii.narrative}}</div>
                                                         <div class="VT_method">{{ii.method}}</div>
-                                                        <div class="rank_data">detail은 (개발중..)% 입니다</div>
+                                                        {% for rank, value in rankData.items %}
+                                                            {% if rank == ii.id_id %}
+                                                                <div class="rank_data">{{value|join:', '}}</div>
+                                                            {% endif %}
+                                                        {% endfor %}
                                                     </td>
                                                 </tr>
                                                 <tr>

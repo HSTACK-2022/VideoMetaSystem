@@ -231,6 +231,8 @@ def searchFile(request):
 
             videoMetaList = []
             videoIdList = {}
+            rankData = {}
+            rank = {}
 
             # before
             categoryList = {}
@@ -238,7 +240,10 @@ def searchFile(request):
 
             #after
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print(videoIdList, videoMetaList, categoryList, typeList, dataList,  rankData)
+            print(videoIdList, videoMetaList, categoryList, typeList, dataList, rankData)
+
+            for j in videoIdList:
+                rank[j] = rankData[j]
 
             if not videoIdList :
                 return render(request, renderAppName + '/test_search.html',
@@ -256,7 +261,7 @@ def searchFile(request):
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
-                        'rankData': rankData,
+                        'rankData': rank,
                     })
 
 # category detail search
@@ -273,7 +278,12 @@ def detailSearch(request):
     videoIdList = videoIdList.split(',')
     newVideoIdList = list()
 
+    videoMetaList = []
+    #rankData = {}
+    #rank = {}
     newVideoIdList, videoMetaList, categoryList, typeList, dataList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
+    # for j in videoIdList:
+    #     rank[j] = rankData[j]
 
     for video in videoMetaList:
         print("****")
@@ -288,5 +298,5 @@ def detailSearch(request):
             "typeList" : typeList,
             "dataList" : dataList,
             'searchWord' : word,
-            #'rankData': rankData,
+            #'rankData': rank,
         })
