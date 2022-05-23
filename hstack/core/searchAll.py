@@ -128,6 +128,7 @@ class Total:
                 finalDict['thumbnail'] = os.path.join(filePath, fileName)
 
         return finalDict
+        
 
 #searchTexts = ["황기", "메모리"]   
 def search(searchTexts):
@@ -145,9 +146,6 @@ def search(searchTexts):
     #ranking algorithm
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
-            a.getVideoMetadataFromID(i)
-            searchResultMeta.append(a.finalDict)
-
             # for rank algorithm.
             print(i) #id
             print(tttt)
@@ -161,7 +159,6 @@ def search(searchTexts):
 
     #value 큰 순서대로 딕셔너리 재배열
     sdict = sorted(rankDict.items(), key=lambda x: x[1], reverse=True)
-
 
     maxlist = dict(sdict) #list형태의 딕셔너리를 딕셔너리 형태로 전환
     for j in maxlist:
@@ -185,9 +182,10 @@ def detailSearch(videoIdList, search_type, search_detail_type):
     for i in videoIdList:
         if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
             res = Total.getDetailVideoList(i, search_type, search_detail_type)
-            if len(res) != 0: 
+            if len(res) != 0:
                 searchResultMeta.append(res)
                 newVideoIdList.append(i)
+
     #print(searchResultMeta)
     return (newVideoIdList, searchResultMeta)
 

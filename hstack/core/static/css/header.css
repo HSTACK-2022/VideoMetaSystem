@@ -33,9 +33,63 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'pre_L';
+    src: url("../font/Pretendard-Light.otf");
+  
+    font-style: normal;
+}
 
-* {
-    font-family: 'GmarketSans';
+@font-face {
+    font-family: 'pre1';
+    src: url("../font/Pretendard-Light.otf");
+  
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'pre2';
+    src: url("../font/Pretendard-Regular.otf");
+  
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pre3';
+    src: url("../font/Pretendard-Medium.otf");
+  
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'jeju';
+    src: url("../font/JejuGothic.ttf");
+    unicode-range: U+0041-005A, U+0061-007A;
+  
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'na2';
+    src: url("../font/NanumSquareRoundEB.ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'na1';
+    src: url("../font/NanumSquareRoundR.ttf");
+    font-style: normal;
+}
+
+
+
+body {
+    font-family: 'pre2';
+    color: rgb(59, 59, 59);
 }
 
 .bodyArea {
@@ -70,33 +124,36 @@ header {
     width: 100%;
 }
 
-.searchInput:focus {
-    outline: none;
-}
-
-input, input:focus{
-    border: none;
-    border-radius: 2pt;
-    box-shadow: 0 0 0 1pt grey;
-    outline: none;
-    transition: .1s;
-}
-
-.searchInput:focus {
-    box-shadow: 0 0 3pt 2pt #08355e;
-}
- 
 
 .searchInput[type=text] {
-    font-family: 'S-Core4';
-    width: 100%;
+    font-family: 'pre2';
+    width: 70%;
     vertical-align: middle;
-    margin-left: 20px;
-    /* background-color: darkblue; */
+
+    
+    height: 30px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 0 0 1pt rgb(48, 48, 48);
+    outline: none;
+    text-indent: 1em;
     
 }
 
-.searchInput[type=submit] {
+.searchInput2[type=submit] {
+
+    height: 30px;
+    width: 30px;
+    margin: 5px;
+   
+    background-color: transparent;
+    background-position: center;
+    background-image: url('../img/search.png');
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    cursor: pointer;
+    outline: none;
+    border: none;
     
     
 }
@@ -107,7 +164,8 @@ input, input:focus{
 }
 
 #uploadBtnImg {
-    height: 30px;
+    
+    height: 22px;
 }
 
 #upload {

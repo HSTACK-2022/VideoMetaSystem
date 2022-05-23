@@ -9,7 +9,7 @@
 </head>
 <body class="bodyArea">
     {% include 'core/test_header.html' %}
-    <div id="uploadFileTitle">Upload File</div>
+    <div id="uploadFileTitle">UPLOAD FILE</div>
     <form action="{% url 'Core:uploadFile' %}" method="POST" enctype="multipart/form-data">
         <table id="uploadFileTable">
             <tr>
@@ -37,7 +37,10 @@
             <tr>
                 <td class="uploadFileTableTD"> <div class="tags">Video File : </div> </td> 
                 <td class="uploadFileTableTD">
-                    <input type="file" name="videoFile">
+                    <input type="file" name="videoFile" id="btn";>
+                    <!-- <label id="fileBtn" for="btn">
+                        파일 선택
+                    </label> -->
                 </td> 
             </tr>
             <tr>

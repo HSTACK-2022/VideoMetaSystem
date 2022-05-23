@@ -13,9 +13,7 @@ urlpatterns = [
     path('test/search/', views.searchFile, name="searchFile"),
     path('test/detail/<int:pk>', views.detailFile, name="detailFile"),
     path('test/success/<int:pk>', views.success, name="success"),
-
-    path('test/minhwa', views.test_minhwa),
-    path('test/minhwa2/detailSearch/', views.test_minhwa3, name="detailSearch"),
+    path('test/minhwa2/detailSearch/', views.detailSearch, name="detailSearch"),
 ]
 
 if settings.DEBUG: 

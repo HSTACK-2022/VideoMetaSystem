@@ -32,56 +32,10 @@ from core import rankAlgo
 # 상수 설정
 OS = platform.system()
 renderAppName = "Core" if OS == 'Windows' else 'core'
-extractingId = {}
 
 # for backend.
 def home(request):
     return render(request, renderAppName + '/test_home.html') 
-
-# search
-def searchFile(request):
-    if request.method == "GET":
-        word = request.GET["searchText"]
-        if word == "":
-            return render(request, renderAppName + '/test_search.html',
-                context={
-                    'code': 404,
-                    'searchWord' : ""
-                })
-
-        else :
-            searchWords = []
-            words = re.split(r'[ ,:]', word)
-            for item in words:
-                if item != "": searchWords.append(item)
-
-            videoMetaList = []
-            videoIdList = {}
-
-            # before
-            categoryList = {}
-            videoIdList, videoMetaList, categoryList, rankData = searchAll.search(searchWords)
-
-            #after
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print(videoIdList, videoMetaList, categoryList, rankData)
-
-            if not videoMetaList :
-                return render(request, renderAppName + '/test_search.html',
-                    context={
-                        'code' : 404,
-                        'searchWord' : word
-                    })
-            else :
-                return render(request, renderAppName + '/test_search.html',
-                    context={
-                        'code' : 200,
-                        'categoryList' : categoryList,
-                        'videoMetaList' : videoMetaList,
-                        'videoIdList' : videoIdList,
-                        'searchWord' : word,
-                        'rankData': rankData,
-                    })
 
 # video(file) upload
 def uploadFile(request):
@@ -204,20 +158,32 @@ def detailFile(request, pk):
         }
     )
 
-
-
-# for test.
+# 업로드 완료 된 영상의 상세페이지 (/test/success/pk)
 def success(request, pk):
     if request.method == "POST":
-        keywordButtonList = request.POST.getlist("keywordButtonList")
-        keywordsBtn = request.POST.getlist("keywordsBtn")
-        
-        print(">>>>>>>>>>>>>>>>>>>")
-        print(len(keywordButtonList))
-        print(len(keywordsBtn))
+        sysKEList = request.POST.getlist("sysKEList")
+        sysKCList = request.POST.getlist("sysKCList")
 
-        for i in range(len(keywordButtonList)):
-            models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtn[i]).update(expose=keywordButtonList[i])
+        newUserKEList = request.POST.getlist("newUserKEList")
+        newUserKCList = request.POST.getlist("newUserKCList")
+        userKEList = request.POST.getlist("userKEList")
+        userKCList = request.POST.getlist("userKCList")
+
+        print(userKEList)
+
+        for i in range(len(sysKEList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = sysKCList[i], sysdef=1).update(expose=sysKEList[i])
+        for i in range(len(userKEList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = userKCList[i], sysdef=0).update(expose=userKEList[i])
+        for i in range(len(newUserKCList)):
+            models.Keywords.objects.create(
+                id = models.Videopath.objects.get(id=pk),
+                keyword = newUserKCList[i],
+                expose = newUserKEList[i],
+                sysdef = 0
+            )
+        
+
 
     videoPath = models.Videopath.objects.get(id = pk).videoaddr
     if OS == 'Windows':
@@ -237,32 +203,62 @@ def success(request, pk):
         request,
         renderAppName + '/test_success.html',
         {
-            'pk' : pk,
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
-            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
+            'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
 
-def test_successFinish(request):
-    keywordButtonList = request.POST['keywordButtonList']
-    print(keywordButtonList)
+# search
+def searchFile(request):
+    if request.method == "GET":
+        word = request.GET["searchText"]
+        if word == "":
+            return render(request, renderAppName + '/test_search.html',
+                context={
+                    'code': 404,
+                    'searchWord' : ""
+                })
 
+        else :
+            searchWords = []
+            words = re.split(r'[ ,:]', word)
+            for item in words:
+                if item != "": searchWords.append(item)
 
-def test_minhwa(request):
-    return render(
-        request,
-        renderAppName + '/test.html',
-        {
-            'keywords' : models.Keywords.objects.filter(id = 28).all().values(),
-            'metadatas' : models.Metadata.objects.filter(id = 28).all().values(),
-            'timestamps' : models.Timestamp.objects.filter(id = 28).all().values(),
-        }
-    )
+            videoMetaList = []
+            videoIdList = {}
 
-def test_minhwa3(request):
+            # before
+            categoryList = {}
+            videoIdList, videoMetaList, categoryList, rankData = searchAll.search(searchWords)
+
+            #after
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print(videoIdList, videoMetaList, categoryList, rankData)
+
+            if not videoIdList :
+                return render(request, renderAppName + '/test_search.html',
+                    context={
+                        'code' : 404,
+                        'searchWord' : word
+                    })
+            else :
+                return render(request, renderAppName + '/test_search.html',
+                    context={
+                        'code' : 200,
+                        'categoryList' : categoryList,
+                        'videoMetaList' : videoMetaList,
+                        'videoIdList' : videoIdList,
+                        'searchWord' : word,
+                        'rankData': rankData,
+                    })
+
+# category detail search
+def detailSearch(request):
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category
     search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
@@ -275,7 +271,7 @@ def test_minhwa3(request):
     newVideoIdList = list()
 
     newVideoIdList, videoMetaList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
-    
+    categoryList = list(search_detail_type)
 
     for video in videoMetaList:
         print("****")
@@ -286,4 +282,6 @@ def test_minhwa3(request):
             'code' : 200,
             'videoMetaList' : videoMetaList,
             'videoIdList' : newVideoIdList,
+            'categoryList' : categoryList,
+            #'rankData': rankData,
         })
