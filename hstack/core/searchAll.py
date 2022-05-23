@@ -99,7 +99,7 @@ class Total:
         keywordQ &= Q(id = videoId)
         keywordQ &= Q(expose=True)
         if search_type == "category":
-            if models.Metadata.objects.filter(id = videoId).filter(category = search_detail_type).exists():
+            if models.Metadata.objects.filter(id = videoId).filter(category__contains = search_detail_type).exists():
                 metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
                 keywordList = list(models.Keywords.objects.filter(keywordQ).all().values_list('keyword', flat=True).distinct())
                 finalDict['id'] = videoId
@@ -113,7 +113,21 @@ class Total:
                 fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
                 finalDict['thumbnail'] = os.path.join(filePath, fileName)
         elif search_type == "method":
-            if models.Metadata.objects.filter(id = videoId).filter(method = search_detail_type).exists():
+            if models.Metadata.objects.filter(id = videoId).filter(method__contains = search_detail_type).exists():
+                metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
+                keywordList = list(models.Keywords.objects.filter(keywordQ).all().values_list('keyword', flat=True).distinct())
+                finalDict['id'] = videoId
+                finalDict['metadata'] = metadataList
+                finalDict['keyword']=keywordList
+                if OS == 'Windows':
+                    filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+                else :
+                    filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+                    
+                fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
+                finalDict['thumbnail'] = os.path.join(filePath, fileName)
+        elif search_type == "narrative":
+            if models.Metadata.objects.filter(id = videoId).filter(narrative__contains = search_detail_type).exists():
                 metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
                 keywordList = list(models.Keywords.objects.filter(keywordQ).all().values_list('keyword', flat=True).distinct())
                 finalDict['id'] = videoId
@@ -171,8 +185,10 @@ def search(searchTexts):
     videoIdList = list(a.resultVideoIDList)
     searchResultMeta = list(searchResultMeta)
     categoryList = extractCategories(videoIdList)
+    typeList = extractType(videoIdList)
+    dataList = extractData(videoIdList)
 
-    return (videoIdList, searchResultMeta, categoryList, a.detail)
+    return (videoIdList, searchResultMeta, categoryList, typeList, dataList, a.detail)
 
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
@@ -185,17 +201,44 @@ def detailSearch(videoIdList, search_type, search_detail_type):
             if len(res) != 0:
                 searchResultMeta.append(res)
                 newVideoIdList.append(i)
+    categoryList = extractCategories(newVideoIdList)
+    typeList = extractType(newVideoIdList)
+    dataList = extractData(newVideoIdList)
 
-    #print(searchResultMeta)
-    return (newVideoIdList, searchResultMeta)
+    return (newVideoIdList, searchResultMeta, categoryList, typeList, dataList)
 
+
+# 각 videoId에서 Categories를 뽑아낸다.
+def extractType(videoIdList):
+    typeList = set()
+    for videoId in videoIdList:
+        types = models.Metadata.objects.get(id = videoId).narrative
+        types = types.split(',')
+        print(types)
+        for c in types:
+            typeList.add(c)
+
+    return typeList
 
 # 각 videoId에서 Categories를 뽑아낸다.
 def extractCategories(videoIdList):
     categoryList = set()
     for videoId in videoIdList:
         category = models.Metadata.objects.get(id = videoId).category
+        category = category.split(',')
         print(category)
-        categoryList.add(category)
+        for c in category:
+            categoryList.add(c)
 
     return categoryList
+# 각 videoId에서 Categories를 뽑아낸다.
+def extractData(videoIdList):
+    dataList = set()
+    for videoId in videoIdList:
+        datas = models.Metadata.objects.get(id = videoId).method
+        datas = datas.split(',')
+        print(datas)
+        for c in datas:
+            dataList.add(c)
+
+    return dataList    
