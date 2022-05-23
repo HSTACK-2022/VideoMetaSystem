@@ -37,14 +37,7 @@
                 <input type="hidden" name="videoIdList" value="{{videoIdList}}">
                 <input type="hidden" name="search_type" id="search_type">
                 <input type="hidden" name="search_detail_type" id="search_detail_type">
-        
-                <select id=selectd_category onchange="Change()" >
-                    <option selected>choose category</option>
-                    <option>IT</option>
-                    <option>식물</option>
-                    <option>지리</option>
-                    <option>경제</option>
-                </select>
+                
                 <br>
                 {% for category in categoryList %}
                 <input type="button" value="{{category}}" onclick="searchDetail('category','{{category}}')">
