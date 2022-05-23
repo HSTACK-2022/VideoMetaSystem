@@ -298,7 +298,17 @@ div.right {
     display: inline-block;
 }
 
-.keywordsBtn111 {
+.keywordsClickedBtn {
+    height: 25px;
+    margin: 2px 0px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 20px;
+    border: 1px solid #888888;
+    background-color: #737070;
+    display: inline-block;
+}
+.userKBtn {
     height: 25px;
     margin: 2px 0px;
     padding: 0px 10px;
@@ -309,7 +319,7 @@ div.right {
     display: inline-block;
 }
 
-.keywordsClickedBtn {
+.userKClickedBtn {
     height: 25px;
     margin: 2px 0px;
     padding: 0px 10px;

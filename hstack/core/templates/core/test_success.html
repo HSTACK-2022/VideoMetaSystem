@@ -13,15 +13,11 @@
         
 </head>
 <body class="bodyArea">
-    <form onsubmit="return validCheck()" action="{% url 'Core:success'%}" method="POST" id="form">
+    <form onsubmit="return validCheck()" method="POST" id="form">
     {% csrf_token %}
     <script>
         
         function validCheck() {
-            // alert(keywordButtonList);
-            // document.getElementById('keywordButtonList').value = keywordButtonList;
-            // console.log(document.getElementById('keywordButtonList').value);
-            //return false;   
             var i = 0;
             // sys defined keyword의 expose를 sysKEList(system Keyword Expose List) 전달
             for(var key in sysKEList){
@@ -61,6 +57,7 @@
                 document.getElementById('form').append(kk);
                 i++;
             }
+            location.href='/test/success/{{ii.id_id}}'
         }
     </script>
     {% include 'core/test_header.html' %}
