@@ -9,7 +9,6 @@
             </td>
 
             <td>
-                
                     <form name="search" action="{% url 'Core:searchFile' %}"method="GET" onsubmit="search()" enctype="multipart/form-data">
                                 <td>
                                     <input class="searchInput" type="text" name="searchText" placeholder="검색어를 입력하세요.">{% csrf_token %}<input class="searchInput2" type="submit" value=" ">

@@ -5,13 +5,15 @@
 <html>
 <head>
         {% for metadata in metadatas %}
-        <title>VMetaSys - {{metadata.title}} </title>
+        <title>VIFO - {{metadata.title}} </title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?after">
 
         <!-- submit check -->
         
+        
 </head>
+{% include 'core/test_header.html' %}
 <body class="bodyArea">
     <form name="modify" method="POST" id="form">
     {% csrf_token %}
@@ -61,7 +63,6 @@
             document.modify.submit();
         }
     </script>
-    {% include 'core/test_header.html' %}
     <div class="divParent">
         <!-- Post content-->
         <div class="detailHeader">
@@ -220,7 +221,7 @@
             </table>
             
             <button type="button" value="저장" onclick="validCheck()">
-        </form>
+            </form>
         </div>
     </div>
     
@@ -233,6 +234,9 @@
             vid.play();
         }
     </script>
+
+
+    </form>
 </body>
 {% endfor %}
 </html>
