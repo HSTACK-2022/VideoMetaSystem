@@ -4,8 +4,7 @@
     <head>
         {% for metadata in metadatas %}
             <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
-            <title>VMetaSys - {{metadata.title}}
-            </title>
+            <title>VMeta - {{metadata.title}}</title>
             <meta charset="UTF-8">
 
         </head>
@@ -44,39 +43,7 @@
                                 {{metadata.presenter}}</div>
 
                         </div>
-                        <!--end of the left div side-->
 
-                        <div class="right">
-                            <table class="metadataTable2">
-                                <!-- Basic metadata -->
-                                <tr>
-                                    <td colspan="2">
-                                        <div class="metadataTR_bottom">
-                                            <div class="metadataTitle">▪ CATEGORY</div>
-                                            <div class="metadataContent">{{metadata.category}}</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <div class="metadataTR_bottom">
-                                            <div class="metadataTitle">▪  NARRATIVE</div>
-                                            <div class="metadataContent">{{metadata.narrative}}</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <div class="metadataTR_bottom">
-                                            <div class="metadataTitle">▪  METHOD</div>
-                                            <div class="metadataContent">{{metadata.method}}</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </div>
-                        <!--end of the right div side-->
                     </div>
 
                 </div>
@@ -93,6 +60,35 @@
                                     <table class="metadataTable">
 
                                         <!--키워드 -->
+
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">CATEGORY</div>
+                                                    <div class="metadataContent">{{metadata.category}}</div>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">NARRATIVE</div>
+                                                    <div class="metadataContent">{{metadata.narrative}}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">METHOD</div>
+                                                    <div class="metadataContent">{{metadata.method}}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
                                         <tr>
                                             <td colspan="2">
                                                 <div class="metadataTR">
@@ -113,42 +109,13 @@
                                         </tr>
                                         <tr class="emptyTR"></tr>
                                     </table>
-                                    <div class="searchScroll2">
 
-                                        <!-- 목차 -->
-                                        <table class="metadataTable">
-                                            <tr>
-                                                <td colspan="2">
-                                                    <div class="metadataTR">
-                                                        <div class="metadataTitle2">INDEX</div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            {% for timestamp in timestamps %}
-
-                                                <tr class="metadataDetailTR">
-                                                    <!-- 수정 필요 -->
-
-                                                    <td colspan="2" class="metadataKeywordTD">
-
-                                                        <button class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
-                                                        <div class="indexTitle">{{timestamp.subtitle}}</div>
-
-                                                    </td>
-
-                                                </tr>
-
-                                            {% endfor %}
-
-                                        </table>
-                                    </div>
                                 </div>
                             </li>
 
-
                             <!-- @@@@@@@@@두번째 탭 스크립트 -->
                             <li id="tab2" class="btnCon">
-                                <a class="btn second" href="#tab2">Script</a>
+                                <a class="btn second" href="#tab2" onclick="searchPost({{scripts}});">Full Script</a>
                                 <div class="tabCon">
 
                                     <!-- detail search : only for detail -->
@@ -165,13 +132,48 @@
                                     </div>
 
                                     <div class="searchScroll">
-                                        <table id="searchResArea" class="" ></table>
+                                        <table id="searchResArea" class=""></table>
                                     </div>
                                 </div>
                             </li>
 
+                            <!-- @@@@@@@@@세번째 탭 목차 -->
                             <li id="tab3" class="btnCon">
-                                <a class="btn third" href="#tab3">Images</a>
+                                <a class="btn thrid" href="#tab3">Index</a>
+                                <div class="tabCon">
+
+                                    <div class="searchScroll2">
+
+                                        <!-- 목차 -->
+                                        <table class="metadataTable">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="metadataTR">
+                                                        <div class="metadataTitle2">INDEX</div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            {% for timestamp in timestamps %}
+
+                                                <tr class="metadataDetailTR">
+                                                    <!-- 수정 필요 -->
+
+                                                    <td colspan="2" class="metadataKeywordTD">
+
+                                                        <button class="indexTime2" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
+                                                        <div class="indexTitle2">{{timestamp.subtitle}}</div>
+
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li id="tab4" class="btnCon">
+                                <a class="btn third" href="#tab4">Images</a>
                                 <div class="tabCon">
                                         <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">download</button> 
                                         <div id = "pptImage">
@@ -181,6 +183,7 @@
                                         </div>
                                 </div>
                             </li>
+
                         </ul>
                     </div>
                 </div>
