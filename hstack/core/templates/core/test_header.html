@@ -1,45 +1,29 @@
 {% load static %}
 <header>
     <link rel="stylesheet" href="{% static 'css/header.css'%}">
-        <table id="header_table">
-            <tr>
-                <td id="header_upload">
-                    <button type="button" id="home" onclick="location.href='/test/'">
-                        <img id="logo" src="{% static 'img/logo_short.png' %}"></button>
-                    </td>
+    <script src="{% static 'js/search.js' %}"></script>
+    <table id="header_table">
+        <tr>
+            <td id="header_upload">
+                <button type="button" id="home" onclick="location.href='/test/'"><img id="logo" src="{% static 'img/logo_short.png' %}"></button>
+            </td>
 
+            <td>
+                <form name="search" action="{% url 'Core:searchFile' %}"method="GET" onsubmit="search()" enctype="multipart/form-data">
                     <td>
-                        <form
-                            name="search"
-                            action="{% url 'Core:searchFile' %}"
-                            method="GET"
-                            enctype="multipart/form-data">
-                            <td>
-                                <input
-                                    class="searchInput"
-                                    type="text"
-                                    name="searchText"
-                                    placeholder="검색어를 입력하세요.">{% csrf_token %}
-                                <input
-                                    class="searchInput2"
-                                    type="submit"
-                                    value=" ">
-                            </td>
-                    </form>
-
+                        <input class="searchInput" type="text" name="searchText" placeholder="검색어를 입력하세요.">{% csrf_token %}<input class="searchInput2" type="submit" value=" ">
+                    </td>
+                </form>
+                
             </td>
 
 
-            <td id="
-                                        header_upload"="header_upload"">
-                                        <button id="upload" onclick="location.href='/test/upload/'">
-                                            <img id="uploadBtnImg" src="{% static 'img/upload2.png' %}"></button>
-                                        </td>
-                                        <td id="header_upload">
-                                            <button id="upload" onclick="location.href='/test/upload/lists'">
-                                                <img id="uploadBtnImg" src="{% static 'img/upload.png' %}"></button>
-                                            </td>
-
-                                        </tr>
-                                    </table>
-                                </header>
+            <td id="header_upload">
+                <button id="upload" type="button" onclick="location.href='/test/upload/'"><img id="uploadBtnImg" src="{% static 'img/upload2.png' %}"></button>
+            </td>
+            <td id ="header_upload">
+                <button id="upload" type="button" onclick="location.href='/test/upload/lists'"><img id="uploadBtnImg" src="{% static 'img/uploadList.png' %}"></button>
+            </td>
+        </tr>
+    </table>
+</header>

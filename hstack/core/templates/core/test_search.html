@@ -47,74 +47,71 @@
                         {% for meta in videoMetaList %}
                             <!-- video id:{{ii.id_id}} <br> -->
                             {% for ii in meta.metadata %}
-                                <table
-                                    class="videoListTable"
-                                    onclick="location.href='/test/detail/{{ii.id_id}}'">
-                                    <tr>
-                                        <td style="width: 300px;">
-                                            <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
-                                        </td>
-                                        <td>
-                                            <table class="videoTable">
-                                                <tr>
-                                                    <td>
-                                                        <div class="VT_category">{{ii.category}}</div>
-                                                        <div class="VT_narrative">{{ii.narrative}}</div>
-                                                        <div class="VT_method">{{ii.method}}</div>
-                                                        {% comment %} <div class="rank_data">detail은 (개발중..)% 입니다</div> {% endcomment %}
+                            <table
+                            class="videoListTable"
+                            onclick="location.href='/test/detail/{{ii.id_id}}'">
+                            <tr>
+                                <td style="width: 300px;">
+                                    <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
+                                </td>
+                                <td>
+                                    <table class="videoTable">
+                                        <tr>
+                                            <td>
+                                                <div class="VT_category">{{ii.category}}</div>
+                                                <div class="VT_narrative">{{ii.narrative}}</div>
+                                                <div class="VT_method">{{ii.method}}</div>
+                                                {% comment %} <div class="rank_data">detail은 (개발중..)% 입니다</div> {% endcomment %}
 
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="VT_videoTitle">{{ii.title}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        {% for key in meta.keyword %}
-                                                            {% if key != "" and forloop.counter < 6 %}
-                                                                <div class="VT_keywords">#{{key}}</div>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="VT_presenter">
-                                                            <image
-                                                                src="{% static 'img/user.png' %}"
-                                                                style="height: 17px; align-items: center;"></image>
-                                                            {{ii.presenter}}
-                                                        </div>
-                                                        {% comment %} <div class="VT_uploadedDate">{{ii.uploaddate}}</div> {% endcomment %}
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="VT_videoTitle">{{ii.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {% for key in meta.keyword %}
+                                                    {% if key != "" and forloop.counter < 6 %}
+                                                        <div class="VT_keywords">#{{key}}</div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="VT_presenter">
+                                                    <image
+                                                        src="{% static 'img/user.png' %}"
+                                                        style="height: 17px; align-items: center;"></image>
+                                                    {{ii.presenter}}
+                                                </div>
+                                                {% comment %} <div class="VT_uploadedDate">{{ii.uploaddate}}</div> {% endcomment %}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
 
-                                        <td>
-                                            <div class="wrap-circles">
-                                                <div class="circle per-title">
-                                                    <div class="inner">제목</div>
-                                                </div>
-                                                <div class="circle per-keyword">
-                                                    <div class="inner">키워드</div>
-                                                </div>
-                                                <div class="circle per-index">
-                                                    <div class="inner">인덱스</div>
-                                                </div>
-                                                <div class="circle per-presenter">
-                                                    <div class="inner">발표자</div>
-                                                </div>
-                                                
-                                            </div>
-                                            <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
-                                        </td>
+                                <td>
+                                    <div class="wrap-circles">
+                                        <div class="circle per-title">
+                                            <div class="inner">제목</div>
+                                        </div>
+                                        <div class="circle per-keyword">
+                                            <div class="inner">키워드</div>
+                                        </div>
+                                        <div class="circle per-index">
+                                            <div class="inner">인덱스</div>
+                                        </div>
+                                        <div class="circle per-presenter">
+                                            <div class="inner">발표자</div>
+                                        </div>
                                         
-
-
-                                    </tr>
-                                </table>
-                            {% endfor %}
+                                    </div>
+                                    <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
+                                </td>
+                            </tr>
+                        </table>
+                        {% endfor %}
                         {% endfor %}
                     </td>
                 </div>

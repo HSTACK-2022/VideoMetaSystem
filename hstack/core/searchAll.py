@@ -42,22 +42,44 @@ class Total:
                self.resultVideoIDList.add(to)
 
 
-    # 입력 값 일치율대로 점수 부여
+     #키워드와 인덱스 확률 계산
+    def getPercent(self, videoId, div, cnt):
+        if(div == "key"):
+            keyTotal = models.Keywords.objects.filter(id = videoId).all()
+            count1 = keyTotal.count()
+            percent = ((cnt/5)/count1)*100 #점수를 주었기 때문에 5로 다시 나누어 줌
+            return round(percent,1) # 소수점 한자리
+        if(div == "subtitle"):
+            subtitleTotal = models.Timestamp.objects.filter(id = videoId).all()
+            count2 = subtitleTotal.count()
+            percent = ((cnt/5)/count2)*100 #점수를 주었기 때문에 5로 다시 나누어 줌
+            return round(percent,1) # 소수점 한자리
+    
+    # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
     def getrank(self, searchTexts, videoId): #ranking algo
         self.rankcount = {"keyword":0,"title":0,"present":0,"subtitle":0} #rank 알고리즘 초기화
+        percentDic = {}
         for searchText in searchTexts:
             for k in models.Keywords.objects.filter(id = videoId).filter(keyword__contains = searchText).values_list('id', flat=True):
                 self.rankcount["keyword"] += 5
+                cnt = self.rankcount["keyword"]
+                percentDic['키워드'] = str(self.getPercent(videoId, "key", cnt))+"%"
             for ti in models.Metadata.objects.filter(id = videoId).filter(title__contains = searchText).values_list('id', flat=True).distinct():
                 self.rankcount["title"] = 50
-                self.rankDetail.append("제목일치")
+                self.rankDetail.append("제목 일치")
             for p in models.Metadata.objects.filter(id = videoId).filter(presenter__contains = searchText).values_list('id', flat=True).distinct():
                 self.rankcount["present"] = 50
-                self.rankDetail.append("발표자일치")
+                self.rankDetail.append("발표자 일치")
             for to in models.Timestamp.objects.filter(id = videoId).filter(subtitle__contains = searchText).values_list('id', flat=True):
                 self.rankcount["subtitle"] += 5
+                cnt = self.rankcount["subtitle"]
+                percentDic['인덱스']=str(self.getPercent(videoId, "subtitle", cnt))+"%"
+        for key, value in percentDic.items():
+            if key == '인덱스':
+                self.rankDetail.append("인덱스 일치율: " + percentDic['인덱스'])
+            if key == '키워드':
+                self.rankDetail.append("키워드 일치율: " +percentDic['키워드'])
 
-        print("bbbbbbbbbbbbbbbb"+str(self.rankDetail)+str(sum(self.rankcount.values())))
         return(sum(self.rankcount.values()), self.rankDetail)
 
 
@@ -149,46 +171,40 @@ def search(searchTexts):
     a = Total()
     a.resultVideoIDList = set() # 두번째를 위해 초기화
     a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
-    
+
     #resultVideoIDList
     searchResultMeta = []
 
     maxlist = [] # 알고리즘을 거친 후의 id 리스트
     rankDict = {} # 정확도 보내는 딕셔너리
-    tttt = []
+    tttt = {}
 
     #ranking algorithm
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
-            # for rank algorithm.
             print(i) #id
-            print(tttt)
-            a.getrank(searchTexts,i) #해당 videoId의 정확도
+            # a.getrank(searchTexts,i) #해당 videoId의 정확도
             a.rankDetail = [] #초기화
             rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
-            print(a.detail[i])
-            tttt.append(a.detail[i])
-
-    print(searchResultMeta)
+            tttt[i] = a.detail[i]
 
     #value 큰 순서대로 딕셔너리 재배열
     sdict = sorted(rankDict.items(), key=lambda x: x[1], reverse=True)
 
     maxlist = dict(sdict) #list형태의 딕셔너리를 딕셔너리 형태로 전환
+    print(maxlist.keys())
     for j in maxlist:
         a.getVideoMetadataFromID(j) #id 받아오기
         searchResultMeta.append(a.finalDict)
-        rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
-        print(a.detail)
-        print(a.rankDetail)
+        searchResultMeta.append(a.detail[j])
 
-    videoIdList = list(a.resultVideoIDList)
+    videoIdList = list(maxlist.keys())
     searchResultMeta = list(searchResultMeta)
     categoryList = extractCategories(videoIdList)
     typeList = extractType(videoIdList)
     dataList = extractData(videoIdList)
 
-    return (videoIdList, searchResultMeta, categoryList, typeList, dataList, a.detail)
+    return (videoIdList, searchResultMeta, categoryList, typeList, dataList, tttt)
 
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
@@ -208,15 +224,16 @@ def detailSearch(videoIdList, search_type, search_detail_type):
     return (newVideoIdList, searchResultMeta, categoryList, typeList, dataList)
 
 
-# 각 videoId에서 Categories를 뽑아낸다.
+# 각 videoId에서 narrative를 뽑아낸다.
 def extractType(videoIdList):
     typeList = set()
     for videoId in videoIdList:
-        types = models.Metadata.objects.get(id = videoId).narrative
-        types = types.split(',')
-        print(types)
-        for c in types:
-            typeList.add(c)
+        if(models.Metadata.objects.get(id = videoId).narrative):
+            types = models.Metadata.objects.get(id = videoId).narrative
+            types = types.split(',')
+            print(types)
+            for c in types:
+                typeList.add(c)
 
     return typeList
 
@@ -224,21 +241,23 @@ def extractType(videoIdList):
 def extractCategories(videoIdList):
     categoryList = set()
     for videoId in videoIdList:
-        category = models.Metadata.objects.get(id = videoId).category
-        category = category.split(',')
-        print(category)
-        for c in category:
-            categoryList.add(c)
+        if(models.Metadata.objects.get(id = videoId).category):
+            category = models.Metadata.objects.get(id = videoId).category
+            category = category.split(',')
+            print(category)
+            for c in category:
+                categoryList.add(c)
 
     return categoryList
-# 각 videoId에서 Categories를 뽑아낸다.
+# 각 videoId에서 method를 뽑아낸다.
 def extractData(videoIdList):
     dataList = set()
     for videoId in videoIdList:
-        datas = models.Metadata.objects.get(id = videoId).method
-        datas = datas.split(',')
-        print(datas)
-        for c in datas:
-            dataList.add(c)
+        if(models.Metadata.objects.get(id = videoId).method):
+            datas = models.Metadata.objects.get(id = videoId).method
+            datas = datas.split(',')
+            print(datas)
+            for c in datas:
+                dataList.add(c)
 
     return dataList    
