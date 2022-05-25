@@ -26,18 +26,10 @@
     display: inline-block;
 }
 
-.VT_videoTitle {
-    height: 100%;
-    padding-top: 5px;
-    padding-bottom: 7px;
-    font-family: 'jeju';
-    font-weight: bold;
-    font-size: 40px;
-    color: rgb(29, 29, 29);
-}
 
 .VT_category, .VT_narrative, .VT_method,  .VT_presenter, .VT_uploadedDate{
     font-family: "pre1";
+    
 }
 
 .VT_category,.VT_narrative, .VT_method{
@@ -84,14 +76,30 @@
 
 }
 
+.VT_videoTitle {
+    height: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    font-weight: bold;
+    font-size: 36px;
+    color: rgb(29, 29, 29);
+    letter-spacing:2px;
+}
+
+
 
 .VT_keywords {
     height: auto;
     margin-bottom: 5px;
-    margin-right: 10px;
+    margin-right: 2px;
 
-    font-size: 18px;
+    font-size: 17px;
     display: inline-block;
+    font-family: "pre2";
+    letter-spacing: -1px;
+    
+
 }
 
 .VT_presenter {
@@ -160,14 +168,6 @@
 }
 
 
-
-
-
-
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
-
-
 .center {
     position: absolute;
     top: 50%;
@@ -189,7 +189,9 @@
     padding: 10px 0 10px 10px;
     border-bottom: 1px solid #ddd;
     font-family: "pre1";
-    font-size: 25px;
+   
+ 
+    font-size: 23px;
 }
 
 .todo-cmp__header h2 {
@@ -216,9 +218,11 @@
     margin: 0;
     text-align: left;
     width: 100%;
+
     font-size: 1.1rem;
+    font-family: "pre2";
     
-    
+
 }
 
 .todo-cmp__list li label {
@@ -226,6 +230,7 @@
     
     width: 100%;
     display: block;
+    letter-spacing: 1px;
     
 }
 
@@ -238,12 +243,14 @@
     position: relative;
     display: block;
     transition: all 550ms ease-in-out;
+    
+    letter-spacing: -0.3px;
 }
 
 .todo-cmp__list li label input+span::after {
     content: "";
     display: block;
-    border: 1px solid #497081;
+    border: none;
     border-radius: 13px;
     height: 13px;
     width: 13px;
@@ -270,8 +277,10 @@
 }
 
 .todo-cmp__list li label input:checked+span {
-    color: #ccc;
+    
     transition: all 550ms ease-in-out;
+    color: rgb(59,59,59);;
+
 }
 
 .todo-cmp__list li label input:checked+span::after {

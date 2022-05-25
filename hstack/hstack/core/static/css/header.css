@@ -66,11 +66,24 @@
 @font-face {
     font-family: 'jeju';
     src: url("../font/JejuGothic.ttf");
+    unicode-range: U+0041-005A, U+0061-007A;
   
     font-style: normal;
 }
 
 
+
+@font-face {
+    font-family: 'na2';
+    src: url("../font/NanumSquareRoundEB.ttf");
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'na1';
+    src: url("../font/NanumSquareRoundR.ttf");
+    font-style: normal;
+}
 
 
 
@@ -113,7 +126,7 @@ header {
 
 
 .searchInput[type=text] {
-    font-family: 'S-Core4';
+    font-family: 'pre2';
     width: 70%;
     vertical-align: middle;
 

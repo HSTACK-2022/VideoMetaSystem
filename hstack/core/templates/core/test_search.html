@@ -43,8 +43,8 @@
         {% if code == 200 %}
        
             <table class="bodyTable">
+             
                 <tr>
-                    <div class= list>
                     <td class="section">
                         <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다</p>
                         {% for meta in videoMetaList %}
@@ -88,6 +88,8 @@
                                                         </div>
                                                         <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
                                                     </td>
+
+                                                    
                                                 </tr>
                                             </table>
                                         </td>
@@ -96,9 +98,9 @@
                             {% endfor %}
                         {% endfor %}
                     </td>
-                </div>
+               
 
-                    <div class= side>
+          
                     <td class="aside">
                         {% comment %} 
                         videoIdList = 
@@ -185,7 +187,7 @@
                             </div>
                         </form>
                     </td>
-                </div>
+              
                 </tr>
             
             </table>

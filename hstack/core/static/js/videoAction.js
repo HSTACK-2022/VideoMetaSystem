@@ -31,9 +31,18 @@ function searchPost(scripts) {
             const titleTd = document.createElement("td");
             tr.appendChild(titleTd);
 
+
+            // 여기
             const title = document.createElement("div");
             title.className = "indexTitle";
-            title.innerText = line;
+
+            var regex = new RegExp(str, "g");
+            line = line.replace(regex, "<span style='background-color:#FFE400;'>" + str + "</span>");
+
+       
+
+            title.innerHTML = line;
+            
             titleTd.appendChild(title);
         }
     });

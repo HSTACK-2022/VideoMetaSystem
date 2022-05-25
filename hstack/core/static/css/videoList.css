@@ -22,6 +22,7 @@
 
 .VT_thumbnail {
     height: 180px;
+    width: 240px;
     margin: 20px;
     display: inline-block;
 }

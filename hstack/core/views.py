@@ -166,20 +166,31 @@ def detailFile(request, pk):
 
 
 
-# for test.
+# 업로드 완료 된 영상의 상세페이지 (/test/success/pk)
 def success(request):
-    pk = 1     ######## 수정 필요
-
+    pk=1
     if request.method == "POST":
-        keywordButtonExposeList = request.POST.getlist("keywordButtonExposeList")
-        keywordsBtnContentList = request.POST.getlist("keywordsBtnContentList")
-        
-        print(">>>>>>>>>>>>>>>>>>>")
-        print(len(keywordButtonExposeList))
-        print(len(keywordsBtnContentList))
+        sysKEList = request.POST.getlist("sysKEList")
+        sysKCList = request.POST.getlist("sysKCList")
 
-        for i in range(len(keywordButtonExposeList)):
-            models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtnContentList[i]).update(expose=keywordButtonExposeList[i])
+        newUserKEList = request.POST.getlist("newUserKEList")
+        newUserKCList = request.POST.getlist("newUserKCList")
+        userKEList = request.POST.getlist("userKEList")
+        userKCList = request.POST.getlist("userKCList")
+
+        print(userKEList)
+
+        for i in range(len(sysKEList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = sysKCList[i], sysdef=1).update(expose=sysKEList[i])
+        for i in range(len(userKEList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = userKCList[i], sysdef=0).update(expose=userKEList[i])
+        for i in range(len(newUserKCList)):
+            models.Keywords.objects.create(
+                id = models.Videopath.objects.get(id=pk),
+                keyword = newUserKCList[i],
+                expose = newUserKEList[i],
+                sysdef = 0
+            )
         
 
 
@@ -201,13 +212,61 @@ def success(request):
         request,
         renderAppName + '/test_success.html',
         {
+            'pk' : pk,
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
-            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+            'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
+            'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
+
+
+# # for test.
+# def success(request):
+#     pk = 1     ######## 수정 필요
+
+#     if request.method == "POST":
+#         keywordButtonExposeList = request.POST.getlist("keywordButtonExposeList")
+#         keywordsBtnContentList = request.POST.getlist("keywordsBtnContentList")
+        
+#         print(">>>>>>>>>>>>>>>>>>>")
+#         print(len(keywordButtonExposeList))
+#         print(len(keywordsBtnContentList))
+
+#         for i in range(len(keywordButtonExposeList)):
+#             models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtnContentList[i]).update(expose=keywordButtonExposeList[i])
+        
+
+
+#     videoPath = models.Videopath.objects.get(id = pk).videoaddr
+#     if OS == 'Windows':
+#         videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
+#     else:
+#         videoPath4Play = "../../../media" + videoPath.split("media")[1]
+    
+#     textPath = models.Videopath.objects.get(id = pk).textaddr
+#     try:
+#         with open(textPath, 'r', encoding='UTF-8-sig') as f:
+#             scripts = f.readlines()
+#     except FileNotFoundError as err:
+#         print(err)
+#         scripts = []
+
+#     return render(
+#         request,
+#         renderAppName + '/test_success.html',
+#         {
+            
+#             'videoaddr' : videoPath4Play,
+#             'scripts' : scripts,
+#             'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
+#             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
+#             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+#             'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
+#         }
+#     )
 
 
 def test_minhwa(request):

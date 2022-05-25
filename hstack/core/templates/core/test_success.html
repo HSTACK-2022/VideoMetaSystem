@@ -6,324 +6,393 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
+    {% for metadata in metadatas %}
     <head>
-        {% for metadata in metadatas %}
-            <title>VIFO -
-                {{metadata.title}}
-            </title>
-            <meta charset="UTF-8">
-            <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?after">
-
-            <!-- submit check -->
-        </head>
-
-        <body class="bodyArea">
-            {% include 'core/test_header.html' %}
-            {% comment %} <form
-                onsubmit="return validCheck()"
-                action="{% url 'Core:success'%}"
-                method="POST"
-                id="form"> {% endcomment %}
-                {% csrf_token %}
-                <script>
-
-                    function validCheck() {
-                        // alert(keywordButtonList); document.getElementById('keywordButtonList').value
-                        // = keywordButtonList;
-                        // console.log(document.getElementById('keywordButtonList').value); return
-                        // false;
-                        var i = 0;
-                        for (var key in keywordButtonExposeList) {
-                            var kk = document.createElement('input');
-                            kk.setAttribute("type", "hidden");
-                            kk.setAttribute("name", "keywordButtonExposeList");
-                            kk.setAttribute("value", keywordButtonExposeList[i]);
-                            document
-                                .getElementById('form')
-                                .append(kk);
-                            i++;
-                        }
+        <title>VIFO -
+        {{metadata.title}}
+        </title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?after">
+        <!-- submit check -->
+    </head>
+    {% include 'core/test_header.html' %}
+    <body class="bodyArea">
+        <form onsubmit="return validCheck()" method="POST" id="form">      
+        {% csrf_token %}
+            <script>
+                function validCheck() {
+                    var i = 0;
+                    // sys defined keyword의 expose를 sysKEList(system Keyword Expose List) 전달
+                    for(var key in sysKEList){
+                        var kk = document.createElement('input');
+                        kk.setAttribute("type","hidden");
+                        kk.setAttribute("name","sysKEList");
+                        kk.setAttribute("value",sysKEList[i]);
+                        document.getElementById('form').append(kk);
+                        i++;
                     }
-                </script>
+                    // user defined keyword의 expose를  전달
+                    var i = 0;
+                    for(var key in userKEList){
+                        var kk = document.createElement('input');
+                        kk.setAttribute("type","hidden");
+                        kk.setAttribute("name","userKEList");
+                        kk.setAttribute("value",userKEList[i]);
+                        document.getElementById('form').append(kk);
+                        i++;
+                    }
+                    // 새롭게 추가된 user defined keyword의 content와 expose여부 전달
+                    var i = 0;
+                    for(var key in newUserKEList){
+                        var kk = document.createElement('input');
+                        kk.setAttribute("type","hidden");
+                        kk.setAttribute("name","newUserKEList");
+                        kk.setAttribute("value",newUserKEList[i]);
+                        document.getElementById('form').append(kk);
+                        i++;
+                    }
+                    var i = 0;
+                    for(var key in newUserKCList){
+                        var kk = document.createElement('input');
+                        kk.setAttribute("type","hidden");
+                        kk.setAttribute("name","newUserKCList");
+                        kk.setAttribute("value",newUserKCList[i]);
+                        document.getElementById('form').append(kk);
+                        i++;
+                    }
+                    location.href='/test/success/#tab1'
+                }
+            </script>
+          
+          <body class="bodyArea">
+       
+            <div class="divParent">
+                <!-- Post content-->
+                <div class="detailHeader">
+                    <!-- Preview image figure-->
 
-                <div class="divParent">
-                    <!-- Post content-->
-                    <div class="detailHeader">
-                        <!-- Preview image figure-->
+                    <video
+                        height="450"
+                        class="videoPlayer"
+                        id="video"
+                        src="{{videoaddr}}"
+                        controls="controls"></video>
+                    <!--<div>result : {{Metadata}}</div>-->
 
-                        <video
-                            height="450"
-                            class="videoPlayer"
-                            id="video"
-                            src="{{videoaddr}}"
-                            controls="controls"></video>
-                        <!--<div>result : {{Metadata}}</div>-->
-                        <div class="box">
-                            <div class="left">
-                                <!-- 키워드 3개만 수정@@@@@@@@@@@-->
-                                <div class="keyTag">
-                                    {% for keyword in keywords %}
-                                        {% if keyword != "" and forloop.counter < 4 %}
-                                            #{{keyword.keyword}}
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <!-- Post title-->
-                                <div class="videoTitle">{{ metadata.title }}</div>
-                                <!-- Post meta content-->
-                                <div class="videoUploadDate">{{metadata.uploaddate}}</div>
-                                <div class="videoPresenter">
-                                    by
-                                    {{metadata.presenter}}</div>
+                    <div class="box">
+                        <div class="left">
+                            <!-- 키워드 3개만 수정@@@@@@@@@@@-->
+                            <div class="keyTag">
+                                {% for keyword in keywords %}
+                                    {% if keyword != "" and forloop.counter < 4 %}
+                                        #{{keyword.keyword}}
+                                    {% endif %}
+                                {% endfor %}
                             </div>
-                            <!--end of the left div side-->
+                            <!-- Post title-->
+                            <div class="videoTitle">{{ metadata.title }}</div>
+                            <!-- Post meta content-->
+                            <div class="videoUploadDate">{{metadata.uploaddate}}</div>
+                            <div class="videoPresenter">
+                                by
+                                {{metadata.presenter}}</div>
 
-                            <div class="right">
-                                <table class="metadataTable2">
-                                    <!-- Basic metadata -->
-                                    <tr>
-                                        <td colspan="2">
-                                            <div class="metadataTR_bottom">
-                                                <div class="metadataTitle">🗸 CATEGORY</div>
-                                                <div class="metadataContent">{{metadata.category}}</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            <div class="metadataTR_bottom">
-                                                <div class="metadataTitle">🗸 NARRATIVE</div>
-                                                <div class="metadataContent">{{metadata.narrative}}</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            <div class="metadataTR_bottom">
-                                                <div class="metadataTitle">🗸 METHOD</div>
-                                                <div class="metadataContent">{{metadata.method}}</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            <div class="metadataTR_bottom">
-                                                <div class="metadataTitle">🗸 VOICE</div>
-                                                <div class="metadataContent">
-                                                    <!-- <div style="background-color: blue; display: inline-block;
-                                                    width:{{metadata.voicemanrate}}%;" >M</div> <div style="background-color: red;
-                                                    display: inline-block; width:{{metadata.voicewomanrate}}%;" >W</div> -->
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <!--end of the right div side-->
                         </div>
-
-                        
+                  
                     </div>
 
+                </div>
 
-                    <!-- @@@@@@@@@@@@@@@@@여기부터 왼쪽창 -->
-                    <div class="detailMetadata">
-                        <div class="tabmenu">
-                            <ul>
-                                <!-- @@@@@@@@@@첫번째 탭 키워드/목차 -->
-                                <li id="tab1" class="btnCon">
-                                    <a class="btn first" href="#tab1">Metadata</a>
-                                    <div class="tabCon">
-                                        <table class="metadataTable">
+                    
+                
+                <!-- @@@@@@@@@@@@@@@@@여기부터 왼쪽창 -->
+                <div class="detailMetadata">
+                    <div class="tabmenu">
+                        <ul>
+                            <!-- @@@@@@@@@@첫번째 탭 키워드/목차 -->
+                            <li id="tab1" class="btnCon">
+                                <a class="btn first" href="#tab1">Metadata</a>
+                                <div class="tabCon">
+                                    <table class="metadataTable">
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">CATEGORY</div>
+                                                    <div class="metadataContent">{{metadata.category}}</div>
 
-                                            <script>
-                                                var keywordButtonExposeList = [];
-                                                $(document).ready(function () {
-                                                    $("button").on('click', function (e) {
-                                                        // 같은 레벨에서 몇번쨰
-                                                        var i = $(this).index();
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                                                        if ($(this).hasClass("keywordsBtn111")) 
-                                                            i = i - 2; // 중간에 들어가는 br 태그 개수 2개
-                                                        
-                                                        console.log(i); // *번째
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">NARRATIVE</div>
+                                                    <div class="metadataContent">{{metadata.narrative}}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
 
-                                                        if ($(this).hasClass("keywordsBtn")) { // expose가 1인 경우
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">METHOD</div>
+                                                    <div class="metadataContent">{{metadata.method}}</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <script>
+                                            var sysKEList = [];
+                                            var userKEList = [];
+                                            var newUserKEList = [];
+                                            var newUserKCList = [];
+                                            $(document).ready(function(){
+                                                $("button").on('click', function(e){
+                                                    // 같은 레벨에서 몇번쨰
+                                                    var i = $(this).index();  
+                                                    
+                                                    if($(this).hasClass("keywordAddBtn"))   // 키워드 새로 추가하기 버튼은 아래 과정 안하기
+                                                        return;
+                                                    else{
+                                                        console.log(i);  // *번째
+                        
+                                                        // system defined keyword
+                                                        if($(this).hasClass("keywordsBtn")){ // expose가 1인 경우
                                                             $(this).removeClass('keywordsBtn');
                                                             $(this).addClass('keywordsClickedBtn');
-                                                            keywordButtonExposeList.splice(i - 1, 1, parseInt("0"));
-                                                        } else {
+                                                            sysKEList.splice(i , 1 , parseInt("0"));
+                                                        }else if($(this).hasClass("keywordsClickedBtn")){
                                                             $(this).removeClass('keywordsClickedBtn'); // expose가 0인 경우
                                                             $(this).addClass('keywordsBtn');
-                                                            keywordButtonExposeList.splice(i - 1, 1, parseInt("1"));
+                                                            sysKEList.splice(i , 1 , parseInt("1"));
                                                         }
-
-                                                        // 존재하는 모든 버튼을 기준으로 index var j = $("button").index(this); console.log(j);
-
-                                                        console.log(keywordButtonExposeList);
-                                                    });
-                                                });
-                                            </script>
-
-                                            <!-- 키워드 -->
-                                            <tr>
-                                                <td colspan="2">
-                                                    <div class="metadataTR">
-                                                        <div class="metadataTitle2">KEYWORDS</div>
+                                                        // user defined keyword
+                                                        else if($(this).hasClass("userKBtn")){
+                                                            $(this).removeClass('userKBtn'); // expose가 1인 경우
+                                                            $(this).addClass('userKClickedBtn');
+                                                            userKEList.splice(i , 1 , parseInt("0"));
+                                                        }else{
+                                                            $(this).removeClass('userKClickedBtn'); // expose가 0인 경우
+                                                            $(this).addClass('userKBtn');
+                                                            userKEList.splice(i , 1 , parseInt("1"));
+                                                        }
                                                         
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <input
-                                                        type="hidden"
-                                                        value={{keyword.keyword}}="}"
-                                                        name="keywordsBtnContentList">
-                                                    <script>
-                                                        {% for keyword in keywords %}
-                                                        keywordButtonExposeList.push({{keyword.expose}})
-                                                        {% endfor %}
-                                                    </script>
-    
-                                                </td>
-                                            </tr>
-
-                                            <tr class="metadataDetailTR">
-                                                <td colspan="2" class="metadataKeywordTD">
+                                                        // 존재하는 모든 버튼을 기준으로 index
+                                                        // var j = $("button").index(this);  
+                                                        // console.log(j);
+                        
+                                                        console.log(sysKEList);
+                                                        console.log(userKEList);
+                                                    }
+                                                    
+                                                });
+                        
+                        
+                                                $(document).on("click", "button[class='keywordAddBtn']", function () {
+                                                    var val = $("#inputKeyW").val();
+                                                    $("#inputKeyW").val("");
+                                                    var newKeyword = "<button type='button' id='newUserkeywordsBtn' class='userKBtn'>"+val+"</button>";
+                                                    $(".userdefinedKeywords").append(newKeyword);
+                                                    newUserKEList.push(parseInt("1"));
+                                                    newUserKCList.push(val);
+                                                });
+                        
+                                                $(document).on("click", "button[id='newUserkeywordsBtn']", function () {
+                                                    console.log(newUserKEList);
+                                                    console.log(newUserKCList);
+                                                    var i = $(this).index();
+                                                    i = i - userKEList.length;
+                                                    if($(this).hasClass("userKBtn")){
+                                                        $(this).removeClass('userKBtn'); // expose가 1인 경우
+                                                        $(this).addClass('userKClickedBtn');
+                                                        newUserKEList.splice(i , 1 , parseInt("0"));
+                                                    }else{
+                                                        $(this).removeClass('userKClickedBtn'); // expose가 0인 경우
+                                                        $(this).addClass('userKBtn');
+                                                        newUserKEList.splice(i , 1 , parseInt("1"));
+                                                    }
+                                                    //console.log(i);
+                                                });
+                        
+                                            });
+                                        </script>
+                                        <tr>
+                                            <td colspan="2">
+                                                <div class="metadataTR">
+                                                    <div class="metadataTitle2">KEYWORDS</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="hidden"
+                                                    value={{keyword.keyword}}="}"
+                                                    name="keywordsBtnContentList">
                                                 
+                                                
+                                                {% for keyword in keywords %}
+                                                <input type="hidden" value={{keyword.keyword}}="}" name="sysKCList">
+                                                <script>
+                                                    sysKEList.push({{keyword.expose}})
+                                                </script>
+                                                {% endfor %}
+
+                                                {% for userkeyword in userkeywords %}
+                                                <input type="hidden" value={{userkeyword.keyword}}="}" name="userKCList">
+                                                <script>
+                                                    userKEList.push({{userkeyword.expose}})
+                                                </script>
+                                                {% endfor %}
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr class="metadataDetailTR">
+                                            <td colspan="2" class="metadataKeywordTD">
+                                    
                                                 <div class="metadataTitle2">- System Defined </div>
                                                 <div class="sysdefinedKeywords">
                                                     {% for keyword in keywords %}
                                                         {% if keyword.expose == 1 %}
-                                                            <button type="button" id="keywordsBtn" class="keywordsBtn" >{{keyword.keyword}}</button>
+                                                            <button type="button" id="keywordsBtn" class="keywordsBtn">{{keyword.keyword}}</button>
                                                         {% else %}
-                                                            <button type="button"  id="keywordsBtn" class="keywordsClickedBtn" >{{keyword.keyword}}</button>
+                                                            <button type="button" id="keywordsBtn" class="keywordsClickedBtn">{{keyword.keyword}}</button>
                                                         {% endif %}
                                                     {% endfor %}
                                                 </div>
-                                                
                                                 <hr>
 
                                                 <div class="metadataTitle2">- User Defined </div>
-                                                <input id ="save" type="submit" value="SAVE">
+                                                
+                                                <input id ="save" type="submit" value="SAVE" style='cursor:pointer;'>
                                                 <div class="userdefinedKeywords">
-                                                    <button type="button" id="keywordsBtn" class="keywordsBtn111" >예제1</button>
-                                                    <button type="button" id="keywordsBtn" class="keywordsBtn111" >예제2</button>
-                                                    <!--<script>keywordButtonExposeList.push(1); keywordButtonExposeList.push(1);</script>-->
+                                                    {% for userkeyword in userkeywords %}
+                                                        {% if userkeyword.expose == 1 %}
+                                                            <button type="button" id="userkeywordsBtn" class="userKBtn">{{userkeyword.keyword}}</button>
+                                                        {% else %}
+                                                            <button type="button" id="userkeywordsBtn" class="userKClickedBtn">{{userkeyword.keyword}}</button>
+                                                        {% endif %}
+                                                    {% endfor %}
                                                 </div>
-
-
-
-                                                {% comment %} <br><input text = "text" placeholder="새로운 키워드 추가하기"><button type="button" class="keywordAddBtn">추가</button> {% endcomment %}
-                                                <!-- 키워드 추가 textfield-->
-                                                <!-- detail search : only for detail -->
+                                                <br>
                                                 <div class="innerKeyword">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="새로운 키워드 추가하기"
-                                                        id="searchContent"></input>
-                                                    <input
-                                                        type="submit"
-                                                        class="plusBtn"
-                                                        value=""
-                                                        onclick="searchPost({{scripts}});"></input>
+                                                    <input text="text" id="inputKeyW" placeholder="새로운 키워드 추가하기">
+                                                    <button type="button" class="keywordAddBtn"></button>
                                                 </div>
-                                            
-                                            
-                                            
-                                                </td>
-                                            </tr>
-                                            <tr class="emptyTR"></tr>
-                                        </table>
-                                        <div class="searchScroll2">
+                                            </td>
+                                        </tr>
+                                        <tr class="emptyTR"></tr>
+                                    <!-- Keywords -->
+                                    </table>
 
-                                            <!-- 목차 -->
-                                            <table class="metadataTable">
-                                                <tr>
-                                                    <td colspan="2">
-                                                        <div class="metadataTR">
-                                                            <div class="metadataTitle2">INDEX</div>
-                                                        </div>
+
+                                    
+                                <!-- end of the 'tabCon' div-->    
+                                </div>
+                            </li>
+
+                            <script>
+                                var vid = document.getElementById("video");
+                                function inputMove(time) {
+                                    timeStr = time.split(":");
+                                    timeSec = Number(timeStr[0] * 3600) + Number(timeStr[1] * 60) + Number(
+                                        timeStr[2]
+                                    );
+                                    vid.currentTime = timeSec;
+                                    vid.play();
+                                }
+                            </script>
+
+
+                            <!-- @@@@@@@@@두번째 탭 스크립트 -->
+                            <li id="tab2" class="btnCon">
+                                <a class="btn second" href="#tab2" onclick="searchPost({{scripts}});">Full Script</a>
+                                <div class="tabCon">
+
+                                    <!-- detail search : only for detail -->
+                                    <div class="innerSearch">
+                                        <input
+                                            type="text"
+                                            placeholder="Search in &quot;{{ metadata.title }}&quot;"
+                                            id="searchContent"></input>
+                                        <input
+                                            type="submit"
+                                            class="searchBtn"
+                                            value=""
+                                            onclick="searchPost({{scripts}});"></input>
+                                    </div>
+
+                                    <div class="searchScroll">
+                                        <table id="searchResArea" class=""></table>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- @@@@@@@@@세번째 탭 목차 -->
+                            <li id="tab3" class="btnCon">
+                                <a class="btn thrid" href="#tab3">Index</a>
+                                <div class="tabCon">
+
+                                    <div class="searchScroll2">
+
+                                        <!-- 목차 -->
+                                        <table class="metadataTable">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="metadataTR">
+                                                        <div class="metadataTitle2">INDEX</div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            {% for timestamp in timestamps %}
+
+                                                <tr class="metadataDetailTR">
+                                                    <!-- 수정 필요 -->
+
+                                                    <td colspan="2" class="metadataKeywordTD">
+
+                                                        <button class="indexTime2" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
+                                                        <div class="indexTitle2">{{timestamp.subtitle}}</div>
+
                                                     </td>
                                                 </tr>
-                                                {% for timestamp in timestamps %}
-
-                                                    <tr class="metadataDetailTR">
-                                                        <!-- 수정 필요 -->
-
-                                                        <td colspan="2" class="metadataKeywordTD">
-                                                            
-                                                            <button class="indexTime" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
-                                                            <div class="indexTitle">{{timestamp.subtitle}}</div>
-
-                                                        </td>
-
-                                                    </tr>
-
-                                                {% endfor %}
-                                                {% comment %} <input type="submit" value="저장"> {% endcomment %}
-
-                                            </table>
-                                        </div>
+                                            {% endfor %}
+                                        </table>
                                     </div>
-                                </li>
+                                </div>
+                            </li>
+                            
 
 
-
-
-                                <script>
-                                    var vid = document.getElementById("video");
-                                    function inputMove(time) {
-                                        timeStr = time.split(":");
-                                        timeSec = Number(timeStr[0] * 3600) + Number(timeStr[1] * 60) + Number(
-                                            timeStr[2]
-                                        );
-                                        vid.currentTime = timeSec;
-                                        vid.play();
-                                    }
-                                </script>
-
-
-
-
-                                <!-- @@@@@@@@@두번째 탭 스크립트 -->
-                                <li id="tab2" class="btnCon">
-                                    <a class="btn second" href="#tab2">Script</a>
-                                    <div class="tabCon">
-
-                                        <!-- detail search : only for detail -->
-                                        <div class="innerSearch">
-                                            <input
-                                                type="text"
-                                                placeholder="Search in &quot;{{ metadata.title }}&quot;"
-                                                id="searchContent"></input>
-                                            <input
-                                                type="submit"
-                                                class="searchBtn"
-                                                value=""
-                                                onclick="searchPost({{scripts}});"></input>
-                                        </div>
-
-                                        <div class="searchScroll">
-                                            <table id="searchResArea" class=""></table>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                            
+                        </ul>
+                    <!-- end of the "tabmenu" div-->
                     </div>
-
-                    <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
-                    <script>
-                        location.href = "#tab1";
-                    </script>
-        
-
-                </body>
-
+                <!-- end of the "detailMetadata" div-->
+                </div>
+            
+            
+                <script>
+                    location.href = "#tab1";
+                </script>   
+                
+                <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+                
+                        
+                <script>
+                    var vid = document.getElementById("video");
+                    function inputMove(time) {
+                        timeStr = time.split(":");
+                        timeSec = Number(timeStr[0] * 3600) + Number(timeStr[1] * 60) + Number(timeStr[2]);
+                        vid.currentTime = timeSec;
+                        vid.play();
+                    }
+                </script>
+            <!--end of the "divParent" div-->
             </div>
-   
-        {% endfor %}
-
-    </html>
+        </form>         
+    </body>
+    {% endfor %}
+</html>

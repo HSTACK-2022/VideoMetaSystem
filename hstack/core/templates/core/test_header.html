@@ -5,6 +5,7 @@
         <tr>
             <td id="header_upload">
                 <button id="home" onclick="location.href='/test/'"><img id="logo" src="{% static 'img/logo_short.png' %}"></button>
+                
             </td>
 
             <td >
@@ -18,9 +19,15 @@
             </td>
 
 
-            <td id="header_upload">
-                <button id="upload" onclick="location.href='/test/upload/'"><img id="uploadBtnImg" src="{% static 'img/upload2.png' %}"></button>
-            </td>
+            <td id="a">
+                <button id="upload" onclick="location.href='/test/upload/'"><img id="uploadBtn" src="{% static 'img/uploadBtn.png' %}"><br>Upload</button>
+
+                    <button id="upload" onclick="location.href='/test/upload/'"><img id="edit" src="{% static 'img/edit.png' %}"><br>Edit</button>
+                    <!-- <button id="upload" onclick="location.href='/test/upload/'"><img id="uploadBtn" src="{% static 'img/uploadBtn.png' %}"></button>
+
+                    <button id="upload" onclick="location.href='/test/upload/'"><img id="edit" src="{% static 'img/edit.png' %}"></button> -->
+            
+                </td>
 
         </tr>
     </table>
