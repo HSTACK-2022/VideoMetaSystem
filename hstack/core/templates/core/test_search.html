@@ -2,7 +2,7 @@
 {% load static %}
 <html>
     <head>
-        <title>VMetaSys - SEARCH {{searchWord}}</title>
+        <title>VMeta - SEARCH {{searchWord}}</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoList.css' %}?">
         <link rel="stylesheet" href="{% static 'css/progressBar.css' %}?">
@@ -40,8 +40,8 @@
         {% if code == 200 %}
        
             <table class="bodyTable">
+             
                 <tr>
-                    <div class= list>
                     <td class="section">
                         <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다</p>
                         {% for meta in videoMetaList %}
@@ -114,9 +114,9 @@
                         {% endfor %}
                         {% endfor %}
                     </td>
-                </div>
+               
 
-                    <div class= side>
+          
                     <td class="aside">
                         {% comment %} 
                         videoIdList = 
@@ -204,7 +204,7 @@
                             </div>
                         </form>
                     </td>
-                </div>
+              
                 </tr>
             
             </table>

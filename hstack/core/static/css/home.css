@@ -2,46 +2,52 @@
     font-family: 'ko';
     src: url("../font/KOTRA_GOTHIC.ttf");
     font-style: bold;
- 
+
 }
 
 
-*{
+
+@font-face {
+    font-family: 'pre1';
+    src: url("../font/Pretendard-Light.otf");
+  
+    font-style: normal;
+}
+
+* {
     font-family: 'ko';
 
-  
 }
 
 #home_body {
     width: 100%;
-    height: 100%;
+
     padding: 20px;
-    display: grid;
-    place-content: center;
+
     background-color: #ffffff;
 }
 
 #home_table {
-    width: 800px;
-    height: 100px;
-    margin: 0 auto;
+    width: 700px;
+
+    margin: auto;
     font-weight: bold;
     font-size: 30px;
     text-align: center;
+
 }
 
-#home_search{
-    height:50px;
-    width:100%;
+#home_search {
+    height: 50px;
+    width: 100%;
     background-color: white;
     border: 2px solid rgb(48, 48, 48);
     border-radius: 30px;
     align-items: center;
-    
+
 }
 
-
-#home_search_input_table{
+#home_search_input_table {
     width: 100%;
 }
 
@@ -52,74 +58,83 @@
 .searchInput[type=text] {
 
     text-align: center;
-    width:100%;
+    width: 100%;
     height: 100%;
-
-    margin-left:20px;
-    background-color:transparent;
+    margin-left: 20px;
+    background-color: transparent;
     border: none;
-
- 
     font-size: 18px;
- 
-  
-    
+
 }
 
 input::-webkit-input-placeholder {
-    color:rgb(48, 48, 48);
+    color: rgb(48, 48, 48);
 
-  }
+}
 
 .searchInput[type=submit] {
     height: 30px;
     width: 30px;
     margin: auto;
-    text-align: right;
-    background-color:transparent;
-    background-image: url('../img/search.png');
+
+    background-color: transparent;
+    background-image: url("../img/search.png");
     background-repeat: no-repeat;
     background-size: 20px;
-    background-position-y:10px;
-    background-position-x:0px;
+    background-position-y: 10px;
+    background-position-x: 0;
 
     cursor: pointer;
     outline: none;
     border: none;
+
 }
 
-#logo{
-    height: 150px;
-    margin-bottom: 20px;
-    
+#logo {
+    height: 110px;
+    margin: 200px 0 40px;
+
 }
 
-#logo:hover{
-    height: 150px;
-    margin-bottom: 20px;
-    
-}
-
-#logo2{
+#logo2 {
     height: 40px;
     display: inline-block;
 }
 
+#uploadBtnImg {
 
-#uploadBtnImg{
-    
     height: 25px;
 
 }
 
 #upload {
-    background-color:transparent;
+    background-color: transparent;
     border: none;
     outline: none;
     cursor: pointer;
-    margin-top: 5px;
-    margin-right: -5px;
-    margin-bottom: 100px;
-    float: right;
+
     display: inline-block;
+    
+    margin: 20px 20px 20px 20px;
+    font-family: "pre1";
+    font-size: 14px;
 }
+
+
+
+#edit2, #upload2{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin: 10px 10px 0;
+
+}
+
+
+#uploadBtn, #edit{
+    height: 60px;
+    margin-bottom: 3px;
+  
+}
+
