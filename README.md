@@ -1,6 +1,6 @@
 # 영상 메타데이터 자동 구축•재생 시스템 VMetaSys
 
-Video Meta System (VMetaSys)는 영상의 메타데이터를 자동으로 구축해 사용자에게 세밀하고 용이한 검색을 가능하게 하는 시스템이다. 
+Video Meta System (이하 VMetaSys)는 영상의 메타데이터를 자동으로 구축해 사용자에게 세밀하고 용이한 검색을 가능하게 하는 시스템이다. 
 <br/><br/>
 
 ---
@@ -9,7 +9,7 @@ Video Meta System (VMetaSys)는 영상의 메타데이터를 자동으로 구축
 ## 📌 작품 소개
 
 ```
-💡 Video Meta Sys는 영상의 메타데이터를 자동으로 구축 및 재생하는 웹 기반 시스템입니다.
+💡 VMetaSys는 영상의 메타데이터를 자동으로 구축 및 재생하는 웹 기반 시스템입니다.
 ```
 
 ### 1. 프로젝트 정의
@@ -50,7 +50,7 @@ Video Meta System (VMetaSys)는 영상의 메타데이터를 자동으로 구축
 <br/>
 
 ## ⚙️ 시스템 구조
-   ![sysArch](./img/arch.png)
+   ![sysArch](./report/img/arch.png)
     
 <br/>
 <br/>
@@ -88,7 +88,7 @@ Video Meta System (VMetaSys)는 영상의 메타데이터를 자동으로 구축
 ## 🖼 프로젝트 결과
 
 ### 1. 작품 사진
-   ![result](./img/VMSresult.png)
+   ![result](./report/img/VMSresult.png)
    
 <br/>
 

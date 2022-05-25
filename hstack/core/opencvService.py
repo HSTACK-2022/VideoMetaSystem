@@ -88,6 +88,29 @@ def doOpencvService(videoId) :
         models.Metadata.objects.filter(id=videoId).update(narrative="Description")
 
 
+def getPPTImage(videoId):
+    pptImage = set()
+    videoPathObj = models.Videopath.objects.get(id=videoId)     #DB에서 videoId에 해당하는 객체를 가져옴
+    imageFilePath = videoPathObj.imageaddr                      #DB에서 imageAddr 추출
+
+    if OS == "Windows" : 
+        imagePath = imageFilePath.split('Image\\')[1]
+    else : 
+        imagePath = imageFilePath.split('Image/')[1]
+    
+    print(imageFilePath)
+    print(imagePath)
+    imageList = os.listdir(imageFilePath)
+    print(imageList)
+
+    for image in imageList:
+        if image.startswith("L") or image.startswith("P"):
+            imageSrc = "..\\..\\..\\media\\Uploaded\\Image\\" + imagePath + "\\" + image
+            pptImage.add(imageSrc)
+    
+    return pptImage
+
+
 from . import models
 
 import cv2

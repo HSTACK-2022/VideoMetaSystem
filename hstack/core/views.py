@@ -6,6 +6,8 @@ from unicodedata import category
 from asgiref.sync import sync_to_async
 from numpy import extract
 
+from core.opencvService import getPPTImage
+
 from . import models
 from .models import Post, Category
 
@@ -146,12 +148,16 @@ def detailFile(request, pk):
     keywordQ &= Q(id = pk)
     keywordQ &= Q(expose=True)
 
+    # 이미지 받아오기
+    pptImage = getPPTImage(pk)
+
     return render(
         request,
         renderAppName + '/test_detail.html',
         {
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
+            'images' : pptImage,
             'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),

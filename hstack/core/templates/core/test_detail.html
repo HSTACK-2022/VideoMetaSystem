@@ -10,7 +10,7 @@
 
         </head>
 
-        <body class="bodyArea">
+        <body class="bodyArea" onload="loadImg('{{ metadata.title }}')">
             {% include 'core/test_header.html' %}
             <div class="divParent">
                 <!-- Post content-->
@@ -169,12 +169,28 @@
                                     </div>
                                 </div>
                             </li>
+
+                            <li id="tab3" class="btnCon">
+                                <a class="btn third" href="#tab3">Images</a>
+                                <div class="tabCon">
+                                        <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">download</button> 
+                                        <div id = "pptImage">
+                                            {% for image in images %}
+                                            <image id="{{image}}" src="{{image}}" style="width:200px"></image>
+                                            {% endfor %}
+                                        </div>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+            <script type="text/javascript" src="{% static 'js/jszip/download.js' %}"></script>
+            <script type="text/javascript" src="{% static 'js/jszip/jszip.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'js/jszip/jszip-utils.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'js/jszip/jszip-utils-ie.min.js' %}"></script>
+            <script type="text/javascript" src="{% static 'js/videoAction.js' %}?after"></script>
             <script>
                 location.href = "#tab1";
             </script>
@@ -182,7 +198,6 @@
         </body>
 
     </div>
-
 
 {% endfor %}
 
