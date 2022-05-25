@@ -13,8 +13,8 @@
 }
 
 .videoTable {
-    width: 100%;
-    /* min-width: 450px; */
+    width: 400px;
+    min-width: 300px;
     margin: 10px 10px;
     padding: 10px 0px;
 }
@@ -119,13 +119,11 @@
 }
 
 .VT_uploadedDate {
-    width: 40%;
-    min-width: 150px;
     height: 35px;
-    margin-top: 10px;
     font-size: 14px;
-    display: inline-block;
     text-align: right;
+    padding-right: 30px;
+    margin-bottom: 5px;
 }
 
 

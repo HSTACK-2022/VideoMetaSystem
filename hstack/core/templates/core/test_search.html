@@ -5,7 +5,7 @@
         <title>VMetaSys - SEARCH {{searchWord}}</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoList.css' %}?">
-
+        <link rel="stylesheet" href="{% static 'css/progressBar.css' %}?">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
             function searchDetail(search_type, search_detail_type) {
@@ -61,7 +61,8 @@
                                                         <div class="VT_category">{{ii.category}}</div>
                                                         <div class="VT_narrative">{{ii.narrative}}</div>
                                                         <div class="VT_method">{{ii.method}}</div>
-                                                        <div class="rank_data">detail은 (개발중..)% 입니다</div>
+                                                        {% comment %} <div class="rank_data">detail은 (개발중..)% 입니다</div> {% endcomment %}
+
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -84,11 +85,33 @@
                                                                 style="height: 17px; align-items: center;"></image>
                                                             {{ii.presenter}}
                                                         </div>
-                                                        <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
+                                                        {% comment %} <div class="VT_uploadedDate">{{ii.uploaddate}}</div> {% endcomment %}
                                                     </td>
                                                 </tr>
                                             </table>
                                         </td>
+
+                                        <td>
+                                            <div class="wrap-circles">
+                                                <div class="circle per-title">
+                                                    <div class="inner">제목</div>
+                                                </div>
+                                                <div class="circle per-keyword">
+                                                    <div class="inner">키워드</div>
+                                                </div>
+                                                <div class="circle per-index">
+                                                    <div class="inner">인덱스</div>
+                                                </div>
+                                                <div class="circle per-presenter">
+                                                    <div class="inner">발표자</div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
+                                        </td>
+                                        
+
+
                                     </tr>
                                 </table>
                             {% endfor %}

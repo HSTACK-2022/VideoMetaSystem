@@ -28,7 +28,7 @@ from urllib.parse import urlparse
 from core import searchAll
 from core import extractMetadata
 from core import rankAlgo
-
+from core import opencvService
 # 상수 설정
 OS = platform.system()
 renderAppName = "Core" if OS == 'Windows' else 'core'
@@ -146,12 +146,16 @@ def detailFile(request, pk):
     keywordQ &= Q(id = pk)
     keywordQ &= Q(expose=True)
 
+    # 이미지 받아오기
+    pptImage = opencvService.getPPTImage(pk)
+
     return render(
         request,
         renderAppName + '/test_detail.html',
         {
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
+            'images' : pptImage,
             'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
@@ -207,6 +211,50 @@ def success(request, pk):
             'scripts' : scripts,
             'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
             'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
+            'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
+            'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+        }
+    )
+    
+    
+# for test.
+def success2(request):
+    pk = 1     ######## 수정 필요
+
+    if request.method == "POST":
+        keywordButtonExposeList = request.POST.getlist("keywordButtonExposeList")
+        keywordsBtnContentList = request.POST.getlist("keywordsBtnContentList")
+        
+        print(">>>>>>>>>>>>>>>>>>>")
+        print(len(keywordButtonExposeList))
+        print(len(keywordsBtnContentList))
+
+        for i in range(len(keywordButtonExposeList)):
+            models.Keywords.objects.filter(id = pk).filter(keyword = keywordsBtnContentList[i]).update(expose=keywordButtonExposeList[i])
+        
+
+
+    videoPath = models.Videopath.objects.get(id = pk).videoaddr
+    if OS == 'Windows':
+        videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
+    else:
+        videoPath4Play = "../../../media" + videoPath.split("media")[1]
+    
+    textPath = models.Videopath.objects.get(id = pk).textaddr
+    try:
+        with open(textPath, 'r', encoding='UTF-8-sig') as f:
+            scripts = f.readlines()
+    except FileNotFoundError as err:
+        print(err)
+        scripts = []
+
+    return render(
+        request,
+        renderAppName + '/test_success.html',
+        {
+            'videoaddr' : videoPath4Play,
+            'scripts' : scripts,
+            'keywords' : models.Keywords.objects.filter(id = pk).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
