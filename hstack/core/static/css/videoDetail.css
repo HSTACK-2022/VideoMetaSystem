@@ -318,8 +318,8 @@ div.right {
     border: 1px solid #888888;
     background-color: #ffffff;
     display: inline-block;
+}
 
-<<<<<<< HEAD
 .keywordsClickedBtn {
     height: 25px;
     margin: 2px 0px;
@@ -339,8 +339,6 @@ div.right {
     border: 1px solid #888888;
     background-color: #f9f9f9;
     display: inline-block;
-=======
->>>>>>> b37164b14dcf840e21a518953f8f68d9435413f9
 }
 
 .userKClickedBtn {
@@ -452,8 +450,6 @@ div.right {
     background-color: transparent;
     margin-bottom: 20px;
     vertical-align: center;
-<<<<<<< HEAD
-=======
 }
 
 
@@ -487,7 +483,6 @@ div.right {
     cursor: pointer;
     outline: none;
     border: none;
->>>>>>> b37164b14dcf840e21a518953f8f68d9435413f9
 }
 
 #searchContent {

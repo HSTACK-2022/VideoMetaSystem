@@ -60,7 +60,6 @@
                                     <table class="metadataTable">
 
                                         <!--키워드 -->
-
                                         <tr>
                                             <td colspan="2">
                                                 <div class="metadataTR">
@@ -172,15 +171,16 @@
                                 </div>
                             </li>
                             
+                            <!-- @@@@@@@@@네번째 탭 이미지 추출 -->
                             <li id="tab4" class="btnCon">
-                                <a class="btn third" href="#tab4">Images</a>
+                                <a class="btn fourth" href="#tab4">Images</a>
                                 <div class="tabCon">
-                                        <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">download</button> 
-                                        <div id = "pptImage">
-                                            {% for image in images %}
-                                            <image id="{{image}}" src="{{image}}" style="width:200px"></image>
-                                            {% endfor %}
-                                        </div>
+                                    <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">download</button> 
+                                    <div id = "pptImage">
+                                        {% for image in images %}
+                                        <image id="{{image}}" src="{{image}}" style="width:200px"></image>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </li>
 
