@@ -192,7 +192,7 @@
                                     <button
                                 id="downloadImg"
                                 type="button"
-                                onclick="downloadImg('{{ metadata.title }}')"><img id="edit" src="{% static 'img/download.png' %}">
+                                onclick="downloadImg('{{ metadata.title }}')"><img id="down" src="{% static 'img/download.png' %}">
                                     <br>
                                     <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">Zip</span>
                                 </button>
@@ -210,7 +210,7 @@
                                             
                                             {% for image in images %}
                                            
-                                                <image id="{{image}}" src="{{image}}" style="width: inherit;margin: 15px 15px 0px 15px ;border-radius: 10px;
+                                                <image id="{{image}}" src="{{image}}" style="width: inherit;border-radius: 10px;
                                                 overflow: hidden; "></image>
                                             
                                             {% endfor %}
