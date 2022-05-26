@@ -16,6 +16,9 @@
         {% csrf_token %}
             <script>
                 function validCheck() {
+                    var testdiv = document.getElementById("testdiv");
+                    testdiv.innerText = "tests";
+
                     var i = 0;
                     // sys defined keyword의 expose를 sysKEList(system Keyword Expose List) 전달
                     for(var key in sysKEList){
@@ -56,12 +59,10 @@
                         i++;
                     }
                     //location.href='/test/success/#tab1'
-                    document.modify.action = "{% url 'Core:success' pk=pk %}"
+                    document.modify.action = "{% url 'Core:success' pk=pk %}";
                     document.modify.submit();
                 }
             </script>
-          
-          <body class="bodyArea">
        
             <div class="divParent">
                 <!-- Post content-->
@@ -184,7 +185,6 @@
                                                     
                                                 });
                         
-                        
                                                 $(document).on("click", "button[class='keywordAddBtn']", function () {
                                                     var val = $("#inputKeyW").val();
                                                     $("#inputKeyW").val("");
@@ -210,7 +210,6 @@
                                                     }
                                                     //console.log(i);
                                                 });
-                        
                                             });
                                         </script>
                                         <tr>
@@ -230,14 +229,14 @@
                                                 
                                                 
                                                 {% for keyword in keywords %}
-                                                <input type="hidden" value={{keyword.keyword}}="}" name="sysKCList">
+                                                <input type="hidden" value={{keyword.keyword}} name="sysKCList">
                                                 <script>
                                                     sysKEList.push({{keyword.expose}})
                                                 </script>
                                                 {% endfor %}
 
                                                 {% for userkeyword in userkeywords %}
-                                                <input type="hidden" value={{userkeyword.keyword}}="}" name="userKCList">
+                                                <input type="hidden" value={{userkeyword.keyword}} name="userKCList">
                                                 <script>
                                                     userKEList.push({{userkeyword.expose}})
                                                 </script>
@@ -262,7 +261,8 @@
 
                                                 <div class="metadataTitle2">- User Defined </div>
                                                 
-                                                <input id ="save" type="submit" value="SAVE" style='cursor:pointer;'>
+                                                <button id="save" type="button" style='cursor:pointer;' onclick="validCheck()">SAVE</button>
+                                                
                                                 <div class="userdefinedKeywords">
                                                     {% for userkeyword in userkeywords %}
                                                         {% if userkeyword.expose == 1 %}
@@ -360,10 +360,6 @@
                                     </div>
                                 </div>
                             </li>
-                            
-
-
-                            
                         </ul>
                     <!-- end of the "tabmenu" div-->
                     </div>
@@ -388,8 +384,8 @@
                     }
                 </script>
             <!--end of the "divParent" div-->
-            </div>
-        </form>         
+            </div> 
+        </form>       
     </body>
     {% endfor %}
 </html>

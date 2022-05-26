@@ -104,10 +104,13 @@ def uploadFile(request):
                         
     return render(request, renderAppName + '/test_upload.html') 
 
+
 # 업로드 후 ~ User 확인 전의 영상 목록들
 def uploadLists(request):
     videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
     categoryList = searchAll.extractCategories(videoIdList)
+    typeList = searchAll.extractType(videoIdList)
+    dataList = searchAll.extractData(videoIdList) 
     videoMetaList = list()
     for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
@@ -124,6 +127,8 @@ def uploadLists(request):
             context={
                 'code' : 200,
                 'categoryList' : categoryList,
+                "typeList" : typeList,
+                "dataList" : dataList,
                 'videoMetaList' : videoMetaList,
                 'videoIdList' : videoIdList,
             })
@@ -175,7 +180,11 @@ def success(request, pk):
         userKEList = request.POST.getlist("userKEList")
         userKCList = request.POST.getlist("userKCList")
 
-        print(userKEList)
+        
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        print(sysKEList)
+        print(sysKCList)
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 
         for i in range(len(sysKEList)):
             models.Keywords.objects.filter(id = pk).filter(keyword = sysKCList[i], sysdef=1).update(expose=sysKEList[i])
@@ -291,6 +300,9 @@ def detailSearch(request):
     newVideoIdList, videoMetaList, categoryList, typeList, dataList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
     # for j in videoIdList:
     #     rank[j] = rankData[j]
+
+    print("#############################################################")
+    print(word)
 
     for video in videoMetaList:
         print("****")
