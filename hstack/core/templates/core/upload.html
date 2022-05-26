@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="{% static 'css/upload.css' %}">
     </head>
     <body class="bodyArea">
-        {% include 'core/test_header.html' %}
+        {% include 'core/header.html' %}
         <div id="uploadFileTitle">UPLOAD FILE</div>
         <form
             action="{% url 'Core:uploadFile' %}"

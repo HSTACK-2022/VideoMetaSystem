@@ -37,7 +37,7 @@ renderAppName = "Core" if OS == 'Windows' else 'core'
 
 # for backend.
 def home(request):
-    return render(request, renderAppName + '/test_home.html') 
+    return render(request, renderAppName + '/home.html') 
 
 # video(file) upload
 def uploadFile(request):
@@ -57,7 +57,7 @@ def uploadFile(request):
             uploadedFile = request.FILES["videoFile"]
 
         if existError:
-            return render(request, renderAppName + '/test_upload.html', context={"error" : existError}) 
+            return render(request, renderAppName + '/upload.html', context={"error" : existError}) 
 
         # Fetching the form data
         # Saving the information in the database
@@ -102,7 +102,7 @@ def uploadFile(request):
 
             return redirect('Core:home')
                         
-    return render(request, renderAppName + '/test_upload.html') 
+    return render(request, renderAppName + '/upload.html') 
 
 
 # 업로드 후 ~ User 확인 전의 영상 목록들
@@ -122,9 +122,9 @@ def uploadLists(request):
         print(videoMetaList)
         
         if not videoIdList :
-            return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
+            return render(request, renderAppName + '/uploadLists.html', context={'code' : 404})
         else :
-            return render(request, renderAppName + '/test_uploadLists.html',
+            return render(request, renderAppName + '/uploadLists.html',
                 context={
                     'code' : 200,
                     'categoryList' : categoryList,
@@ -167,9 +167,9 @@ def uploadLists(request):
             newVideoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
 
         if not newVideoIdList :
-            return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
+            return render(request, renderAppName + '/uploadLists.html', context={'code' : 404})
         else :
-            return render(request, renderAppName + '/test_uploadLists.html',
+            return render(request, renderAppName + '/uploadLists.html',
                 context={
                     'code' : 200,
                     'categoryList' : categoryList,
@@ -179,7 +179,7 @@ def uploadLists(request):
                     'videoIdList' : newVideoIdList,
                 })
 
-# 각 영상의 상세페이지 (/test/detail/pk)
+# 각 영상의 상세페이지 (/detail/pk)
 def detailFile(request, pk):
     videoPath = models.Videopath.objects.get(id = pk).videoaddr
     if OS == 'Windows':
@@ -204,7 +204,7 @@ def detailFile(request, pk):
 
     return render(
         request,
-        renderAppName + '/test_detail.html',
+        renderAppName + '/detail.html',
         {
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
@@ -215,7 +215,7 @@ def detailFile(request, pk):
         }
     )
 
-# 업로드 완료 된 영상의 상세페이지 (/test/success/pk)
+# 업로드 완료 된 영상의 상세페이지 (/success/pk)
 def success(request, pk):
     if request.method == "POST":
         sysKEList = request.POST.getlist("sysKEList")
@@ -262,7 +262,7 @@ def success(request, pk):
 
     return render(
         request,
-        renderAppName + '/test_success.html',
+        renderAppName + '/success.html',
         {
             'pk' : pk,
             'videoaddr' : videoPath4Play,
@@ -279,7 +279,7 @@ def searchFile(request):
     if request.method == "GET":
         word = request.GET["searchText"]
         if word == "":
-            return render(request, renderAppName + '/test_search.html',
+            return render(request, renderAppName + '/search.html',
                 context={
                     'code': 404,
                     'searchWord' : ""
@@ -313,13 +313,13 @@ def searchFile(request):
             #print(rankList)
 
             if not videoIdList :
-                return render(request, renderAppName + '/test_search.html',
+                return render(request, renderAppName + '/search.html',
                     context={
                         'code' : 404,
                         'searchWord' : word
                     })
             else :
-                return render(request, renderAppName + '/test_search.html',
+                return render(request, renderAppName + '/search.html',
                     context={
                         'code' : 200,
                         'categoryList' : categoryList,
@@ -376,13 +376,13 @@ def detailSearch(request):
     print(rankList)
 
     if not videoIdList :
-        return render(request, renderAppName + '/test_search.html',
+        return render(request, renderAppName + '/search.html',
             context={
                 'code' : 404,
                 'searchWord' : word
             })
     else :
-        return render(request, renderAppName + '/test_search.html',
+        return render(request, renderAppName + '/search.html',
             context={
                 'code' : 200,
                 'categoryList' : categoryList,

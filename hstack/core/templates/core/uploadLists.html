@@ -19,7 +19,7 @@
 </head>
 <body class="bodyArea">
     
-    {% include 'core/test_header.html' %}
+    {% include 'core/header.html' %}
     {% if code == 200 %}
     <table class="bodyTable">
         <tr>
@@ -31,7 +31,7 @@
                     {% for ii in meta.metadata %}
                         <table
                             class="videoListTable"
-                            onclick="location.href='/test/success/{{ii.id_id}}'">
+                            onclick="location.href='/success/{{ii.id_id}}'">
                             <tr>
                                 <td style="width: 300px;">
                                     <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
