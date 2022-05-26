@@ -261,12 +261,14 @@ class TextRank:
 
 def doIndexingService(videoId):
     videopath = models.Videopath.objects.get(id = videoId)
-    method = models.Metadata.objects.get(id = videoId).method
     audioScript = videopath.textaddr
     
     resultDictionary = getIndexSentence(audioScript) 
 
-    if method=="PPT":
+    videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
+    isVideoIndexScript = os.path.isfile(videoIndexScript)
+
+    if isVideoIndexScript:
         videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
         indexFromVideo = videoScript2Dic(videoIndexScript)
         resultDictionary.update(indexFromVideo)
