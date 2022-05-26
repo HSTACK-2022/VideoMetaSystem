@@ -131,7 +131,7 @@ class Total:
         self.rankDetail.append(str(midResultDic['keyword']))
 
         # total
-        perc = str(round((percentDic['index']+percentDic['keyword']+percentDic['title']+percentDic['present'])/4 ,1))
+        perc = str(round((midResultDic['index']+midResultDic['keyword']+midResultDic['title']+midResultDic['present'])/4 ,1))
         
         self.rankDetail.append(perc)
         # 순서: title, presenter, index, keyword, total
