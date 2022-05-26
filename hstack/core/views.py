@@ -107,31 +107,77 @@ def uploadFile(request):
 
 # 업로드 후 ~ User 확인 전의 영상 목록들
 def uploadLists(request):
-    videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
-    categoryList = searchAll.extractCategories(videoIdList)
-    typeList = searchAll.extractType(videoIdList)
-    dataList = searchAll.extractData(videoIdList) 
-    videoMetaList = list()
-    for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
-        videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+    if request.method == "GET":
+        videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
+        categoryList = searchAll.extractCategories(videoIdList)
+        typeList = searchAll.extractType(videoIdList)
+        dataList = searchAll.extractData(videoIdList) 
+        videoMetaList = list()
+        for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
+            videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
 
-    print("********************")
-    print(videoIdList)
-    print(categoryList)
-    print(videoMetaList)
-    
-    if not videoIdList :
-        return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
-    else :
-        return render(request, renderAppName + '/test_uploadLists.html',
-            context={
-                'code' : 200,
-                'categoryList' : categoryList,
-                "typeList" : typeList,
-                "dataList" : dataList,
-                'videoMetaList' : videoMetaList,
-                'videoIdList' : videoIdList,
-            })
+        print("********************")
+        print(videoIdList)
+        print(categoryList)
+        print(videoMetaList)
+        
+        if not videoIdList :
+            return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
+        else :
+            return render(request, renderAppName + '/test_uploadLists.html',
+                context={
+                    'code' : 200,
+                    'categoryList' : categoryList,
+                    "typeList" : typeList,
+                    "dataList" : dataList,
+                    'videoMetaList' : videoMetaList,
+                    'videoIdList' : videoIdList,
+                })
+    else:
+        # POST인 경우에는 Category, Type, Method 등 필터가 있다.
+        # 현재 videoIdList를 받아 필터링 후 return
+        stringvideoIdList = request.POST['videoIdList']
+        search_type = request.POST['search_type']   # category, method, narrative
+        search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
+
+        # 첫 filtering은 Queryset으로 온다. <Queryset ~~~ > 에서 ~~~만 나오도록. 흡사 list 출력 형태.
+        if stringvideoIdList.startswith("<QuerySet"):
+            videoIdList = stringvideoIdList[10:-1]
+        else:
+            videoIdList = stringvideoIdList
+
+        videoIdList = re.split(r'[ \[\],\']', videoIdList)
+        newVideoIdList = list()
+
+        for videoId in videoIdList:
+            if videoId != "":
+                filterQ = Q()
+                filterQ &= Q(id = videoId)
+                if search_type == "category" :  filterQ &= Q(category__contains = search_detail_type)
+                if search_type == "narrative" : filterQ &= Q(narrative = search_detail_type)
+                if search_type == "method" :    filterQ &= Q(method = search_detail_type)
+                if (not not models.Metadata.objects.filter(filterQ)) :
+                    newVideoIdList.append(videoId)
+
+        categoryList = searchAll.extractCategories(newVideoIdList)
+        typeList = searchAll.extractType(newVideoIdList)
+        dataList = searchAll.extractData(newVideoIdList) 
+        newVideoMetaList = list()
+        for i in newVideoIdList:         # (newVideoIdList)에 저장되어 있는 id로 메타데이터 가져옴
+            newVideoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+
+        if not newVideoIdList :
+            return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
+        else :
+            return render(request, renderAppName + '/test_uploadLists.html',
+                context={
+                    'code' : 200,
+                    'categoryList' : categoryList,
+                    "typeList" : typeList,
+                    "dataList" : dataList,
+                    'videoMetaList' : newVideoMetaList,
+                    'videoIdList' : newVideoIdList,
+                })
 
 # 각 영상의 상세페이지 (/test/detail/pk)
 def detailFile(request, pk):

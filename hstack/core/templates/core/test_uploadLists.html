@@ -4,25 +4,16 @@
 {% load static %}
 <html>
 <head>
-        <title>VMetaSys - SEARCH {{searchWord}}</title>
+        <title>VMeta - Edit List</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoList.css' %}">
 
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
-            function searchDetail(search_type,search_detail_type){
+            function searchDetail(search_type, search_detail_type){
                 document.getElementById("search_detail_type").value = search_detail_type;
                 document.getElementById("search_type").value = search_type;
                 document.getElementById("form").submit();
-            }
-            
-            function Change(){
-                //alert( $("#selectd_category option:selected").val());
-                selected = $("#selectd_category option:selected").val();
-                if(selected == "choose category")
-                    return;
-                else
-                    searchDetail("category",selected);
             }
         </script>
 </head>
@@ -74,10 +65,12 @@
                                                         style="height: 17px; align-items: center;"></image>
                                                     {{ii.presenter}}
                                                 </div>
-                                                <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
                                             </td>
                                         </tr>
                                     </table>
+                                </td>
+                                <td style="vertical-align: bottom; min-width: 140px;">
+                                    <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
                                 </td>
                             </tr>
                         </table>
@@ -94,7 +87,7 @@
                 {{id}}
                 {%endfor%} {% endcomment %}
                     
-                    <form action="{% url 'Core:detailSearch'%}" method="POST" id="form">
+                    <form action="{% url 'Core:uploadLists'%}" method="POST" id="form">
                         {% csrf_token %}
                         <input type="hidden" name="videoIdList" value="{{videoIdList}}">
                         <input type="hidden" name="search_type" id="search_type">
@@ -142,7 +135,7 @@
                                             <label>
                                                 <span style="font-family: 'pre1';"
                                                     value="{{data}}"
-                                                    onclick="searchDetail('data','{{data}}')">▪ {{data}}</span>
+                                                    onclick="searchDetail('method','{{data}}')">▪ {{data}}</span>
                                             </label> 
                                             
                                         </li>

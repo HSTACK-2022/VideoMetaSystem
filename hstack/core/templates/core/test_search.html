@@ -9,15 +9,9 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
             function searchDetail(search_type, search_detail_type) {
-                document
-                    .getElementById("search_detail_type")
-                    .value = search_detail_type;
-                document
-                    .getElementById("search_type")
-                    .value = search_type;
-                document
-                    .getElementById("form")
-                    .submit();
+                document.getElementById("search_detail_type").value = search_detail_type;
+                document.getElementById("search_type") .value = search_type;
+                document.getElementById("form").submit();
             }
             function Change() {
                 //alert( $("#selectd_category option:selected").val());
@@ -82,7 +76,6 @@
                                                         style="height: 17px; align-items: center;"></image>
                                                     {{ii.presenter}}
                                                 </div>
-                                                {% comment %} <div class="VT_uploadedDate">{{ii.uploaddate}}</div> {% endcomment %}
                                             </td>
                                         </tr>
                                     </table>
