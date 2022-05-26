@@ -41,7 +41,6 @@ class Total:
             for to in models.Timestamp.objects.filter(subtitle__contains = searchText).values_list('id', flat=True):
                self.resultVideoIDList.add(to)
 
-
      #키워드와 인덱스 확률 계산
     def getPercent(self, videoId, div, cnt):
         if (cnt == 0) :
@@ -100,7 +99,11 @@ class Total:
                 
             cnt = self.rankcount["subtitle"]
             percentDic['인덱스'] = self.getPercent(videoId, "subtitle", cnt)
+            print(searchText)
+            print(percentDic)
 
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.")
+        print(percentDic)
         for key, value in percentDic.items():
             if key == '인덱스':
                 self.rankDetail.append(str(percentDic['인덱스']))
@@ -150,6 +153,7 @@ class Total:
         keywordQ = Q()
         keywordQ &= Q(id = videoId)
         keywordQ &= Q(expose=True)
+
         if search_type == "category":
             if models.Metadata.objects.filter(id = videoId).filter(category__contains = search_detail_type).exists():
                 metadataList = list(models.Metadata.objects.filter(id = videoId).all().values())
@@ -212,11 +216,15 @@ def search(searchTexts):
     #ranking algorithm
     for i in list(a.resultVideoIDList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
-            print(i) #id
+            #print(i) #id
             # a.getrank(searchTexts,i) #해당 videoId의 정확도
             a.rankDetail = [] #초기화
             rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
             tttt[i] = a.detail[i]
+
+
+    # for i in rangelist(a.resultVideoIDList):
+    #     print(rankDict[i]['전체스코어'])
 
     #value 큰 순서대로 딕셔너리 재배열
     sdict = sorted(rankDict.items(), key=lambda x: x[1], reverse=True)
@@ -253,17 +261,15 @@ def detailSearch(videoIdList, search_type, search_detail_type, searchTexts):
     maxlist = [] # 알고리즘을 거친 후의 id 리스트
     rankDict = {} # 정확도 보내는 딕셔너리
     tttt = {}
-    b = Total()
+    a = Total()
     #ranking algorithm
-    print(">>>>>>>>>>>>>>>>>>>>>")
-    print(newVideoIdList)
-
     for i in list(newVideoIdList): # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
         if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
             #print(i) #id
             # a.getrank(searchTexts,i) #해당 videoId의 정확도
-            b.rankDetail = [] #초기화
-            rankDict[i], b.detail[i] = b.getrank(searchTexts,i)
+            a.rankDetail = [] #초기화
+            rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
+            tttt[i] = a.detail[i]
 
 
     # for i in rangelist(a.resultVideoIDList):
@@ -275,9 +281,9 @@ def detailSearch(videoIdList, search_type, search_detail_type, searchTexts):
     maxlist = dict(sdict) #list형태의 딕셔너리를 딕셔너리 형태로 전환
     print(maxlist.keys())
     for j in maxlist:
-        b.getVideoMetadataFromID(j) #id 받아오기
-        searchResultMeta.append(b.finalDict)
-        searchResultMeta.append(b.detail[j])
+        a.getVideoMetadataFromID(j) #id 받아오기
+        searchResultMeta.append(a.finalDict)
+        searchResultMeta.append(a.detail[j])
 
     newVideoIdList = list(maxlist.keys())
     print(newVideoIdList)

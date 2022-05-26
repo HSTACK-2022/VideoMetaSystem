@@ -50,7 +50,7 @@ Video Meta System (이하 VMetaSys)는 영상의 메타데이터를 자동으로
 <br/>
 
 ## ⚙️ 시스템 구조
-   ![sysArch](./report/img/arch.png)
+   ![sysArch](./report/img/arch.jpg)
     
 <br/>
 <br/>
@@ -88,7 +88,7 @@ Video Meta System (이하 VMetaSys)는 영상의 메타데이터를 자동으로
 ## 🖼 프로젝트 결과
 
 ### 1. 작품 사진
-   ![result](./report/img/VMSresult.png)
+   ![result](./report/img/VMSresult.jpg)
    
 <br/>
 

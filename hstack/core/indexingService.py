@@ -261,7 +261,6 @@ class TextRank:
 
 def doIndexingService(videoId):
     videopath = models.Videopath.objects.get(id = videoId)
-    method = models.Metadata.objects.get(id = videoId).method
     audioScript = videopath.textaddr
     
     resultDictionary = getIndexSentence(audioScript) 
