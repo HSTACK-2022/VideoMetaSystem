@@ -1,57 +1,78 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-<head>
-    <title>VIFO - File Upload</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/upload.css' %}">
-</head>
-<body class="bodyArea">
-    {% include 'core/test_header.html' %}
-    <div id="uploadFileTitle">UPLOAD FILE</div>
-    <form action="{% url 'Core:uploadFile' %}" method="POST" enctype="multipart/form-data">
-        <table id="uploadFileTable">
-            <tr>
-                <td> <div class="tags">Title : </div> </td> 
-                <td class="uploadFileTableTD">
-                    <input type="text" name="fileTitle" class="inputText" placeholder="Enter a title">
-                </td> 
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <div class="errorMsg">{{error.nameError}}</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="uploadFileTableTD"> <div class="tags">Presenter : </div> </td> 
-                <td class="uploadFileTableTD">
-                    <input type="text" name="presenter" class="inputText" placeholder="HSTACK">
-                </td> 
-            </tr>
-            <tr>
-                <td></td>
-                <td><div class="errorMsg">{{error.presenterError}}</div></td>
-            </tr>
-            <tr>
-                <td class="uploadFileTableTD"> <div class="tags">Video File : </div> </td> 
-                <td class="uploadFileTableTD">
-                    <input type="file" name="videoFile" id="btn";>
-                    <!-- <label id="fileBtn" for="btn">
-                        파일 선택
-                    </label> -->
-                </td> 
-            </tr>
-            <tr>
-                <td></td>
-                <td><div class="errorMsg">{{error.fileError}}</div></td>
-            </tr>
-            <tr>
-                <td class="uploadFileTableTD"></td>
-                <td id="uploadFileSubmit"> {% csrf_token %} <input id="inputSubmit" type="submit" value="Upload"> </td>
-            </tr>
-        </table>
-    </form>
-</body>
+    <head>
+        <title>VMeta - File Upload</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/upload.css' %}">
+    </head>
+    <body class="bodyArea">
+        {% include 'core/test_header.html' %}
+        <div id="uploadFileTitle">UPLOAD FILE</div>
+        <form
+            action="{% url 'Core:uploadFile' %}"
+            method="POST"
+            enctype="multipart/form-data">
+            <table id="uploadFileTable">
+                <tr>
+                    <td>
+                        <div class="tags">Title :
+                        </div>
+                    </td>
+                    <td class="uploadFileTableTD">
+                        <input
+                            type="text"
+                            name="fileTitle"
+                            class="inputText"
+                            placeholder="Enter a title">
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="errorMsg">{{error.nameError}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uploadFileTableTD">
+                        <div class="tags">Presenter :
+                        </div>
+                    </td>
+                    <td class="uploadFileTableTD">
+                        <input type="text" name="presenter" class="inputText" placeholder="HSTACK">
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="errorMsg">{{error.presenterError}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uploadFileTableTD">
+                        <div class="tags">Video File :
+                        </div>
+                    </td>
+                    <td class="uploadFileTableTD">
+                        <input type="file" name="videoFile" id="btn" ;=";">
+                        <!-- <label id="fileBtn" for="btn"> 파일 선택 </label> -->
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="errorMsg">{{error.fileError}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uploadFileTableTD"></td>
+                    <td id="uploadFileSubmit">
+                        {% csrf_token %}
+                        <input id="inputSubmit" type="submit" value="Upload">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
 </html>

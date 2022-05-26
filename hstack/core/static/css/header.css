@@ -133,8 +133,8 @@ header {
     
     height: 30px;
     border: none;
-    border-radius: 20px;
-    box-shadow: 0 0 0 1pt rgb(48, 48, 48);
+    border-radius: 10px;
+    box-shadow: 0 0 0 1pt rgb(118,118,118);
     outline: none;
     text-indent: 1em;
     
@@ -159,7 +159,7 @@ header {
 }
 
 #logo {
-    height: 30px;
+    height: 40px;
     margin-right: 20px;
 }
 
@@ -174,6 +174,8 @@ header {
     outline: none;
     cursor: pointer;
     margin-right: 5px;
+    font-family: "pre2";
+    color: rgb(95, 95, 95)
 }
 
 #home {
@@ -182,3 +184,27 @@ header {
     outline: none;
     cursor: pointer;
 }
+
+#edit2, #upload2{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin: 10px 10px 0;
+  
+
+}
+
+
+#uploadBtn, #edit{
+    height: 40px;
+    /* margin-bottom: 3px; */
+    
+}
+
+#a{
+    float: right;
+    margin-right: 5px;
+}
+
+

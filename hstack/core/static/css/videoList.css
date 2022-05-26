@@ -13,8 +13,8 @@
 }
 
 .videoTable {
-    width: 100%;
-    /* min-width: 450px; */
+    width: 400px;
+    min-width: 300px;
     margin: 10px 10px;
     padding: 10px 0px;
 }
@@ -22,17 +22,24 @@
 .VT_thumbnail {
     width: 240px;
     height: 180px;
+    width: 240px;
     margin: 20px;
     display: inline-block;
 }
 
 
-.VT_category, .VT_narrative, .VT_method,  .VT_presenter, .VT_uploadedDate{
+.VT_category,
+.VT_narrative,
+.VT_method,
+.VT_presenter,
+.VT_uploadedDate {
     font-family: "pre1";
-    
+
 }
 
-.VT_category,.VT_narrative, .VT_method{
+.VT_category,
+.VT_narrative,
+.VT_method {
     font-size: 15px;
     height: 25px;
     padding: 0px 10px;
@@ -41,26 +48,26 @@
 
 .VT_category {
     width: fit-content;
-    
-    
-    
+
+
+
     display: inline-block;
     background-color: rgb(80, 37, 32);
     border-radius: 20px;
     color: white;
     text-align: center;
-    
+
 }
 
 .VT_narrative {
     width: fit-content;
-  
+
     display: inline-block;
     background-color: rgb(30, 91, 52);
     border-radius: 20px;
     color: white;
     text-align: center;
-    
+
 }
 
 .VT_method {
@@ -72,7 +79,7 @@
     border-radius: 20px;
     color: white;
     text-align: center;
-    
+
 
 }
 
@@ -84,7 +91,7 @@
     font-weight: bold;
     font-size: 36px;
     color: rgb(29, 29, 29);
-    letter-spacing:2px;
+    letter-spacing: 2px;
 }
 
 
@@ -98,7 +105,7 @@
     display: inline-block;
     font-family: "pre2";
     letter-spacing: -1px;
-    
+
 
 }
 
@@ -113,13 +120,11 @@
 }
 
 .VT_uploadedDate {
-    width: 40%;
-    min-width: 150px;
     height: 35px;
-    margin-top: 10px;
     font-size: 14px;
-    display: inline-block;
     text-align: right;
+    padding-right: 30px;
+    margin-bottom: 5px;
 }
 
 
@@ -185,12 +190,12 @@
 }
 
 .todo-cmp__header {
-    
+
     padding: 10px 0 10px 10px;
     border-bottom: 1px solid #ddd;
     font-family: "pre1";
-   
- 
+
+
     font-size: 23px;
 }
 
@@ -210,7 +215,7 @@
 .todo-cmp__list {
     list-style: none;
     padding: 0 15px;
-    
+
 }
 
 .todo-cmp__list li {
@@ -221,17 +226,17 @@
 
     font-size: 1.1rem;
     font-family: "pre2";
-    
+
 
 }
 
 .todo-cmp__list li label {
     cursor: pointer;
-    
+
     width: 100%;
     display: block;
     letter-spacing: 1px;
-    
+
 }
 
 .todo-cmp__list li label input {
@@ -243,7 +248,7 @@
     position: relative;
     display: block;
     transition: all 550ms ease-in-out;
-    
+
     letter-spacing: -0.3px;
 }
 
@@ -277,9 +282,10 @@
 }
 
 .todo-cmp__list li label input:checked+span {
-    
+
     transition: all 550ms ease-in-out;
-    color: rgb(59,59,59);;
+    color: rgb(59, 59, 59);
+    ;
 
 }
 

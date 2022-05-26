@@ -290,15 +290,16 @@ def detailSearch(videoIdList, search_type, search_detail_type, searchTexts):
     return (newVideoIdList, searchResultMeta, categoryList, typeList, dataList, tttt)
 
 
-# 각 videoId에서 Categories를 뽑아낸다.
+# 각 videoId에서 narrative를 뽑아낸다.
 def extractType(videoIdList):
     typeList = set()
     for videoId in videoIdList:
-        types = models.Metadata.objects.get(id = videoId).narrative
-        types = types.split(',')
-        print(types)
-        for c in types:
-            typeList.add(c)
+        if(models.Metadata.objects.get(id = videoId).narrative):
+            types = models.Metadata.objects.get(id = videoId).narrative
+            types = types.split(',')
+            print(types)
+            for c in types:
+                typeList.add(c)
 
     return typeList
 
@@ -306,21 +307,23 @@ def extractType(videoIdList):
 def extractCategories(videoIdList):
     categoryList = set()
     for videoId in videoIdList:
-        category = models.Metadata.objects.get(id = videoId).category
-        category = category.split(',')
-        print(category)
-        for c in category:
-            categoryList.add(c)
+        if(models.Metadata.objects.get(id = videoId).category):
+            category = models.Metadata.objects.get(id = videoId).category
+            category = category.split(',')
+            print(category)
+            for c in category:
+                categoryList.add(c)
 
     return categoryList
-# 각 videoId에서 Categories를 뽑아낸다.
+# 각 videoId에서 method를 뽑아낸다.
 def extractData(videoIdList):
     dataList = set()
     for videoId in videoIdList:
-        datas = models.Metadata.objects.get(id = videoId).method
-        datas = datas.split(',')
-        print(datas)
-        for c in datas:
-            dataList.add(c)
+        if(models.Metadata.objects.get(id = videoId).method):
+            datas = models.Metadata.objects.get(id = videoId).method
+            datas = datas.split(',')
+            print(datas)
+            for c in datas:
+                dataList.add(c)
 
     return dataList    

@@ -266,7 +266,10 @@ def doIndexingService(videoId):
     
     resultDictionary = getIndexSentence(audioScript) 
 
-    if method=="PPT":
+    videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
+    isVideoIndexScript = os.path.isfile(videoIndexScript)
+
+    if isVideoIndexScript:
         videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
         indexFromVideo = videoScript2Dic(videoIndexScript)
         resultDictionary.update(indexFromVideo)
