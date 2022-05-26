@@ -2,7 +2,10 @@
     font-family: 'S-Core3';
 }
 
-
+body{
+    margin: 0;
+    padding: 0;
+}
 
 hr {
     width: 100%;
