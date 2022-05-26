@@ -47,55 +47,85 @@
                         {% for meta in videoMetaList %}
                             <!-- video id:{{ii.id_id}} <br> -->
                             {% for ii in meta.metadata %}
-                                <table
-                                    class="videoListTable"
-                                    onclick="location.href='/test/detail/{{ii.id_id}}'">
-                                    <tr>
-                                        <td style="width: 300px;">
-                                            <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
-                                        </td>
-                                        <td>
-                                            <table class="videoTable">
-                                                <tr>
-                                                    <td>
-                                                        <div class="VT_category">{{ii.category}}</div>
-                                                        <div class="VT_narrative">{{ii.narrative}}</div>
-                                                        <div class="VT_method">{{ii.method}}</div>
-                                                        {% for rank, value in rankData.items %}
-                                                            {% if rank == ii.id_id %}
-                                                                <div class="rank_data">{{value|join:', '}}</div>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="VT_videoTitle">{{ii.title}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        {% for key in meta.keyword %}
-                                                            {% if key != "" and forloop.counter < 6 %}
-                                                                <div class="VT_keywords">#{{key}}</div>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div class="VT_presenter">
-                                                            <image
-                                                                src="{% static 'img/user.png' %}"
-                                                                style="height: 17px; align-items: center;"></image>
-                                                            {{ii.presenter}}
-                                                        </div>
-                                                        <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
-                            {% endfor %}
+                            <table
+                            class="videoListTable"
+                            onclick="location.href='/test/detail/{{ii.id_id}}'">
+                            <tr>
+                                <td style="width: 300px;">
+                                    <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
+                                </td>
+                                <td>
+                                    <table class="videoTable">
+                                        <tr>
+                                            <td>
+                                                <div class="VT_category">{{ii.category}}</div>
+                                                <div class="VT_narrative">{{ii.narrative}}</div>
+                                                <div class="VT_method">{{ii.method}}</div>
+                                                {% comment %} <div class="rank_data">detail은 (개발중..)% 입니다</div> {% endcomment %}
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="VT_videoTitle">{{ii.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                {% for key in meta.keyword %}
+                                                    {% if key != "" and forloop.counter < 6 %}
+                                                        <div class="VT_keywords">#{{key}}</div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="VT_presenter">
+                                                    <image
+                                                        src="{% static 'img/user.png' %}"
+                                                        style="height: 17px; align-items: center;"></image>
+                                                    {{ii.presenter}}
+                                                </div>
+                                                {% comment %} <div class="VT_uploadedDate">{{ii.uploaddate}}</div> {% endcomment %}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td>
+                                    {% for rank in rankData %}
+                                                {% if rank.id == meta.id %}
+                                                <div class="wrap-circles">
+                                                    <div class="circle per-title" id="circleTitle{{rank.id}}">
+                                                        <div class="inner">제목</div>
+                                                    </div>
+                                                    <div class="circle per-keyword" id="circleKeyword{{rank.id}}">
+                                                        <div class="inner">키워드</div>
+                                                    </div>
+                                                    <div class="circle per-index" id="circleIndex{{rank.id}}">
+                                                        <div class="inner">인덱스</div>
+                                                    </div>
+                                                    <div class="circle per-presenter" id="circlePresenter{{rank.id}}">
+                                                        <div class="inner">발표자</div>
+                                                    </div>
+                                                    {{rank.total}}%
+                                                </div>
+                                                <script>
+                                                    document.getElementById("circleTitle{{rank.id}}").style.backgroundImage = "conic-gradient(#22629d {{rank.title}}%, #dedede 0)";
+                                                    document.getElementById("circleTitle{{rank.id}}").title = '제목 {{rank.title}}% 일치'
+                                                    document.getElementById("circleKeyword{{rank.id}}").style.backgroundImage = "conic-gradient(#5b9d22 {{rank.keyword}}%, #dedede 0)";
+                                                    document.getElementById("circleKeyword{{rank.id}}").title = '키워드 {{rank.keyword}}% 일치'
+                                                    document.getElementById("circleIndex{{rank.id}}").style.backgroundImage = "conic-gradient(#9d2230 {{rank.index}}%, #dedede 0)";
+                                                    document.getElementById("circleIndex{{rank.id}}").title = '인덱스 {{rank.index}}% 일치'
+                                                    document.getElementById("circlePresenter{{rank.id}}").style.backgroundImage = "conic-gradient(#9d6e22 {{rank.presenter}}%, #dedede 0)";
+                                                    document.getElementById("circlePresenter{{rank.id}}").title = '발표자 {{rank.presenter}}% 일치'
+                                                </script>
+                                                {% endif %}
+                                            {% endfor %}
+                                    <div class="VT_uploadedDate">{{ii.uploaddate}}</div>
+                                </td>
+                            </tr>
+                        </table>
+                        {% endfor %}
                         {% endfor %}
                     </td>
                 </div>
@@ -177,7 +207,7 @@
                                                     <label>
                                                         <span style="font-family: 'pre1';"
                                                             value="{{data}}"
-                                                            onclick="searchDetail('data','{{data}}')">▪ {{data}}</span>
+                                                            onclick="searchDetail('method','{{data}}')">▪ {{data}}</span>
                                                     </label> 
                                                     
                                                 </li>

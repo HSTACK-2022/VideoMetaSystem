@@ -232,7 +232,7 @@ def searchFile(request):
             videoMetaList = []
             videoIdList = {}
             rankData = {}
-            rank = {}
+            rankList = []
 
             # before
             categoryList = {}
@@ -243,7 +243,15 @@ def searchFile(request):
             print(videoIdList, videoMetaList, categoryList, typeList, dataList, rankData)
 
             for j in videoIdList:
-                rank[j] = rankData[j]
+                rankDict = {}
+                rankDict['id'] = j
+                rankDict['title'] = rankData[j][0]
+                rankDict['presenter'] = rankData[j][1]
+                rankDict['index'] = rankData[j][2]
+                rankDict['keyword'] = rankData[j][3]
+                rankDict['total'] = rankData[j][4]
+                rankList.append(rankDict)
+            
 
             if not videoIdList :
                 return render(request, renderAppName + '/test_search.html',
@@ -261,7 +269,7 @@ def searchFile(request):
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
-                        'rankData': rank,
+                        'rankData': rankList,
                     })
 
 # category detail search
@@ -279,24 +287,42 @@ def detailSearch(request):
     newVideoIdList = list()
 
     videoMetaList = []
-    #rankData = {}
-    #rank = {}
-    newVideoIdList, videoMetaList, categoryList, typeList, dataList = searchAll.detailSearch(videoIdList, search_type, search_detail_type)
+    rankData = {}
+    rankList = []
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type,word)
+
     # for j in videoIdList:
     #     rank[j] = rankData[j]
 
-    for video in videoMetaList:
-        print("****")
-        print(video['thumbnail'])
+    for j in newVideoIdList:
+        rankDict = {}
+        rankDict['id'] = j
+        rankDict['title'] = rankData[j][0]
+        rankDict['presenter'] = rankData[j][1]
+        rankDict['index'] = rankData[j][2]
+        rankDict['keyword'] = rankData[j][3]
+        rankDict['total'] = rankData[j][4]
+        rankList.append(rankDict)
+
+    # for video in videoMetaList:
+    #     print("****")
+    #     print(video['thumbnail'])
         
-    return render(request, renderAppName + '/test_search.html',
-        context={
-            'code' : 200,
-            'videoMetaList' : videoMetaList,
-            'videoIdList' : newVideoIdList,
-            'categoryList' : categoryList,
-            "typeList" : typeList,
-            "dataList" : dataList,
-            'searchWord' : word,
-            #'rankData': rank,
-        })
+    if not videoIdList :
+        return render(request, renderAppName + '/test_search.html',
+            context={
+                'code' : 404,
+                'searchWord' : word
+            })
+    else :
+        return render(request, renderAppName + '/test_search.html',
+            context={
+                'code' : 200,
+                'categoryList' : categoryList,
+                "typeList" : typeList,
+                "dataList" : dataList,
+                'videoMetaList' : videoMetaList,
+                'videoIdList' : newVideoIdList,
+                'searchWord' : word,
+                'rankData': rankList,
+            })
