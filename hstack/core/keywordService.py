@@ -44,7 +44,10 @@ def doKeywordService(videoId):
     videoScript = os.path.join(videopath.imageaddr, "keyword.txt")
     videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
 
-    if (models.Metadata.objects.get(id = videoId).method=="PPT"):
+    isVideoScript = os.path.isfile(videoScript)
+    isVideoIndexScript = os.path.isfile(videoIndexScript)
+
+    if (isVideoScript and isVideoIndexScript):
         keywords = mergeKeyword(audioScript, videoScript, videoIndexScript)
     else :
         keywords = mergeKeyword(audioScript, None, None)
