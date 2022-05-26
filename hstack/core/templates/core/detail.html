@@ -4,13 +4,15 @@
     <head>
         {% for metadata in metadatas %}
             <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
-            <title>VMeta - {{metadata.title}}</title>
+            <link rel="stylesheet" href="{% static 'css/tab3.css' %}">
+            <title>VMeta - {{metadata.title}}
+            </title>
             <meta charset="UTF-8">
 
         </head>
 
         <body class="bodyArea" onload="loadImg('{{ metadata.title }}')">
-            {% include 'core/test_header.html' %}
+            {% include 'core/header.html' %}
             <div class="divParent">
                 <!-- Post content-->
                 <div class="detailHeader">
@@ -112,9 +114,12 @@
                                 </div>
                             </li>
 
+
+
+
                             <!-- @@@@@@@@@두번째 탭 스크립트 -->
                             <li id="tab2" class="btnCon">
-                                <a class="btn second" href="#tab2" onclick="searchPost({{scripts}});">Full Script</a>
+                                <a class="btn second" href="#tab2" onclick="searchPost({{scripts}});">Script</a>
                                 <div class="tabCon">
 
                                     <!-- detail search : only for detail -->
@@ -127,18 +132,18 @@
                                             type="submit"
                                             class="searchBtn"
                                             value=""
-                                            onclick="searchPost({{scripts}});"></input>
+                                            ></input>
                                     </div>
 
                                     <div class="searchScroll">
-                                        <table id="searchResArea" class=""></table>
+                                        <table id="searchResArea" class="" ></table>
                                     </div>
                                 </div>
                             </li>
 
-                            <!-- @@@@@@@@@세번째 탭 목차 -->
-                            <li id="tab3" class="btnCon">
-                                <a class="btn third" href="#tab3">Index</a>
+                             <!-- @@@@@@@@@세번째 탭 목차 -->
+                             <li id="tab3" class="btnCon">
+                                <a class="btn thrid" href="#tab3">Index</a>
                                 <div class="tabCon">
 
                                     <div class="searchScroll2">
@@ -170,34 +175,45 @@
                                     </div>
                                 </div>
                             </li>
-                            
-                            <!-- @@@@@@@@@네번째 탭 이미지 추출 -->
+
+
+
                             <li id="tab4" class="btnCon">
-                                <a class="btn fourth" href="#tab4">Images</a>
+                                <a class="btn third" href="#tab4">Images</a>
                                 <div class="tabCon">
-                                    <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">download</button> 
-                                    <div id = "pptImage">
-                                        {% for image in images %}
-                                        <image id="{{image}}" src="{{image}}" style="width:200px"></image>
-                                        {% endfor %}
+                                <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
+                                    <img id="down" src="{% static 'img/download.png' %}">
+                                    <br>
+                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">Zip</span>
+                                </button>
+                                    
+                                    <div class="searchScroll">
+                                        <div class="metadataTR2">
+                                            <div class="metadataTitle2" style="width: 100%;">{{metadata.title}}에서 총 {{images|length}} 개의 장면을 감지했습니다.</div>
+                                        </div>  
+
+                                        <div id = "pptImage">
+                                            {% for image in images %}
+                                                <image id="{{image}}" src="{{image}}" style="width: inherit;border-radius: 10px;
+                                                overflow: hidden; "></image>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
                             </li>
-
                         </ul>
                     </div>
                 </div>
             </div>
-
             <script type="text/javascript" src="{% static 'js/jszip/download.js' %}"></script>
             <script type="text/javascript" src="{% static 'js/jszip/jszip.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'js/jszip/jszip-utils.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'js/jszip/jszip-utils-ie.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'js/videoAction.js' %}?after"></script>
+            
             <script>
                 location.href = "#tab1";
             </script>
-
         </body>
 
     </div>

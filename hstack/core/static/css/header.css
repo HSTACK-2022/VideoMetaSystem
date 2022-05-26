@@ -124,6 +124,10 @@ header {
     width: 100%;
 }
 
+#searchBar{
+    margin: 50px;
+
+}
 
 .searchInput[type=text] {
     font-family: 'pre2';
@@ -137,6 +141,8 @@ header {
     box-shadow: 0 0 0 1pt rgb(118,118,118);
     outline: none;
     text-indent: 1em;
+
+    /* margin-top: 10px; */
     
 }
 
@@ -154,13 +160,14 @@ header {
     cursor: pointer;
     outline: none;
     border: none;
-    
+   
     
 }
 
 #logo {
     height: 40px;
     margin-right: 20px;
+    margin-bottom: 10px;
 }
 
 #uploadBtnImg {
