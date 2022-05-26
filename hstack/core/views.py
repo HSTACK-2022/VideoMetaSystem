@@ -300,11 +300,15 @@ def detailSearch(request):
     #word = word.replace(" ", "") # 공백 제거
     #word = word.replace("'", "") # 작은 따옴표 제거
     #word = word.split(',')
+    searchWords = []
+    words = re.split(r'[ ,:]', word)
+    for item in words:
+        if item != "": searchWords.append(item)
 
     videoMetaList = []
     rankData = {}
     rankList = []
-    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, word)
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, searchWords)
 
     print(">>>>>>>>>>>>>>>>>>>")
     print(rankData)
