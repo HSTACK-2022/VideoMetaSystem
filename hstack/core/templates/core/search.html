@@ -25,9 +25,14 @@
                 document.querySelectorAll(`input[type=checkbox]`).forEach(el => el.checked = false);
                 target.checked = true;
             }
+            function updateSearchText(){
+                var searchText = document.getElementById("searchText");
+                var word = '{{searchWord}}';
+                searchText.value = word;
+            }
         </script>
     </head>
-<body class="bodyArea">
+<body class="bodyArea" onload="updateSearchText()">
 
         {% include 'core/header.html' %}
         {% if code == 200 %}
