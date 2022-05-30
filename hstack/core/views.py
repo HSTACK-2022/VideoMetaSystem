@@ -29,7 +29,6 @@ from urllib.parse import urlparse
 
 from core import searchAll
 from core import extractMetadata
-from core import rankAlgo
 
 # 상수 설정
 OS = platform.system()

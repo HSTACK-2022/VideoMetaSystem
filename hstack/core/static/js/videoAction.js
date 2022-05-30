@@ -2,6 +2,8 @@ var vid = document.getElementById("video");
 function inputMove(time) {
     timeStr = time.split(":");
     timeSec = Number(timeStr[0] * 3600) + Number(timeStr[1] * 60) + Number(timeStr[2]);
+    vid.pause();
+    var t = vid.currentTime;
     vid.currentTime = timeSec;
     vid.play();
 }
@@ -24,7 +26,9 @@ function searchPost(scripts) {
 
             const button = document.createElement("button");
             button.className = "indexTime";
-            button.onclick = "inputMove(timeSec)";
+            button.addEventListener("click", function(event){
+                inputMove(timeStr);
+            });
             button.innerText = timeStr;
             btnTd.appendChild(button);
 
@@ -73,7 +77,7 @@ function loadImg(folderName){
     var pptImage = document.getElementById("pptImage");
     var images = pptImage.childNodes;
 
-    var testdiv = document.getElementById("testdiv");
+    //var testdiv = document.getElementById("testdiv");
 
     for(var i=0, count=0; i<images.length; i++){
         if(images[i].nodeName != "IMG") continue;
@@ -83,7 +87,7 @@ function loadImg(folderName){
             var fileName = folderName + count.toString() + ".jpg";
             var imgFile = dataURLtoFile(dataUrl, fileName);
             zip.file(fileName, imgFile);
-            testdiv.innerText = fileName;
+            //testdiv.innerText = fileName;
         });
     }
 }
