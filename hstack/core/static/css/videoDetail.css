@@ -2,6 +2,11 @@
     font-family: 'S-Core3';
 }
 
+body{
+    margin: 0;
+    padding: 0;
+}
+
 hr {
     width: 100%;
     color: #ccc;
@@ -42,10 +47,6 @@ hr {
 
 }
 
-.left{
-    
-}
-
 /* 수정부분 */
 
 
@@ -64,7 +65,7 @@ ul {
 .tabmenu ul li {
     border-radius: 20px 20px 0 0;
     display: inline-block;
-    width: 30%;
+    width: 20%;
     height: 75px;
     float: left;
     text-align: center;
@@ -84,10 +85,10 @@ ul {
     /*tabbar text position*/
     line-height: 30px;
     padding-top: 6px;
-    font-size: 18px;
+    font-size: 17px;
     height: 42px;
     text-decoration: none;
-   letter-spacing: 0px;
+    letter-spacing: 0px;
     color: rgb(29, 29, 29);
 }
 
@@ -130,7 +131,7 @@ div.left {
     width: 55%;
     float: left;
     box-sizing: border-box;
-   
+
 }
 
 div.right {
@@ -150,12 +151,16 @@ div.right {
     min-width: 500px;
     vertical-align: top;
     display: inline-block;
-    
+
 }
 
 .videoPlayer {
     width: 100%;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 287da85c64946cc34394d7e2977b258edaa3aa21
 }
 
 .keyTag {
@@ -164,7 +169,7 @@ div.right {
     display: block;
     font-size: 15px;
     margin: 10px 5px 0px;
-    
+
 }
 
 .videoTitle {
@@ -173,7 +178,7 @@ div.right {
     display: block;
     font-size: 35px;
     margin: 0px 5px 0px;
-    
+
 }
 
 .videoUploadDate {
@@ -194,7 +199,7 @@ div.right {
 
 .metadataTable {
     width: 100%;
-    border-spacing: 3px;
+    border-spacing: 5px;
     border-collapse: separate;
 
 
@@ -216,10 +221,10 @@ div.right {
 .metadataTR {
     width: 100%;
     height: 35px;
-
+    margin: 1px 0px;
     background-color: #dddddd;
     border-radius: 30px;
-    
+
 }
 
 .metadataTR_bottom {
@@ -267,7 +272,7 @@ div.right {
     background-color: #f1f1f1;
     padding: 10px;
     border-radius: 30px;
-    
+
 }
 
 .metadataKeywordTD {
@@ -275,7 +280,7 @@ div.right {
     background-color: #f1f1f1;
     border-radius: 30px;
     /*padding: 10px;*/
-  
+
 
 }
 
@@ -290,7 +295,7 @@ div.right {
     /* align :center; */
     margin: 5px 5px 5px 10px;
     /* background-color: #ff5959; */
-    
+
 }
 
 
@@ -316,30 +321,10 @@ div.right {
     border: 1px solid #888888;
     background-color: #ffffff;
     display: inline-block;
+
 }
 
 .keywordsClickedBtn {
-    height: 25px;
-    margin: 2px 0px;
-    padding: 0px 10px;
-    font-size: 14px;
-    border-radius: 20px;
-    border: 1px solid #888888;
-    background-color: #737070;
-    display: inline-block;
-}
-.userKBtn {
-    height: 25px;
-    margin: 2px 0px;
-    padding: 0px 10px;
-    font-size: 14px;
-    border-radius: 20px;
-    border: 1px solid #888888;
-    background-color: #f9f9f9;
-    display: inline-block;
-}
-
-.userKClickedBtn {
     height: 25px;
     margin: 2px 0px;
     padding: 0px 10px;
@@ -354,7 +339,7 @@ div.right {
     font-family: "S-Core4";
 
     height: 25px;
-    margin:1px 2px;
+    margin: 1px 2px;
     padding: 0px 10px;
     font-size: 14px;
     border-radius: 20px;
@@ -379,7 +364,8 @@ div.right {
     height: 100%;
     font-family: sans-serif;
     font-size: 13px;
-
+    margin-top: 10px;
+    margin-right: 5px;
     border: none;
     color: #007bff;
     vertical-align: top;
@@ -388,6 +374,10 @@ div.right {
 
 }
 
+.indexTime:hover {
+    color: #5856d6;
+    cursor: pointer;
+}
 .indexTime2 {
     width: 70px;
     height: 100%;
@@ -417,7 +407,7 @@ div.right {
 }
 
 .indexTitle {
-    
+
     font-family: sans-serif;
     font-size: 14px;
     margin: 10px 0px;
@@ -446,7 +436,7 @@ div.right {
     border-radius: 20px;
     border: 1px solid gray;
     background-color: transparent;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     vertical-align: center;
 }
 
@@ -537,7 +527,10 @@ div.right {
     overflow-x: hidden;
     overflow-y: scroll;
     border-radius: 20px;
+    /* background: rgba(68, 68, 68, 0.1); */
+    /* width: fit-content; */
 }
+
 /* 아래의 모든 코드는 영역::코드로 사용 */
 
 .searchScroll::-webkit-scrollbar {
@@ -592,16 +585,6 @@ div.right {
 }
 
 
-.footer {
-    font-family: "S-Core3" !important;
-    font-style: italic;
-
-    text-align: center;
-    color: #ffffff;
-    background-color: #2F5597;
-
-
-}
 
 #save {
 
@@ -619,3 +602,11 @@ div.right {
 
 }
 
+
+.metadataTR2 {
+    width: 100%;
+    height: 35px;
+    margin: 1px 0px;
+   
+    border-radius: 30px;
+}

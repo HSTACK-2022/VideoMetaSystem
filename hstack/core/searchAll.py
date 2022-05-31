@@ -60,7 +60,7 @@ class Total:
         if(div == "present"):
             return 100 
     
-    # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
+     # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
     def getrank(self, searchTexts, videoId): #ranking algo
         self.rankcount = {"keyword":0,"title":0,"present":0,"subtitle":0} #rank 알고리즘 초기화
         percentDic = {"keyword":0,"title":0,"present":0,"index":0}
@@ -118,15 +118,12 @@ class Total:
             i = percentDic['index']
             k_i = 0
 
-            if k >=50 or i >=50 or (k!=0 or i != 0):
+            if k >=50 or i >=50:
                 k_i = (k+i)/4 + 50
             else:
                 k_i = (k+i)/2
 
-            
-            if t==0 and p==100 :
-                percSum += 80 + k_i*0.2
-            elif t==100 or p==100 :
+            if t==100 or p==100 :
                 percSum += 95 + k_i*0.05
             else :
                 percSum += k_i
@@ -162,7 +159,9 @@ class Total:
 
         print(self.rankDetail)
 
+        #return(sum(self.rankcount.values()), self.rankDetail)
         return(float(perc), self.rankDetail)
+
 
 
     def getVideoMetadataFromID(self, videoId):
@@ -183,14 +182,25 @@ class Total:
         self.finalDict['id'] = videoId
         self.finalDict['metadata'] = metadataList
         self.finalDict['keyword'] = keywordList
+        self.finalDict['thumbnail'] = None
 
         if OS == 'Windows':
             filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
         else :
             filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
 
-        fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
-        self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
+        count = 0
+        for file in os.listdir(models.Videopath.objects.get(id = videoId).imageaddr):
+            if file.split(".")[1] == "jpg":
+                count+=1
+                if count > 1:
+                    fileName = file
+                    self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
+                    break
+
+        if self.finalDict['thumbnail'] == None:
+            self.finalDict['thumbnail'] = '/static/img/defThumbnail.jpg'
+        
         #self.finalDict['filePath']=filePath
         #self.finalDict['timestamp']=timestamp
 

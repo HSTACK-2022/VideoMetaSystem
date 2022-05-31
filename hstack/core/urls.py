@@ -7,13 +7,13 @@ from django.contrib.auth import views as auth_views
 app_name = "Core"
 
 urlpatterns = [
-    path('test/', views.home, name="home"),
-    path('test/upload/', views.uploadFile, name="uploadFile"),
-    path('test/upload/lists', views.uploadLists, name="uploadLists"),
-    path('test/search/', views.searchFile, name="searchFile"),
-    path('test/detail/<int:pk>', views.detailFile, name="detailFile"),
-    path('test/success/<int:pk>', views.success, name="success"),
-    path('test/search/detailSearch/', views.detailSearch, name="detailSearch"),
+    path('', views.home, name="home"),
+    path('upload/', views.uploadFile, name="uploadFile"),
+    path('upload/lists', views.uploadLists, name="uploadLists"),
+    path('search/', views.searchFile, name="searchFile"),
+    path('detail/<int:pk>', views.detailFile, name="detailFile"),
+    path('success/<int:pk>', views.success, name="success"),
+    path('search/detailSearch/', views.detailSearch, name="detailSearch"),
 ]
 
 if settings.DEBUG: 

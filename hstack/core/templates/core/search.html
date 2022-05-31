@@ -9,15 +9,9 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
             function searchDetail(search_type, search_detail_type) {
-                document
-                    .getElementById("search_detail_type")
-                    .value = search_detail_type;
-                document
-                    .getElementById("search_type")
-                    .value = search_type;
-                document
-                    .getElementById("form")
-                    .submit();
+                document.getElementById("search_detail_type").value = search_detail_type;
+                document.getElementById("search_type") .value = search_type;
+                document.getElementById("form").submit();
             }
             function Change() {
                 //alert( $("#selectd_category option:selected").val());
@@ -31,11 +25,16 @@
                 document.querySelectorAll(`input[type=checkbox]`).forEach(el => el.checked = false);
                 target.checked = true;
             }
+            function updateSearchText(){
+                var searchText = document.getElementById("searchText");
+                var word = '{{searchWord}}';
+                searchText.value = word;
+            }
         </script>
     </head>
-<body class="bodyArea">
+<body class="bodyArea" onload="updateSearchText()">
 
-        {% include 'core/test_header.html' %}
+        {% include 'core/header.html' %}
         {% if code == 200 %}
        
             <table class="bodyTable">
@@ -48,7 +47,7 @@
                             {% for ii in meta.metadata %}
                             <table
                             class="videoListTable"
-                            onclick="location.href='/test/detail/{{ii.id_id}}'">
+                            onclick="location.href='/detail/{{ii.id_id}}'">
                             <tr>
                                 <td style="width: 300px;">
                                     <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
@@ -82,7 +81,6 @@
                                                         style="height: 17px; align-items: center;"></image>
                                                     {{ii.presenter}}
                                                 </div>
-                                                {% comment %} <div class="VT_uploadedDate">{{ii.uploaddate}}</div> {% endcomment %}
                                             </td>
                                         </tr>
                                     </table>
