@@ -309,6 +309,8 @@ def detailSearch(request):
     rankData = {}
     rankList = []
     newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, searchWords)
+
+    print(">>>>>>>>>>>>>>>>>>>")
     print(rankData)
     print(">>>>>>>>>>>>>>>>>>>")
 

@@ -24,7 +24,7 @@ function searchPost(scripts) {
 
             const button = document.createElement("button");
             button.className = "indexTime";
-            button.onclick = "inputMove(timeSec)";
+            button.addEventListener('click', function(event){inputMove(timeStr);});
             button.innerText = timeStr;
             btnTd.appendChild(button);
 

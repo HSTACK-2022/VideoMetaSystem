@@ -5,7 +5,7 @@
         <title>VMeta - SEARCH {{searchWord}}</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoList.css' %}?">
-        <link rel="stylesheet" href="{% static 'css/progressBar.css' %}?">
+        <link rel="stylesheet" href="{% static 'css/progressBar.css' %}?after">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
             function searchDetail(search_type, search_detail_type) {
@@ -19,7 +19,6 @@
                     .getElementById("form")
                     .submit();
             }
-
             function Change() {
                 //alert( $("#selectd_category option:selected").val());
                 selected = $("#selectd_category option:selected").val();
@@ -27,7 +26,7 @@
                     return;
                 else 
                     searchDetail("category", selected);
-                }
+            }
             function clickCheck(target) {
                 document.querySelectorAll(`input[type=checkbox]`).forEach(el => el.checked = false);
                 target.checked = true;
@@ -61,8 +60,6 @@
                                                 <div class="VT_category">{{ii.category}}</div>
                                                 <div class="VT_narrative">{{ii.narrative}}</div>
                                                 <div class="VT_method">{{ii.method}}</div>
-                                                {% comment %} <div class="rank_data">detail은 (개발중..)% 입니다</div> {% endcomment %}
-
                                             </td>
                                         </tr>
                                         <tr>
@@ -92,7 +89,6 @@
                                 </td>
 
                                 <td>
-
                                     {% for rank in rankData %}
                                         {% if rank.id == meta.id %}
                                         <div class="wrap-circles">
@@ -108,7 +104,7 @@
                                             <div class="circle per-presenter" id="circlePresenter{{rank.id}}">
                                                 <div class="inner">발표자</div>
                                             </div>
-                                            {{rank.total}}%
+                                            <div class="total-rank">"{{searchWord}}" 와 <span class="total-perc">{{rank.total}}%</span> 일치</div>
                                         </div>
                                         <script>
                                             document.getElementById("circleTitle{{rank.id}}").style.backgroundImage = "conic-gradient(#22629d {{rank.title}}%, #dedede 0)";
@@ -130,8 +126,6 @@
                         {% endfor %}
                     </td>
                
-
-          
                     <td class="aside">
                         {% comment %} 
                         videoIdList = 
@@ -146,25 +140,6 @@
                                 <input type="hidden" name="search_detail_type" id="search_detail_type">
                                 <input type="hidden" name="searchWord" value="{{searchWord}}">
                                 <div class="category">
-                                    <h2 class="todo-cmp__header">검색 정렬 방법</h2>
-                                    
-                                    <ul class="todo-cmp__list">
-                                       
-                                        <li>
-                                            <label for="todo-02">
-                                                <input id="todo-02" type="checkbox" onclick="clickCheck(this)">
-                                                <span>▪ 업로드 최신 순</span>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label for="todo-03">
-                                                <input id="todo-03" type="checkbox" onclick="clickCheck(this)">
-                                                <span>▪ 업로드 과거 순</span>
-                                            </label>
-                                        </li>
-                                        
-                                        
-                                    </ul>
 
                                     <h2 class="todo-cmp__header">검색 내 세부검색</h2>
                                     

@@ -6,7 +6,7 @@
 <head>
         <title>VMetaSys - SEARCH {{searchWord}}</title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'css/videoList.css' %}?after">
+        <link rel="stylesheet" href="{% static 'css/videoList.css' %}">
 
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
@@ -100,26 +100,6 @@
                         <input type="hidden" name="search_type" id="search_type">
                         <input type="hidden" name="search_detail_type" id="search_detail_type">
                         <div class="category">
-                            <h2 class="todo-cmp__header">검색 정렬 방법</h2>
-                            
-                            <ul class="todo-cmp__list">
-                               
-                                <li>
-                                    <label for="todo-02">
-                                        <input id="todo-02" type="checkbox" onclick="clickCheck(this)">
-                                        <span>▪ 업로드 최신 순</span>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label for="todo-03">
-                                        <input id="todo-03" type="checkbox" onclick="clickCheck(this)">
-                                        <span>▪ 업로드 과거 순</span>
-                                    </label>
-                                </li>
-                                
-                                
-                            </ul>
-
                             <h2 class="todo-cmp__header">검색 내 세부검색</h2>
                             
                             <ul class="todo-cmp__list">
