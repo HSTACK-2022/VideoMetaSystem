@@ -60,11 +60,13 @@ class Total:
         if(div == "present"):
             return 100 
     
-    # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
+     # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
     def getrank(self, searchTexts, videoId): #ranking algo
         self.rankcount = {"keyword":0,"title":0,"present":0,"subtitle":0} #rank 알고리즘 초기화
         percentDic = {"keyword":0,"title":0,"present":0,"index":0}
         midResultDic = {"keyword":0,"title":0,"present":0,"index":0}
+
+        percSum = 0
 
 
         print(len(searchTexts))
@@ -76,7 +78,7 @@ class Total:
             print(searchText)
 
             #
-            for keyW in models.Keywords.objects.filter(id = videoId).filter(keyword__contains = searchText).values_list('keyword', flat=True):
+            for keyW in models.Keywords.objects.filter(id = videoId, expose = 1).filter(keyword__contains = searchText).values_list('keyword', flat=True):
                 if(searchText in keyW):
                     self.rankcount["keyword"] += 5
                 else:
@@ -110,6 +112,24 @@ class Total:
             cnt = self.rankcount["subtitle"]
             percentDic['index'] = self.getPercent(videoId, "subtitle", cnt)
 
+            t = percentDic['title']
+            p = percentDic['present']
+            k = percentDic['keyword']
+            i = percentDic['index']
+            k_i = 0
+
+            if k >=50 or i >=50:
+                k_i = (k+i)/4 + 50
+            else:
+                k_i = (k+i)/2
+
+            if t==100 or p==100 :
+                percSum += 95 + k_i*0.05
+            else :
+                percSum += k_i
+
+
+
             # 중간결산
             midResultDic['keyword'] += percentDic['keyword']
             midResultDic['title'] += percentDic['title']
@@ -131,14 +151,17 @@ class Total:
         self.rankDetail.append(str(midResultDic['keyword']))
 
         # total
-        perc = str(round((midResultDic['index']+midResultDic['keyword']+midResultDic['title']+midResultDic['present'])/4 ,1))
+        #perc = str(round((midResultDic['index']+midResultDic['keyword']+midResultDic['title']+midResultDic['present'])/4 ,1))
+        perc = str(round(percSum / len(searchTexts),2))
         
         self.rankDetail.append(perc)
         # 순서: title, presenter, index, keyword, total
 
         print(self.rankDetail)
 
-        return(sum(self.rankcount.values()), self.rankDetail)
+        #return(sum(self.rankcount.values()), self.rankDetail)
+        return(float(perc), self.rankDetail)
+
 
 
     def getVideoMetadataFromID(self, videoId):
@@ -159,14 +182,25 @@ class Total:
         self.finalDict['id'] = videoId
         self.finalDict['metadata'] = metadataList
         self.finalDict['keyword'] = keywordList
+        self.finalDict['thumbnail'] = None
 
         if OS == 'Windows':
             filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
         else :
             filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
 
-        fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
-        self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
+        count = 0
+        for file in os.listdir(models.Videopath.objects.get(id = videoId).imageaddr):
+            if file.split(".")[1] == "jpg":
+                count+=1
+                if count > 1:
+                    fileName = file
+                    self.finalDict['thumbnail'] = os.path.join(filePath, fileName)
+                    break
+
+        if self.finalDict['thumbnail'] == None:
+            self.finalDict['thumbnail'] = '/static/img/defThumbnail.jpg'
+        
         #self.finalDict['filePath']=filePath
         #self.finalDict['timestamp']=timestamp
 

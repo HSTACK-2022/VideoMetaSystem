@@ -242,8 +242,6 @@ def success(request, pk):
                 expose = newUserKEList[i],
                 sysdef = 0
             )
-        
-
 
     videoPath = models.Videopath.objects.get(id = pk).videoaddr
     if OS == 'Windows':
@@ -259,6 +257,10 @@ def success(request, pk):
         print(err)
         scripts = []
 
+        
+    # 이미지 받아오기
+    pptImage = getPPTImage(pk)
+
     return render(
         request,
         renderAppName + '/success.html',
@@ -266,6 +268,7 @@ def success(request, pk):
             'pk' : pk,
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
+            'images' : pptImage,
             'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
             'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
