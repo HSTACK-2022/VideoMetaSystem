@@ -221,7 +221,7 @@ class Total:
             print(self.rankDetail)
 
             #return(sum(self.rankcount.values()), self.rankDetail)
-            return(float(perc), self.rankDetail)
+            return(float(perc), self.rankDetail, True)
 
         else:
             if T != None:
