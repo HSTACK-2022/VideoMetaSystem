@@ -27,9 +27,6 @@
 }
 
 
-
-
-
 #downloadImg {
     background-color: transparent;
     border: none;
@@ -48,4 +45,13 @@
 #edit {
     width: 40px;
     height: auto;
+}
+
+#downloadImg{
+    margin-bottom: 20px;
+}
+
+.donwloadBtns{
+    width: 50px;
+    float: right;
 }

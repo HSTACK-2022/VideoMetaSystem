@@ -1,3 +1,4 @@
+from ast import keyword
 import os
 import re
 import platform
@@ -9,7 +10,6 @@ from numpy import extract
 from core.opencvService import getPPTImage
 
 from . import models
-from .models import Post, Category
 
 from django import forms
 from django.db.models import Q
@@ -27,9 +27,9 @@ from django.db.models import Q
 from urllib import response
 from urllib.parse import urlparse
 
+from core import makePPT
 from core import searchAll
 from core import extractMetadata
-from core import rankAlgo
 
 # 상수 설정
 OS = platform.system()
@@ -103,7 +103,6 @@ def uploadFile(request):
             return redirect('Core:home')
                         
     return render(request, renderAppName + '/upload.html') 
-
 
 # 업로드 후 ~ User 확인 전의 영상 목록들
 def uploadLists(request):
@@ -202,6 +201,9 @@ def detailFile(request, pk):
     # 이미지 받아오기
     pptImage = getPPTImage(pk)
 
+    # PPT 파일 받아오기
+    pptFile = makePPT.getPPTFile(pk)
+
     return render(
         request,
         renderAppName + '/detail.html',
@@ -209,6 +211,7 @@ def detailFile(request, pk):
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
             'images' : pptImage,
+            'pptFile' : pptFile,
             'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
@@ -243,8 +246,6 @@ def success(request, pk):
                 expose = newUserKEList[i],
                 sysdef = 0
             )
-        
-
 
     videoPath = models.Videopath.objects.get(id = pk).videoaddr
     if OS == 'Windows':
@@ -260,6 +261,10 @@ def success(request, pk):
         print(err)
         scripts = []
 
+        
+    # 이미지 받아오기
+    pptImage = getPPTImage(pk)
+
     return render(
         request,
         renderAppName + '/success.html',
@@ -267,6 +272,7 @@ def success(request, pk):
             'pk' : pk,
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
+            'images' : pptImage,
             'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
             'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
@@ -278,7 +284,11 @@ def success(request, pk):
 def searchFile(request):
     if request.method == "GET":
         word = request.GET["searchText"]
-        if word == "":
+        title = request.GET['searchTextTitle']
+        keyword = request.GET['searchTextKeyword']
+        presenter = request.GET['searchTextPresenter']
+
+        if word == "" and title == "" and keyword == "" and presenter == "":
             return render(request, renderAppName + '/search.html',
                 context={
                     'code': 404,
@@ -290,6 +300,32 @@ def searchFile(request):
             words = re.split(r'[ ,:]', word)
             for item in words:
                 if item != "": searchWords.append(item)
+            if len(searchWords) == 0:
+                searchWords = None
+
+            searchTitles = []
+            word += (title + " ")
+            words = re.split(r'[ ,:]', title)
+            for item in words:
+                if item != "": searchTitles.append(item)
+            if len(searchTitles) == 0:
+                searchTitles = None
+
+            searchKeywords = []
+            word += (keyword + " ")
+            words = re.split(r'[ ,:]', keyword)
+            for item in words:
+                if item != "": searchKeywords.append(item)
+            if len(searchKeywords) == 0:
+                searchKeywords = None
+
+            searchPresenters = []
+            word += (presenter + " ")
+            words = re.split(r'[ ,:]', presenter)
+            for item in words:
+                if item != "": searchPresenters.append(item)
+            if len(searchPresenters) == 0:
+                searchPresenters = None
 
             videoMetaList = []
             videoIdList = {}
@@ -298,19 +334,18 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(searchWords)
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
 
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
                 rankDict['title'] = rankData[j][0]
                 rankDict['presenter'] = rankData[j][1]
-                rankDict['index'] = rankData[j][2]
-                rankDict['keyword'] = rankData[j][3]
-                rankDict['total'] = rankData[j][4]
+                rankDict['keyword'] = rankData[j][2]
+                rankDict['total'] = rankData[j][3]
                 rankList.append(rankDict)
             
-            #print(rankList)
+            print(rankList)
 
             if not videoIdList :
                 return render(request, renderAppName + '/search.html',
@@ -328,12 +363,19 @@ def searchFile(request):
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
+                        'searchWordDetailTitle': title,
+                        'searchWordDetailKeyword': keyword,
+                        'searchWordDetailPresenter': presenter,
                         'rankData': rankList,
                     })
 
 # category detail search
 def detailSearch(request):
     word = request.POST['searchWord']
+    title = request.POST['searchWordTitle']
+    keyword = request.POST['searchWordKeyword']
+    presenter = request.POST['searchWordPresenter']
+
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category , method, narrative
     search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
@@ -346,15 +388,49 @@ def detailSearch(request):
     #word = word.replace(" ", "") # 공백 제거
     #word = word.replace("'", "") # 작은 따옴표 제거
     #word = word.split(',')
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print(word)
+    print(title)
+    print(keyword)
+    print(presenter)
+
     searchWords = []
     words = re.split(r'[ ,:]', word)
     for item in words:
         if item != "": searchWords.append(item)
+    searchTitles = None
+    searchKeywords = None
+    searchPresenters = None
+
+    if title!="" or keyword!="" or presenter!="":
+        searchWords = None
+
+        searchTitles = []
+        words = re.split(r'[ ,:]', title)
+        for item in words:
+            if item != "": searchTitles.append(item)
+        if len(searchTitles) == 0:
+            searchTitles = None
+
+        searchKeywords = []
+        words = re.split(r'[ ,:]', keyword)
+        for item in words:
+            if item != "": searchKeywords.append(item)
+        if len(searchKeywords) == 0:
+            searchKeywords = None
+
+        searchPresenters = []
+        words = re.split(r'[ ,:]', presenter)
+        for item in words:
+            if item != "": searchPresenters.append(item)
+        if len(searchPresenters) == 0:
+            searchPresenters = None
 
     videoMetaList = []
     rankData = {}
     rankList = []
-    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, searchWords)
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
+
 
     print(">>>>>>>>>>>>>>>>>>>")
     print(rankData)
@@ -363,9 +439,8 @@ def detailSearch(request):
         rankDict['id'] = j
         rankDict['title'] = rankData[j][0]
         rankDict['presenter'] = rankData[j][1]
-        rankDict['index'] = rankData[j][2]
-        rankDict['keyword'] = rankData[j][3]
-        rankDict['total'] = rankData[j][4]
+        rankDict['keyword'] = rankData[j][2]
+        rankDict['total'] = rankData[j][3]
         rankList.append(rankDict)
 
     print(type(videoMetaList[0]['id']))
@@ -391,5 +466,8 @@ def detailSearch(request):
                 'videoMetaList' : videoMetaList,
                 'videoIdList' : newVideoIdList,
                 'searchWord' : word,
+                'searchWordDetailTitle': title,
+                'searchWordDetailKeyword': keyword,
+                'searchWordDetailPresenter': presenter,
                 'rankData': rankList,
             })

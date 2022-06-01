@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="{% static 'css/videoList.css' %}">
 
         <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
         <script>
             function searchDetail(search_type, search_detail_type){
                 document.getElementById("search_detail_type").value = search_detail_type;
@@ -17,7 +18,7 @@
             }
         </script>
 </head>
-<body class="bodyArea">
+<body class="bodyArea" onload="onloads();">
     
     {% include 'core/header.html' %}
     {% if code == 200 %}

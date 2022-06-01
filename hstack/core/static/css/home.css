@@ -29,7 +29,6 @@
 
 #home_table {
     width: 700px;
-
     margin: auto;
     font-weight: bold;
     font-size: 30px;
@@ -38,7 +37,7 @@
 }
 
 #home_search {
-    height: 50px;
+    height: 100%;
     width: 100%;
     background-color: white;
     border: 2px solid rgb(48, 48, 48);
@@ -56,15 +55,41 @@
 }
 
 .searchInput[type=text] {
-
     text-align: center;
-    width: 100%;
+    width: 90%;
     height: 100%;
     margin-left: 20px;
     background-color: transparent;
     border: none;
     font-size: 18px;
 
+}
+
+.searchInput[type=button] {
+    background-color: transparent;
+    border: none;
+}
+
+.searchNameHidden {
+    width: 45px;
+    height: 100%;
+    margin-left: 20px;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    text-align: left;
+}
+
+.searchInputHidden[type=text] {
+    width: 85%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid gray;
 }
 
 input::-webkit-input-placeholder {
@@ -88,6 +113,10 @@ input::-webkit-input-placeholder {
     outline: none;
     border: none;
 
+}
+
+.hiddenName {
+    width: 70px;
 }
 
 #logo {

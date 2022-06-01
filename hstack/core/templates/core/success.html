@@ -10,13 +10,14 @@
     <head>
         <title>VMeta - {{metadata.title}} </title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}?after">
+        <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
+        <link rel="stylesheet" href="{% static 'css/tab3.css' %}">
         <!-- submit check -->
     </head>
 
     {% include 'core/header.html' %}
 
-    <body class="bodyArea">
+    <body class="bodyArea" onload="loadImg('{{ metadata.title }}')">
         <form name="modify" method="POST" id="form">
         {% csrf_token %}
 
@@ -75,7 +76,8 @@
                     class="videoPlayer"
                     id="video"
                     src="{{videoaddr}}"
-                    controls="controls"></video>
+                    controls="controls"
+                    autoplay muted></video>
 
                 <!--<div>result : {{Metadata}}</div>-->
                 <div class="box">
@@ -262,6 +264,96 @@
                                 <!-- end of the 'tabCon' div-->
                                 </div>
                                 </li>
+
+                                 <!-- @@@@@@@@@두번째 탭 스크립트 -->
+                            <li id="tab2" class="btnCon">
+                                <a class="btn second" href="#tab2" onclick="searchPost({{scripts}});">Script</a>
+                                <div class="tabCon">
+
+                                    <!-- detail search : only for detail -->
+                                    <div class="innerSearch">
+                                        <input
+                                            type="text"
+                                            placeholder="Search in &quot;{{ metadata.title }}&quot;"
+                                            id="searchContent"></input>
+                                        <input
+                                            type="submit"
+                                            class="searchBtn"
+                                            value=""
+                                            onclick="searchPost({{scripts}});"
+                                            ></input>
+                                    </div>
+
+                                    <div class="searchScroll">
+                                        <table id="searchResArea" class="" ></table>
+                                    </div>
+                                </div>
+                            </li>
+
+                             <!-- @@@@@@@@@세번째 탭 목차 -->
+                             <li id="tab3" class="btnCon">
+                                <a class="btn thrid" href="#tab3">Index</a>
+                                <div class="tabCon">
+
+                                    <div class="searchScroll2">
+
+                                        <!-- 목차 -->
+                                        <table class="metadataTable">
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="metadataTR">
+                                                        <div class="metadataTitle2">INDEX</div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            {% for timestamp in timestamps %}
+
+                                                <tr class="metadataDetailTR">
+                                                    <!-- 수정 필요 -->
+
+                                                    <td colspan="2" class="metadataKeywordTD">
+
+                                                        <button class="indexTime2" onclick="inputMove('{{timestamp.time}}')">{{timestamp.time}}</button>
+                                                        <div class="indexTitle2">{{timestamp.subtitle}}</div>
+
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+
+
+
+                            <li id="tab4" class="btnCon">
+                                <a class="btn third" href="#tab4">Images</a>
+                                <div class="tabCon">
+                                <!--
+                                <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
+                                    <img id="down" src="{% static 'img/download.png' %}">
+                                    <br>
+                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">장면</span><br>
+                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">저장</span><br>
+                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">(jpg)</span>
+                                </button>
+                                -->
+                                    
+                                    <div class="searchScroll">
+                                        <div class="metadataTR2">
+                                            <div class="metadataTitle2" style="width: 100%;">{{metadata.title}}에서 총 {{images|length}} 개의 장면을 감지했습니다.</div>
+                                        </div>  
+
+                                        <div id = "pptImage">
+                                            {% for image in images %}
+                                                <image id="{{image}}" src="{{image}}" style="width: inherit;border-radius: 10px;
+                                                overflow: hidden; "></image>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             </ul>
                             <!-- end of the "tabmenu" div-->
                         </div>
