@@ -25,7 +25,7 @@ def getPPTFile(videoId):
     imageList = os.listdir(imageFilePath)
     print(imageList)
 
-    slide_layout = pptFile.slide_layouts[7]
+    slide_layout = pptFile.slide_layouts[6]
 
     for image in imageList:
         if image.startswith("L") or image.startswith("P"):
