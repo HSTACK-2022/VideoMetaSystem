@@ -300,16 +300,15 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(searchWords)
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=["라즈베리"])
 
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
                 rankDict['title'] = rankData[j][0]
                 rankDict['presenter'] = rankData[j][1]
-                rankDict['index'] = rankData[j][2]
-                rankDict['keyword'] = rankData[j][3]
-                rankDict['total'] = rankData[j][4]
+                rankDict['keyword'] = rankData[j][2]
+                rankDict['total'] = rankData[j][3]
                 rankList.append(rankDict)
             
             #print(rankList)

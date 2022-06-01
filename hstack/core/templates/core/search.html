@@ -96,9 +96,6 @@
                                             <div class="circle per-keyword" id="circleKeyword{{rank.id}}">
                                                 <div class="inner">키워드</div>
                                             </div>
-                                            <div class="circle per-index" id="circleIndex{{rank.id}}">
-                                                <div class="inner">인덱스</div>
-                                            </div>
                                             <div class="circle per-presenter" id="circlePresenter{{rank.id}}">
                                                 <div class="inner">발표자</div>
                                             </div>
@@ -109,8 +106,6 @@
                                             document.getElementById("circleTitle{{rank.id}}").title = '제목 {{rank.title}}% 일치'
                                             document.getElementById("circleKeyword{{rank.id}}").style.backgroundImage = "conic-gradient(#5b9d22 {{rank.keyword}}%, #dedede 0)";
                                             document.getElementById("circleKeyword{{rank.id}}").title = '키워드 {{rank.keyword}}% 일치'
-                                            document.getElementById("circleIndex{{rank.id}}").style.backgroundImage = "conic-gradient(#9d2230 {{rank.index}}%, #dedede 0)";
-                                            document.getElementById("circleIndex{{rank.id}}").title = '인덱스 {{rank.index}}% 일치'
                                             document.getElementById("circlePresenter{{rank.id}}").style.backgroundImage = "conic-gradient(#9d6e22 {{rank.presenter}}%, #dedede 0)";
                                             document.getElementById("circlePresenter{{rank.id}}").title = '발표자 {{rank.presenter}}% 일치'
                                         </script>
