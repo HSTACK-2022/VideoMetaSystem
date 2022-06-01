@@ -1,6 +1,7 @@
 # 2022.04.28
 # search(searchTexts)로 실행 -> list로 메타데이터 가져옴
 
+from operator import index
 import os
 import platform
 from re import I
@@ -46,7 +47,7 @@ class Total:
         if (cnt == 0) :
             return 0
         if(div == "key"):
-            keyTotal = models.Keywords.objects.filter(id = videoId).all()
+            keyTotal = models.Keywords.objects.filter(id = videoId).filter(expose=1).all()
             count1 = keyTotal.count()
             percent = ((cnt/5)/count1)*100 #점수를 주었기 때문에 5로 다시 나누어 줌
             return round(percent,1) # 소수점 한자리
@@ -60,21 +61,9 @@ class Total:
         if(div == "present"):
             return 100 
     
-     # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
-    def getrank(self, searchTexts, videoId): #ranking algo
-        self.rankcount = {"keyword":0,"title":0,"present":0,"subtitle":0} #rank 알고리즘 초기화
-        percentDic = {"keyword":0,"title":0,"present":0,"index":0}
-        midResultDic = {"keyword":0,"title":0,"present":0,"index":0}
-
-        percSum = 0
-
-
-        print(len(searchTexts))
-
-        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-        print(videoId)
-
-        for searchText in searchTexts:
+    def getPercentDic(self, searchTexts, videoId):
+         percentDic = {"keyword":0,"title":0,"present":0,"index":0}
+         for searchText in searchTexts:
             print(searchText)
 
             #
@@ -112,56 +101,205 @@ class Total:
             cnt = self.rankcount["subtitle"]
             percentDic['index'] = self.getPercent(videoId, "subtitle", cnt)
 
-            t = percentDic['title']
-            p = percentDic['present']
-            k = percentDic['keyword']
-            i = percentDic['index']
-            k_i = 0
 
-            if k >=50 or i >=50:
-                k_i = (k+i)/4 + 50
-            else:
-                k_i = (k+i)/2
-
-            if t==100 or p==100 :
-                percSum += 95 + k_i*0.05
-            else :
-                percSum += k_i
-
-
-
-            # 중간결산
-            midResultDic['keyword'] += percentDic['keyword']
-            midResultDic['title'] += percentDic['title']
-            midResultDic['present'] += percentDic['present']
-            midResultDic['index'] += percentDic['index']
-
+            print("((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))")
             print(percentDic)
+            return percentDic
+
+    def getWeight(self, percentDic):
+        total = 0
+        # 1. 하나만 있는 경우??
+        cnt = 0
+        exists = {"T":False, "P":False, "K":False}
+        
+        if percentDic['title'] != 0:
+            cnt += 1
+            exists["T"] = True
+
+        if percentDic['present'] != 0:
+            cnt += 1
+            exists["P"] = True
+        
+        if percentDic['keyword'] != 0:
+            cnt += 1
+            exists["K"] = True
+
+        # 1개만 있으면 걔가 total
+        if cnt == 1:
+            total = percentDic['title'] + percentDic['present'] + percentDic['keyword']
+
+        elif cnt == 3:
+            total = (percentDic['title']*0.4) + (percentDic['present']*0.4) + (percentDic['keyword']*0.2)
+
+        else:
+            if exists["K"] == False:
+                total = 100
+            else:
+                if exists["T"] == True: # T와 K가 있는 경우
+                    total = (percentDic['title']*0.8) + (percentDic['keyword']*0.2)
+                else: # P와 K가 있는 경우
+                    total = (percentDic['present']*0.8) + (percentDic['keyword']*0.2)
+
+        return total
+
+     # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
+    def getrank(self, videoId, All, T, K, P): #ranking algo
+        self.rankcount = {"keyword":0,"title":0,"present":0,"subtitle":0} #rank 알고리즘 초기화
+        percentDic = {"keyword":0,"title":0,"present":0}
+        midResultDic = {"keyword":0,"title":0,"present":0, "index":0}
+
+        percSum = 0
+
+        searchTexts = []
+        if All != None:  # 전체 검색을 한 경우
+            for i in All: # searchTexts는 All만
+                searchTexts.append(i)
+                percentDicRes = self.getPercentDic(searchTexts, videoId)
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+                print(percentDicRes)
+                t = percentDicRes['title']
+                p = percentDicRes['present']
+                k = percentDicRes['keyword']
+                i = percentDicRes['index']
+                k_i = 0
+
+                if k >=50 or i >=50:
+                    k_i = (k+i)/4 + 50
+                else:
+                    k_i = (k+i)/2
+
+                if t==100 or p==100 :
+                    percSum += 95 + k_i*0.05
+                else :
+                    percSum += k_i
+
+                # 중간결산
+                midResultDic['keyword'] += percentDicRes['keyword']
+                midResultDic['index'] += percentDicRes['index']
+                midResultDic['title'] += percentDicRes['title']
+                midResultDic['present'] += percentDicRes['present']
+
+
+            print(percentDicRes)
             print(midResultDic)
 
-        # 최종 결산
-        if (midResultDic['title'] > 100) :      midResultDic['title'] = 100     # title
-        if (midResultDic['present'] > 100) :    midResultDic['present'] = 100   # presenter
-        midResultDic['index'] = midResultDic['index'] / len(searchTexts)        # index
-        midResultDic['keyword'] = midResultDic['keyword'] / len(searchTexts)    # keyword
-        
-        self.rankDetail.append(str(midResultDic['title']))
-        self.rankDetail.append(str(midResultDic['present']))
-        self.rankDetail.append(str(midResultDic['index']))
-        self.rankDetail.append(str(midResultDic['keyword']))
+            # 최종 결산
+            if (midResultDic['title'] > 100) :      midResultDic['title'] = 100     # title
+            if (midResultDic['present'] > 100) :    midResultDic['present'] = 100   # presenter
+            # midResultDic['index'] = midResultDic['index'] / len(searchTexts)        # index
+            # midResultDic['keyword'] = midResultDic['keyword'] / len(searchTexts)    # keyword
 
-        # total
-        #perc = str(round((midResultDic['index']+midResultDic['keyword']+midResultDic['title']+midResultDic['present'])/4 ,1))
-        perc = str(round(percSum / len(searchTexts),2))
-        
-        self.rankDetail.append(perc)
-        # 순서: title, presenter, index, keyword, total
+            keywordPerc = 0
+            indexPerc = 0
+            indexPerc = midResultDic['index'] / len(searchTexts)        # index
+            keywordPerc = midResultDic['keyword'] / len(searchTexts)    # keyword
 
-        print(self.rankDetail)
+            # keyword + index merge
+            if keywordPerc > indexPerc:
+                alpha = (100 - keywordPerc)/100.0
+                indexPerc = alpha * indexPerc
+            else :
+                alpha = (100 - indexPerc)/100.0
+                keywordPerc = alpha * keywordPerc
+            midResultDic['keyword'] = round(keywordPerc + indexPerc, 2)
+            
+            self.rankDetail.append(str(midResultDic['title']))
+            self.rankDetail.append(str(midResultDic['present']))
+            self.rankDetail.append(str(midResultDic['keyword']))
 
-        #return(sum(self.rankcount.values()), self.rankDetail)
-        return(float(perc), self.rankDetail)
+            # total
+            #perc = str(round((midResultDic['index']+midResultDic['keyword']+midResultDic['title']+midResultDic['present'])/4 ,1))
+            perc = str(round(percSum / len(searchTexts),2))
+            
+            self.rankDetail.append(perc)
+            # 순서: title, presenter, keyword, total
 
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            print(self.rankDetail)
+
+            #return(sum(self.rankcount.values()), self.rankDetail)
+            return(float(perc), self.rankDetail)
+
+        else:
+            if T != None:
+                for i in T:
+                    searchTexts.append(i)
+                for searchText in searchTexts:
+                    keywordQ = Q()
+                    keywordQ &= Q(id = videoId)
+                    keywordQ &= Q(title__contains = searchText)
+                    if models.Metadata.objects.filter(keywordQ).exists():
+                        percentDic['title'] = self.getPercent(videoId, "title", 100)
+
+            searchTexts = []
+            if P != None:
+                for i in P:
+                    searchTexts.append(i)
+                for searchText in searchTexts:
+                    if models.Metadata.objects.filter(id = videoId).filter(presenter__contains = searchText).exists():
+                        percentDic['present'] = self.getPercent(videoId, "present", 100)
+
+            searchTexts = []
+            if K != None:
+                keywordPerc = 0
+                indexPerc = 0
+                for i in K:
+                    searchTexts.append(i)
+                for searchText in searchTexts:
+                    self.rankcount["keyword"] = 0
+                    self.rankcount["subtitle"] = 0
+                    keywordQ = Q()
+                    keywordQ &= Q(id = videoId)
+                    keywordQ &= Q(expose = 1)
+                    keywordQ &= Q(keyword__contains = searchText)
+                    for keyW in models.Keywords.objects.filter(keywordQ).values_list('keyword', flat=True):
+                        if(searchText in keyW):
+                            self.rankcount["keyword"] += 5
+                        else:
+                            self.rankcount["keyword"] += 0
+                        
+                    cnt = self.rankcount["keyword"]
+                    keywordPerc += self.getPercent(videoId, "key", cnt)
+                    #
+                    for subT in models.Timestamp.objects.filter(id = videoId).filter(subtitle__contains = searchText).values_list('subtitle', flat=True):
+                        if(searchText in subT):
+                            self.rankcount["subtitle"] += 5
+                        else:
+                            self.rankcount["subtitle"] += 0
+                        
+                    cnt = self.rankcount["subtitle"]
+                    indexPerc += self.getPercent(videoId, "subtitle", cnt)
+
+                keywordPerc = keywordPerc/len(searchTexts)
+                indexPerc = indexPerc/len(searchTexts)
+
+                if keywordPerc > indexPerc:
+                    alpha = (100 - keywordPerc)/100.0
+                    indexPerc = alpha * indexPerc
+                else :
+                    alpha = (100 - indexPerc)/100.0
+                    keywordPerc = alpha * keywordPerc
+                percentDic['keyword'] = round(keywordPerc + indexPerc,2)
+
+            # else의 계산
+            
+            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            print(percentDic)
+
+            perc = self.getWeight(percentDic)
+            print(perc)
+
+            # 순서: title, presenter, keyword, total
+            self.rankDetail['title'] = percentDic['title']
+            self.rankDetail['present'] = percentDic['present']
+            self.rankDetail['keyword'] = percentDic['keyword']
+            self.rankDetail.append(perc)
+            
+            #return(sum(self.rankcount.values()), self.rankDetail)
+            return(float(perc), self.rankDetail)
 
 
     def getVideoMetadataFromID(self, videoId):
@@ -260,11 +398,28 @@ class Total:
         
 
 #searchTexts = ["황기", "메모리"]   
-def search(searchTexts):
+def search(All, T, K, P):
+    # searchTexts로 저장
+    searchTexts = []
+    if All != None:
+        for i in All:
+            searchTexts.append(i)
+    else:
+        if T != None:
+            for i in T:
+                searchTexts.append(i)
+        if K != None:
+            for i in K:
+                searchTexts.append(i)
+        if P != None:
+            for i in P:
+                searchTexts.append(i)
+
     a = Total()
     a.resultVideoIDList = set() # 두번째를 위해 초기화
     a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
-
+    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+    print(a.resultVideoIDList)
     #resultVideoIDList
     searchResultMeta = []
 
@@ -278,7 +433,7 @@ def search(searchTexts):
             #print(i) #id
             # a.getrank(searchTexts,i) #해당 videoId의 정확도
             a.rankDetail = [] #초기화
-            rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
+            rankDict[i], a.detail[i] = a.getrank(i, All=All,T=T,K=K,P=P)
             tttt[i] = a.detail[i]
 
 

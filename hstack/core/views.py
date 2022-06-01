@@ -103,7 +103,6 @@ def uploadFile(request):
                         
     return render(request, renderAppName + '/upload.html') 
 
-
 # 업로드 후 ~ User 확인 전의 영상 목록들
 def uploadLists(request):
     if request.method == "GET":
@@ -280,7 +279,11 @@ def success(request, pk):
 def searchFile(request):
     if request.method == "GET":
         word = request.GET["searchText"]
-        if word == "":
+        title = request.GET['searchTextTitle']
+        keyword = request.GET['searchTextKeyword']
+        presenter = request.GET['searchTextPresenter']
+
+        if word == "" and title == "" and keyword == "" and presenter == "":
             return render(request, renderAppName + '/search.html',
                 context={
                     'code': 404,
@@ -292,6 +295,32 @@ def searchFile(request):
             words = re.split(r'[ ,:]', word)
             for item in words:
                 if item != "": searchWords.append(item)
+            if len(searchWords) == 0:
+                searchWords = None
+
+            searchTitles = []
+            words = re.split(r'[ ,:]', title)
+            for item in words:
+                if item != "": searchTitles.append(item)
+            if len(searchTitles) == 0:
+                searchTitles = None
+
+            searchPresenters = []
+            words = re.split(r'[ ,:]', presenter)
+            for item in words:
+                if item != "": searchPresenters.append(item)
+            if len(searchPresenters) == 0:
+                searchPresenters = None
+
+            searchKeywords = []
+            words = re.split(r'[ ,:]', keyword)
+            for item in words:
+                if item != "": searchKeywords.append(item)
+            if len(searchKeywords) == 0:
+                searchKeywords = None
+
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            print(searchWords, searchTitles, searchPresenters, searchKeywords)
 
             videoMetaList = []
             videoIdList = {}
@@ -300,16 +329,16 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(searchWords)
+            #videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=None, T=['운영체제'], P=['황기태'], K=['커널'])
 
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
                 rankDict['title'] = rankData[j][0]
                 rankDict['presenter'] = rankData[j][1]
-                rankDict['index'] = rankData[j][2]
-                rankDict['keyword'] = rankData[j][3]
-                rankDict['total'] = rankData[j][4]
+                rankDict['keyword'] = rankData[j][2]
+                rankDict['total'] = rankData[j][3]
                 rankList.append(rankDict)
             
             #print(rankList)

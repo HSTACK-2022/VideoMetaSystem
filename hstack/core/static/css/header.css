@@ -126,24 +126,57 @@ header {
 
 #searchBar{
     margin: 50px;
-
+    min-width: 350px;
 }
 
-.searchInput[type=text] {
-    font-family: 'pre2';
+#searchBarTable{
     width: 70%;
-    vertical-align: middle;
-
-    
-    height: 30px;
+    height: 100%;
+    min-width: 300px;
     border: none;
     border-radius: 10px;
     box-shadow: 0 0 0 1pt rgb(118,118,118);
     outline: none;
     text-indent: 1em;
+    display: inline-block;
+}
 
-    /* margin-top: 10px; */
-    
+.searchNameHidden {
+    width: 60px;
+    height: 100%;
+    background-color: transparent;
+    font-size: 16px;
+    text-align: left;
+}
+
+.searchInput[type=button] {
+    background-color: transparent;
+    border: none;
+}
+
+.searchInputHidden[type=text] {
+    font-family: 'pre2';
+    width: 85%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    display: inline-block;
+    padding: 5px 15px;
+    margin: 3px 0px;
+    border-radius: 20px;
+    border: 1px solid gray;
+}
+
+
+.searchInput[type=text] {
+    font-family: 'pre2';
+    width: 85%;
+    vertical-align: middle;
+    height: 30px;
+    border: none;
+    outline: none;
+    text-indent: 1em;
 }
 
 .searchInput2[type=submit] {
@@ -160,8 +193,6 @@ header {
     cursor: pointer;
     outline: none;
     border: none;
-   
-    
 }
 
 #logo {
