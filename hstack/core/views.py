@@ -1,3 +1,4 @@
+from ast import keyword
 import os
 import re
 import platform
@@ -322,9 +323,6 @@ def searchFile(request):
             if len(searchPresenters) == 0:
                 searchPresenters = None
 
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            print(searchWords, searchTitles, searchPresenters, searchKeywords)
-
             videoMetaList = []
             videoIdList = {}
             rankData = {}
@@ -361,12 +359,19 @@ def searchFile(request):
                         'videoMetaList' : videoMetaList,
                         'videoIdList' : videoIdList,
                         'searchWord' : word,
+                        'searchWordDetailTitle': title,
+                        'searchWordDetailKeyword': keyword,
+                        'searchWordDetailPresenter': presenter,
                         'rankData': rankList,
                     })
 
 # category detail search
 def detailSearch(request):
     word = request.POST['searchWord']
+    title = request.POST['searchWordTitle']
+    keyword = request.POST['searchWordKeyword']
+    presenter = request.POST['searchWordPresenter']
+
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category , method, narrative
     search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
@@ -379,15 +384,49 @@ def detailSearch(request):
     #word = word.replace(" ", "") # 공백 제거
     #word = word.replace("'", "") # 작은 따옴표 제거
     #word = word.split(',')
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print(word)
+    print(title)
+    print(keyword)
+    print(presenter)
+
     searchWords = []
     words = re.split(r'[ ,:]', word)
     for item in words:
         if item != "": searchWords.append(item)
+    searchTitles = None
+    searchKeywords = None
+    searchPresenters = None
+
+    if title!="" or keyword!="" or presenter!="":
+        searchWords = None
+
+        searchTitles = []
+        words = re.split(r'[ ,:]', title)
+        for item in words:
+            if item != "": searchTitles.append(item)
+        if len(searchTitles) == 0:
+            searchTitles = None
+
+        searchKeywords = []
+        words = re.split(r'[ ,:]', keyword)
+        for item in words:
+            if item != "": searchKeywords.append(item)
+        if len(searchKeywords) == 0:
+            searchKeywords = None
+
+        searchPresenters = []
+        words = re.split(r'[ ,:]', presenter)
+        for item in words:
+            if item != "": searchPresenters.append(item)
+        if len(searchPresenters) == 0:
+            searchPresenters = None
 
     videoMetaList = []
     rankData = {}
     rankList = []
-    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, searchWords)
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
+
 
     print(">>>>>>>>>>>>>>>>>>>")
     print(rankData)
@@ -396,9 +435,8 @@ def detailSearch(request):
         rankDict['id'] = j
         rankDict['title'] = rankData[j][0]
         rankDict['presenter'] = rankData[j][1]
-        rankDict['index'] = rankData[j][2]
-        rankDict['keyword'] = rankData[j][3]
-        rankDict['total'] = rankData[j][4]
+        rankDict['keyword'] = rankData[j][2]
+        rankDict['total'] = rankData[j][3]
         rankList.append(rankDict)
 
     print(type(videoMetaList[0]['id']))
@@ -424,5 +462,8 @@ def detailSearch(request):
                 'videoMetaList' : videoMetaList,
                 'videoIdList' : newVideoIdList,
                 'searchWord' : word,
+                'searchWordDetailTitle': title,
+                'searchWordDetailKeyword': keyword,
+                'searchWordDetailPresenter': presenter,
                 'rankData': rankList,
             })

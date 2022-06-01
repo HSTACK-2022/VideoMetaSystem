@@ -313,8 +313,6 @@ class Total:
             
             return(float(perc), self.rankDetail, isValid)
 
-            
-
 
     def getVideoMetadataFromID(self, videoId):
         # 아래는 단어찾은 비디오 id로 메타데이터 얻는 법
@@ -483,9 +481,25 @@ def search(All, T, K, P):
 
 
 # 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
-def detailSearch(videoIdList, search_type, search_detail_type, searchTexts):
+def detailSearch(videoIdList, search_type, search_detail_type, All, T, K, P):
     searchResultMeta = []
     newVideoIdList = list()
+
+    # searchTexts로 저장
+    searchTexts = []
+    if All != None:
+        for i in All:
+            searchTexts.append(i)
+    else:
+        if T != None:
+            for i in T:
+                searchTexts.append(i)
+        if K != None:
+            for i in K:
+                searchTexts.append(i)
+        if P != None:
+            for i in P:
+                searchTexts.append(i)
     
     for i in videoIdList:
         if models.Videopath.objects.get(id = i).extracted == 1 or models.Videopath.objects.get(id = i).extracted == 2:
@@ -505,8 +519,16 @@ def detailSearch(videoIdList, search_type, search_detail_type, searchTexts):
             #print(i) #id
             # a.getrank(searchTexts,i) #해당 videoId의 정확도
             a.rankDetail = [] #초기화
-            rankDict[i], a.detail[i] = a.getrank(searchTexts,i)
-            tttt[i] = a.detail[i]
+            rank, details, isValid = a.getrank(i, All=All, T=T, K=K, P=P)
+
+            if isValid:
+                rankDict[i] = rank
+                a.detail[i] = details
+                tttt[i] = a.detail[i]
+
+            # perc 값이 0인 경우 유효하지 않은 값이기 때문에 제거해야한다.
+            if not isValid:
+                print("&&&&&&&&&&& NOT VALID &&&&&&&&&&&&&")
 
 
     # for i in rangelist(a.resultVideoIDList):

@@ -11,9 +11,8 @@
             <meta charset="UTF-8">
 
         </head>
-
-        <body class="bodyArea" onload="loadImg('{{ metadata.title }}')">
-            {% include 'core/header.html' %}
+        {% include 'core/header.html' %}
+        <body class="bodyArea" onload="loadImg('{{ metadata.title }}'); onloads();">
             <div class="divParent">
                 <!-- Post content-->
                 <div class="detailHeader">
