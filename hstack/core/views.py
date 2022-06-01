@@ -299,25 +299,28 @@ def searchFile(request):
                 searchWords = None
 
             searchTitles = []
+            word += (title + " ")
             words = re.split(r'[ ,:]', title)
             for item in words:
                 if item != "": searchTitles.append(item)
             if len(searchTitles) == 0:
                 searchTitles = None
 
-            searchPresenters = []
-            words = re.split(r'[ ,:]', presenter)
-            for item in words:
-                if item != "": searchPresenters.append(item)
-            if len(searchPresenters) == 0:
-                searchPresenters = None
-
             searchKeywords = []
+            word += (keyword + " ")
             words = re.split(r'[ ,:]', keyword)
             for item in words:
                 if item != "": searchKeywords.append(item)
             if len(searchKeywords) == 0:
                 searchKeywords = None
+
+            searchPresenters = []
+            word += (presenter + " ")
+            words = re.split(r'[ ,:]', presenter)
+            for item in words:
+                if item != "": searchPresenters.append(item)
+            if len(searchPresenters) == 0:
+                searchPresenters = None
 
             print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             print(searchWords, searchTitles, searchPresenters, searchKeywords)
@@ -329,19 +332,18 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            #videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
-            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=None, T=['운영체제'], P=['황기태'], K=['커널'])
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
 
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
-                rankDict['title'] = rankData[j][0]['title']
-                rankDict['presenter'] = rankData[j][0]['present']
-                rankDict['keyword'] = rankData[j][0]['keyword']
-                rankDict['total'] = rankData[j][1]
+                rankDict['title'] = rankData[j][0]
+                rankDict['presenter'] = rankData[j][1]
+                rankDict['keyword'] = rankData[j][2]
+                rankDict['total'] = rankData[j][3]
                 rankList.append(rankDict)
             
-            #print(rankList)
+            print(rankList)
 
             if not videoIdList :
                 return render(request, renderAppName + '/search.html',

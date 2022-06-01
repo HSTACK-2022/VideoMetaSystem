@@ -131,7 +131,7 @@ class Total:
         elif cnt == 3:
             total = (percentDic['title']*0.4) + (percentDic['present']*0.4) + (percentDic['keyword']*0.2)
 
-        else:
+        elif cnt == 2:
             if exists["K"] == False:
                 total = 100
             else:
@@ -295,18 +295,25 @@ class Total:
             perc = self.getWeight(percentDic)
             print(perc)
 
-            # 순서: title, presenter, keyword, total
-            midResultDic['title'] = percentDic['title']
-            midResultDic['present'] = percentDic['present']
-            midResultDic['keyword'] = percentDic['keyword']
-            self.rankDetail.append(midResultDic)
-            self.rankDetail.append(perc)
+            if perc > 0:
+                isValid = True
+                
+                # 순서: title, presenter, keyword, total
+                self.rankDetail.append(str(percentDic['title']))
+                self.rankDetail.append(str(percentDic['present']))
+                self.rankDetail.append(str(percentDic['keyword']))
+                self.rankDetail.append(perc)
 
-            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-            print(self.rankDetail)
+                print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                print(self.rankDetail)
+                
+                #return(sum(self.rankcount.values()), self.rankDetail)
+            else:
+                isValid = False
             
-            #return(sum(self.rankcount.values()), self.rankDetail)
-            return(float(perc), self.rankDetail)
+            return(float(perc), self.rankDetail, isValid)
+
+            
 
 
     def getVideoMetadataFromID(self, videoId):
@@ -440,8 +447,17 @@ def search(All, T, K, P):
             #print(i) #id
             # a.getrank(searchTexts,i) #해당 videoId의 정확도
             a.rankDetail = [] #초기화
-            rankDict[i], a.detail[i] = a.getrank(i, All=All, T=T, K=K, P=P)
-            tttt[i] = a.detail[i]
+            #rankDict[i], a.detail[i], isValid = a.getrank(i, All=All, T=T, K=K, P=P)
+            rank, details, isValid = a.getrank(i, All=All, T=T, K=K, P=P)
+
+            if isValid:
+                rankDict[i] = rank
+                a.detail[i] = details
+                tttt[i] = a.detail[i]
+
+            # perc 값이 0인 경우 유효하지 않은 값이기 때문에 제거해야한다.
+            if not isValid:
+                print("&&&&&&&&&&& NOT VALID &&&&&&&&&&&&&")
 
 
     # for i in rangelist(a.resultVideoIDList):
