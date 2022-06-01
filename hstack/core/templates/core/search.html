@@ -4,9 +4,10 @@
     <head>
         <title>VMeta - SEARCH {{searchWord}}</title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'css/videoList.css' %}?">
-        <link rel="stylesheet" href="{% static 'css/progressBar.css' %}?after">
+        <link rel="stylesheet" href="{% static 'css/videoList.css' %}">
+        <link rel="stylesheet" href="{% static 'css/progressBar.css' %}">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
         <script>
             function searchDetail(search_type, search_detail_type) {
                 document.getElementById("search_detail_type").value = search_detail_type;
@@ -26,9 +27,10 @@
                 target.checked = true;
             }
             function updateSearchText(){
+                onloads();
                 var searchText = document.getElementById("searchText");
                 var word = '{{searchWord}}';
-                searchText.value = word;
+                //searchText.value = word;
             }
         </script>
     </head>

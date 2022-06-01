@@ -17,7 +17,7 @@
 
     {% include 'core/header.html' %}
 
-    <body class="bodyArea">
+    <body class="bodyArea" onload="loadImg('{{ metadata.title }}')">
         <form name="modify" method="POST" id="form">
         {% csrf_token %}
 
@@ -76,7 +76,8 @@
                     class="videoPlayer"
                     id="video"
                     src="{{videoaddr}}"
-                    controls="controls"></video>
+                    controls="controls"
+                    autoplay muted></video>
 
                 <!--<div>result : {{Metadata}}</div>-->
                 <div class="box">
@@ -329,12 +330,15 @@
                             <li id="tab4" class="btnCon">
                                 <a class="btn third" href="#tab4">Images</a>
                                 <div class="tabCon">
+                                <!--
                                 <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
                                     <img id="down" src="{% static 'img/download.png' %}">
                                     <br>
                                     <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">장면</span><br>
-                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">저장</span>
+                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">저장</span><br>
+                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">(jpg)</span>
                                 </button>
+                                -->
                                     
                                     <div class="searchScroll">
                                         <div class="metadataTR2">

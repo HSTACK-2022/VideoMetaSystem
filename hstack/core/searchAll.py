@@ -151,7 +151,7 @@ class Total:
         percSum = 0
 
         searchTexts = []
-        if All != "*":  # 전체 검색을 한 경우
+        if All != None:  # 전체 검색을 한 경우
             for i in All: # searchTexts는 All만
                 searchTexts.append(i)
                 percentDicRes = self.getPercentDic(searchTexts, videoId)
@@ -224,7 +224,7 @@ class Total:
             return(float(perc), self.rankDetail)
 
         else:
-            if T != "*":
+            if T != None:
                 for i in T:
                     searchTexts.append(i)
                 for searchText in searchTexts:
@@ -235,7 +235,7 @@ class Total:
                         percentDic['title'] = self.getPercent(videoId, "title", 100)
 
             searchTexts = []
-            if P != "*":
+            if P != None:
                 for i in P:
                     searchTexts.append(i)
                 for searchText in searchTexts:
@@ -243,7 +243,7 @@ class Total:
                         percentDic['present'] = self.getPercent(videoId, "present", 100)
 
             searchTexts = []
-            if K != "*":
+            if K != None:
                 keywordPerc = 0
                 indexPerc = 0
                 for i in K:
@@ -398,26 +398,23 @@ class Total:
         
 
 #searchTexts = ["황기", "메모리"]   
-def search(All="*",T="*",K="*",P="*"):
+def search(All, T, K, P):
     # searchTexts로 저장
     searchTexts = []
-    if All != "*":
+    if All != None:
         for i in All:
             searchTexts.append(i)
     else:
-        if T != "*":
+        if T != None:
             for i in T:
                 searchTexts.append(i)
-        if K != "*":
+        if K != None:
             for i in K:
                 searchTexts.append(i)
-        if P != "*":
+        if P != None:
             for i in P:
                 searchTexts.append(i)
 
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-    print(All,T,K,P)
-    print(searchTexts)
     a = Total()
     a.resultVideoIDList = set() # 두번째를 위해 초기화
     a.searchWordFromDB(searchTexts) # 찾고자 하는 단어를 가진 메타데이터 비디오id를 (resultVideoIDList) set으로 가져옴
