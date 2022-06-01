@@ -95,7 +95,7 @@ def uploadFile(request):
             if OS == 'Windows':
                 videoPath4Play = "..\\..\\..\\media" + videopath.split("media")[1]
             else:
-                videoPath4Play = "../../../media" + videopath.split("media")[1]
+                videoPath4Play = "../../../media" + videopath.split("media")[2]
             print(videoPath4Play)
 
             extractMetadata.extractMetadata(videoId)
@@ -184,7 +184,7 @@ def detailFile(request, pk):
     if OS == 'Windows':
         videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
     else:
-        videoPath4Play = "../../../media" + videoPath.split("media")[1]
+        videoPath4Play = "../../../media" + videoPath.split("media")[2]
     
     textPath = models.Videopath.objects.get(id = pk).textaddr
     try:
@@ -251,7 +251,7 @@ def success(request, pk):
     if OS == 'Windows':
         videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
     else:
-        videoPath4Play = "../../../media" + videoPath.split("media")[1]
+        videoPath4Play = "../../../media" + videoPath.split("media")[2]
     
     textPath = models.Videopath.objects.get(id = pk).textaddr
     try:

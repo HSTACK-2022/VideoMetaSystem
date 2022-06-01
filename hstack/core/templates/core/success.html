@@ -12,12 +12,13 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
         <link rel="stylesheet" href="{% static 'css/tab3.css' %}">
+        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
         <!-- submit check -->
     </head>
 
     {% include 'core/header.html' %}
 
-    <body class="bodyArea" onload="loadImg('{{ metadata.title }}')">
+    <body class="bodyArea" onload="loadImg('{{ metadata.title }}'); onloads();">
         <form name="modify" method="POST" id="form">
         {% csrf_token %}
 

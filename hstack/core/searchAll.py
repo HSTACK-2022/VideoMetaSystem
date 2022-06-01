@@ -344,7 +344,7 @@ class Total:
         if OS == 'Windows':
             filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
         else :
-            filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+            filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[2]
 
         count = 0
         for file in os.listdir(models.Videopath.objects.get(id = videoId).imageaddr):
@@ -394,7 +394,7 @@ class Total:
                 if OS == 'Windows':
                     filePath = "\\media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
                 else :
-                    filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[1]
+                    filePath = "/media" + models.Videopath.objects.get(id = videoId).imageaddr.split('media')[2]
                     
                 fileName = os.listdir(models.Videopath.objects.get(id = videoId).imageaddr)[0]
                 finalDict['thumbnail'] = os.path.join(filePath, fileName)
