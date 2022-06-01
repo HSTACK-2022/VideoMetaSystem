@@ -135,7 +135,7 @@ def audio2text(audioFilePath, i):
 
 # Contents와 FilePath를 주면 파일에 적어서 뱉는다.
 def content2file(contents, filePath, isFirst):
-    f = open(filePath, "a", encoding="UTF-8")
+    f = open(filePath, "a", encoding="UTF-8-sig")
     	
     try:
         # 이미 열려있던 파일이면 개행 후 시작하자.
@@ -212,7 +212,7 @@ def sttAsync(audioPath, endNum):
     resultVector.append(result_4)
 
     try :
-        for i in range(0, 4):
+        for i in range(0, 5):
             th = threading.Thread(target=threadWork, args=([i]))
             th.start()
             threads.append(th)

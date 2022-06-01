@@ -29,7 +29,7 @@
 # 2. mergeKeyword(audioScriptPath, NULL, NULL)
 
 # 테스트 위한 변수
-min_count = 3   # 단어의 최소 출현 빈도수 (그래프 생성 시)
+min_count = 2   # 단어의 최소 출현 빈도수 (그래프 생성 시)
 max_length = 10 # 단어의 최대 길이
 #audioScriptPath = '../cache/algoWithEnter.txt'
 #videoScriptPath = '../cache/mytxt2.txt'
@@ -125,17 +125,23 @@ def mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath):
     print("audioScriptKeyword >> "+' '.join(audioScriptKeyword))
     set1 = set(audioScriptKeyword)
 
+    # check is videoScriptPath valid
+    content = ""
+    if (videoScriptPath != None):
+        content = open(videoScriptPath, 'r', encoding="utf-8-sig").readline().split("\n")[0]
+        print(content == "")
 
-    if (videoScriptPath!=None and videoIndexScriptKeyword!=None):
+    if (videoScriptPath!=None and videoIndexScriptKeyword!=None and content != ""):
         videoScriptKeyword = getKeyword(videoScriptPath,min_count,max_length)
-        videoIndexScriptKeyword = getKeyword(videoIndexScriptPath,min_count,max_length)
         print("videoScriptKeyword >> "+' '.join(videoScriptKeyword))
-        print("videoIndexScriptKeyword >> "+' '.join(videoIndexScriptKeyword))
+        #videoIndexScriptKeyword = getKeyword(videoIndexScriptPath,min_count,max_length)
+        #print("videoIndexScriptKeyword >> "+' '.join(videoIndexScriptKeyword))
         set2 = set(videoScriptKeyword)
-        set1Inter2 = set1.intersection(set2)
+        set1Inter2 = set1.union(set2)
+        return (list(set1Inter2))
 
-        set3 = set(videoIndexScriptKeyword)
-        return (list(set3.union(set1Inter2)))
+        #set3 = set(videoIndexScriptKeyword)
+        #return (list(set3.union(set1Inter2)))
     
     return list(set1)
 
