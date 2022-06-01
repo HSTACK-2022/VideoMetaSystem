@@ -4,7 +4,7 @@
     <head>
         {% for metadata in metadatas %}
             <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
-            <link rel="stylesheet" href="{% static 'css/tab3.css' %}">
+            <link rel="stylesheet" href="{% static 'css/tab3.css' %}?after">
             <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
             <title>VMeta - {{metadata.title}}
             </title>
@@ -185,13 +185,22 @@
                             <li id="tab4" class="btnCon">
                                 <a class="btn third" href="#tab4">Images</a>
                                 <div class="tabCon">
-                                <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
-                                    <img id="down" src="{% static 'img/download.png' %}">
-                                    <br>
-                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">장면</span><br>
-                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">저장</span><br>
-                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">(jpg)</span>
-                                </button>
+                                    <div class="donwloadBtns">
+                                        <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
+                                            <img id="down" src="{% static 'img/download.png' %}">
+                                            <br>
+                                            <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">장면</span><br>
+                                            <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">저장</span><br>
+                                            <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">(jpg)</span>
+                                        </button>
+                                        <button id="downloadImg" type="button" onclick="downloadPPT('{{ pptFile }}')">
+                                            <img id="down" src="{% static 'img/download.png' %}">
+                                            <br>
+                                            <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">장면</span><br>
+                                            <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">저장</span><br>
+                                            <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">(ppt)</span>
+                                        </button>
+                                    </div>
                                     
                                     <div class="searchScroll">
                                         <div class="metadataTR2">
@@ -215,7 +224,7 @@
             <script type="text/javascript" src="{% static 'js/jszip/jszip.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'js/jszip/jszip-utils.min.js' %}"></script>
             <script type="text/javascript" src="{% static 'js/jszip/jszip-utils-ie.min.js' %}"></script>
-            <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
+            <script type="text/javascript" src="{% static 'js/videoAction.js' %}?after"></script>
             
             <script>
                 location.href = "#tab1";

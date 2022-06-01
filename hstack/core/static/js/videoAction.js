@@ -130,3 +130,13 @@ function downloadImg(folderName){
         }
     );
 }
+
+function downloadPPT(filepath){
+    var testdiv = document.getElementById("testdiv");
+    var element = document.createElement('a');
+    element.setAttribute('href', filepath);
+    element.setAttribute('download', filepath);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}

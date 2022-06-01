@@ -106,39 +106,43 @@ class Total:
             print(percentDic)
             return percentDic
 
-    def getWeight(self, percentDic):
+    def getWeight(self, percentDic, count):
         total = 0
-        # 1. 하나만 있는 경우??
-        cnt = 0
-        exists = {"T":False, "P":False, "K":False}
-        
-        if percentDic['title'] != 0:
-            cnt += 1
-            exists["T"] = True
-
-        if percentDic['present'] != 0:
-            cnt += 1
-            exists["P"] = True
-        
-        if percentDic['keyword'] != 0:
-            cnt += 1
-            exists["K"] = True
-
-        # 1개만 있으면 걔가 total
-        if cnt == 1:
+        if count == 1:
             total = percentDic['title'] + percentDic['present'] + percentDic['keyword']
 
-        elif cnt == 3:
-            total = (percentDic['title']*0.4) + (percentDic['present']*0.4) + (percentDic['keyword']*0.2)
+        elif count == 2: # 주어진 세부사항이 2가지인 경우
+            if percentDic['keyword']==0:    
+                total = (percentDic['title'] + percentDic['present']) * 0.5
+            elif percentDic['title'] == 0:
+                if percentDic['present'] != 0:  # keyword와 presenter가 나온 경우
+                    total = (percentDic['present']* 0.6 + percentDic['keyword']* 0.4)
+                else:   # keyword만 나온 경우 (keyword가 50% 이상/이하 경우 나눔)
+                    if percentDic['keyword']<50:
+                        total = percentDic['keyword']* 0.9
+                    else:
+                        total = percentDic['keyword']
+            else:   # title과 keyword만 나온 경우
+                total = (percentDic['title']* 0.6 + percentDic['keyword']* 0.4)
 
-        elif cnt == 2:
-            if exists["K"] == False:
-                total = 100
+        elif count == 3:    # 주어진 세부사항이 3가지인 경우
+            if percentDic['title']==0: # keyword만/ presenter만/ keyword와 presenter만 나온 경우
+                if percentDic['present']==0:    # keyword만 값이 나온 경우
+                    total = (percentDic['keyword']*0.6)
+                elif percentDic['keyword']==0:    # presenter만 값이 나온 경우
+                    total = (percentDic['present']*0.6)
+                else:    # keyword와 presenter만 값이 나온 경우
+                    total = (percentDic['present']*0.5) + (percentDic['keyword']*0.25)
+            elif percentDic['present']==0: # title만/ keyword와 title만 나온 경우
+                if percentDic['keyword']==0:    # title만 값이 나온 경우
+                    total = (percentDic['title']*0.6)
+                else:   # keyword와 title만 값이 나온 경우
+                    total = (percentDic['title']*0.5) + (percentDic['keyword']*0.25)
+            elif percentDic['keyword']==0:
+                total = (percentDic['title']*0.37) + (percentDic['present']*0.37)
+
             else:
-                if exists["T"] == True: # T와 K가 있는 경우
-                    total = (percentDic['title']*0.8) + (percentDic['keyword']*0.2)
-                else: # P와 K가 있는 경우
-                    total = (percentDic['present']*0.8) + (percentDic['keyword']*0.2)
+                total = (percentDic['title']*0.4) + (percentDic['present']*0.4) + (percentDic['keyword']*0.2)
 
         return round(total, 2)
 
@@ -224,7 +228,9 @@ class Total:
             return(float(perc), self.rankDetail, True)
 
         else:
+            count = 0
             if T != None:
+                count += 1
                 for i in T:
                     searchTexts.append(i)
                 for searchText in searchTexts:
@@ -236,6 +242,7 @@ class Total:
 
             searchTexts = []
             if P != None:
+                count += 1
                 for i in P:
                     searchTexts.append(i)
                 for searchText in searchTexts:
@@ -247,6 +254,7 @@ class Total:
 
             searchTexts = []
             if K != None:
+                count += 1
                 keywordPerc = 0
                 indexPerc = 0
                 for i in K:
@@ -292,7 +300,7 @@ class Total:
             print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             print(percentDic)
 
-            perc = self.getWeight(percentDic)
+            perc = self.getWeight(percentDic, count)
             print(perc)
 
             if perc > 0:
@@ -312,7 +320,6 @@ class Total:
                 isValid = False
             
             return(float(perc), self.rankDetail, isValid)
-
 
     def getVideoMetadataFromID(self, videoId):
         # 아래는 단어찾은 비디오 id로 메타데이터 얻는 법
@@ -408,7 +415,6 @@ class Total:
 
         return finalDict
         
-
 #searchTexts = ["황기", "메모리"]   
 def search(All, T, K, P):
     # searchTexts로 저장

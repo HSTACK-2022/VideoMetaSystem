@@ -10,7 +10,6 @@ from numpy import extract
 from core.opencvService import getPPTImage
 
 from . import models
-from .models import Post, Category
 
 from django import forms
 from django.db.models import Q
@@ -28,6 +27,7 @@ from django.db.models import Q
 from urllib import response
 from urllib.parse import urlparse
 
+from core import makePPT
 from core import searchAll
 from core import extractMetadata
 
@@ -201,6 +201,9 @@ def detailFile(request, pk):
     # 이미지 받아오기
     pptImage = getPPTImage(pk)
 
+    # PPT 파일 받아오기
+    pptFile = makePPT.getPPTFile(pk)
+
     return render(
         request,
         renderAppName + '/detail.html',
@@ -208,6 +211,7 @@ def detailFile(request, pk):
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
             'images' : pptImage,
+            'pptFile' : pptFile,
             'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
