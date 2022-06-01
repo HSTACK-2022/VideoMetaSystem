@@ -335,10 +335,10 @@ def searchFile(request):
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
-                rankDict['title'] = rankData[j][0]
-                rankDict['presenter'] = rankData[j][1]
-                rankDict['keyword'] = rankData[j][2]
-                rankDict['total'] = rankData[j][3]
+                rankDict['title'] = rankData[j][0]['title']
+                rankDict['presenter'] = rankData[j][0]['present']
+                rankDict['keyword'] = rankData[j][0]['keyword']
+                rankDict['total'] = rankData[j][1]
                 rankList.append(rankDict)
             
             #print(rankList)

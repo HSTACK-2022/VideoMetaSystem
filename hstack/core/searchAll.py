@@ -140,7 +140,7 @@ class Total:
                 else: # P와 K가 있는 경우
                     total = (percentDic['present']*0.8) + (percentDic['keyword']*0.2)
 
-        return total
+        return round(total, 2)
 
      # 입력 값 일치율대로 점수 부여 & 디테일 리스트 추가
     def getrank(self, videoId, All, T, K, P): #ranking algo
@@ -228,10 +228,10 @@ class Total:
                 for i in T:
                     searchTexts.append(i)
                 for searchText in searchTexts:
-                    keywordQ = Q()
-                    keywordQ &= Q(id = videoId)
-                    keywordQ &= Q(title__contains = searchText)
-                    if models.Metadata.objects.filter(keywordQ).exists():
+                    titleQ = Q()
+                    titleQ &= Q(id = videoId)
+                    titleQ &= Q(title__contains = searchText)
+                    if models.Metadata.objects.filter(titleQ).exists():
                         percentDic['title'] = self.getPercent(videoId, "title", 100)
 
             searchTexts = []
@@ -239,7 +239,10 @@ class Total:
                 for i in P:
                     searchTexts.append(i)
                 for searchText in searchTexts:
-                    if models.Metadata.objects.filter(id = videoId).filter(presenter__contains = searchText).exists():
+                    presentQ = Q()
+                    presentQ &= Q(id = videoId)
+                    presentQ &= Q(presenter__contains = searchText)
+                    if models.Metadata.objects.filter(presentQ).exists():
                         percentDic['present'] = self.getPercent(videoId, "present", 100)
 
             searchTexts = []
@@ -293,10 +296,14 @@ class Total:
             print(perc)
 
             # 순서: title, presenter, keyword, total
-            self.rankDetail['title'] = percentDic['title']
-            self.rankDetail['present'] = percentDic['present']
-            self.rankDetail['keyword'] = percentDic['keyword']
+            midResultDic['title'] = percentDic['title']
+            midResultDic['present'] = percentDic['present']
+            midResultDic['keyword'] = percentDic['keyword']
+            self.rankDetail.append(midResultDic)
             self.rankDetail.append(perc)
+
+            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            print(self.rankDetail)
             
             #return(sum(self.rankcount.values()), self.rankDetail)
             return(float(perc), self.rankDetail)
@@ -433,7 +440,7 @@ def search(All, T, K, P):
             #print(i) #id
             # a.getrank(searchTexts,i) #해당 videoId의 정확도
             a.rankDetail = [] #초기화
-            rankDict[i], a.detail[i] = a.getrank(i, All=All,T=T,K=K,P=P)
+            rankDict[i], a.detail[i] = a.getrank(i, All=All, T=T, K=K, P=P)
             tttt[i] = a.detail[i]
 
 
