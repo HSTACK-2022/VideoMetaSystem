@@ -6,6 +6,16 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 ---
 <br/>
 
+## 📷 소개 영상
+
+하단 이미지를 클릭하시면 영상을 시청하실 수 있습니다:)
+
+[<img src="https://user-images.githubusercontent.com/73868349/171586152-85d907ca-51e4-4186-998c-c3c808e651e2.jpg" alt="VMeta"
+ width = "480" height="270" />](https://youtu.be/-k8TcLdf65s)
+
+---
+<br/>
+
 ## 📌 작품 소개
 
 ```
