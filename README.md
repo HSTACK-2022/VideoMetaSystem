@@ -50,7 +50,14 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 <br/>
 
 ## ⚙️ 시스템 구조
+
+### 전체 구조
+
    ![sysArch](./report/img/arch.jpg)
+
+### Ranking 알고리즘
+
+   ![rankingAlgo](./report/img/weightTable.jpg)
     
 <br/>
 <br/>
