@@ -135,7 +135,7 @@ def audio2text(audioFilePath, i):
 
 # Contents와 FilePath를 주면 파일에 적어서 뱉는다.
 def content2file(contents, filePath, isFirst):
-    f = open(filePath, "a", encoding="UTF-8-sig")
+    f = open(filePath, "a", encoding="UTF-8")
     	
     try:
         # 이미 열려있던 파일이면 개행 후 시작하자.
@@ -244,11 +244,16 @@ def resultFileWrite(textPath, endNum):
             for i in range (0,5):
                 if i==0 and j==0:
                     #sttService.content2file(str((5 * j) + i) + "\n" + resultVector[i][j], filePath, True)
+                    print("##########################################")
+                    print("##########################################")
+                    print("##########################################")
+                    print("##########################################")
                     content2file(resultVector[i][j], textPath, True)
                     continue
                 elif(j>len(resultVector[i])-1):
                     continue
                 #sttService.content2file(str((5 * j) + i) + "\n" + resultVector[i][j], filePath, False)
+                print("##########################################55555555")
                 content2file(resultVector[i][j], textPath, False)
 
         # 저장 후 기존 Vector clear
