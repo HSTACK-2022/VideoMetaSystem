@@ -10,7 +10,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 
 ### 2022 한성대학교 컴퓨터공학부 캡스톤디자인 작품 발표회
 
-| ![금상](./report/img/award.jpg) |
+| <img src=./report/img/award.jpg alt="GOLD" width = "500" /> |
 | --- |
 | 모바일부문 최우수상 (1위) |
 
@@ -85,7 +85,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 
 ### Ranking 알고리즘
 
-   ![rankingAlgo](./report/img/rankingWeightTable.jpg)
+   <img src=./report/img/rankingWeightTable.jpg alt="rankingAlgo" width = "500" /> 
     
 <br/>
 <br/>
