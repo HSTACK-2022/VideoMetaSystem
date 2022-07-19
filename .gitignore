@@ -253,3 +253,8 @@ hstack/tensorflow/AudioDetect/data
 hstack/tensorflow/ImageSeperate/train/
 hstack/tensorflow/ImageSeperate/validation/
 hstack/secrets.json
+
+#FLASK
+FLASK/venv
+FLASK/hstack/__pycache__
+FLASK/hstack/migrations
