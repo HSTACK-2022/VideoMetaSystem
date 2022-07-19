@@ -6,6 +6,8 @@ from unicodedata import category
 from asgiref.sync import sync_to_async
 from numpy import extract
 
+from core.opencvService import getPPTImage
+
 from . import models
 from .models import Post, Category
 
@@ -34,7 +36,7 @@ renderAppName = "Core" if OS == 'Windows' else 'core'
 
 # for backend.
 def home(request):
-    return render(request, renderAppName + '/test_home.html') 
+    return render(request, renderAppName + '/home.html') 
 
 # video(file) upload
 def uploadFile(request):
@@ -54,7 +56,7 @@ def uploadFile(request):
             uploadedFile = request.FILES["videoFile"]
 
         if existError:
-            return render(request, renderAppName + '/test_upload.html', context={"error" : existError}) 
+            return render(request, renderAppName + '/upload.html', context={"error" : existError}) 
 
         # Fetching the form data
         # Saving the information in the database
@@ -99,33 +101,83 @@ def uploadFile(request):
 
             return redirect('Core:home')
                         
-    return render(request, renderAppName + '/test_upload.html') 
+    return render(request, renderAppName + '/upload.html') 
 
 # 업로드 후 ~ User 확인 전의 영상 목록들
 def uploadLists(request):
-    videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
-    categoryList = searchAll.extractCategories(videoIdList)
-    videoMetaList = list()
-    for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
-        videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+    if request.method == "GET":
+        videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
+        categoryList = searchAll.extractCategories(videoIdList)
+        typeList = searchAll.extractType(videoIdList)
+        dataList = searchAll.extractData(videoIdList) 
+        videoMetaList = list()
+        for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
+            videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
 
-    print("********************")
-    print(videoIdList)
-    print(categoryList)
-    print(videoMetaList)
-    
-    if not videoIdList :
-        return render(request, renderAppName + '/test_uploadLists.html', context={'code' : 404})
-    else :
-        return render(request, renderAppName + '/test_uploadLists.html',
-            context={
-                'code' : 200,
-                'categoryList' : categoryList,
-                'videoMetaList' : videoMetaList,
-                'videoIdList' : videoIdList,
-            })
+        print("********************")
+        print(videoIdList)
+        print(categoryList)
+        print(videoMetaList)
+        
+        if not videoIdList :
+            return render(request, renderAppName + '/uploadLists.html', context={'code' : 404})
+        else :
+            return render(request, renderAppName + '/uploadLists.html',
+                context={
+                    'code' : 200,
+                    'categoryList' : categoryList,
+                    "typeList" : typeList,
+                    "dataList" : dataList,
+                    'videoMetaList' : videoMetaList,
+                    'videoIdList' : videoIdList,
+                })
+    else:
+        # POST인 경우에는 Category, Type, Method 등 필터가 있다.
+        # 현재 videoIdList를 받아 필터링 후 return
+        stringvideoIdList = request.POST['videoIdList']
+        search_type = request.POST['search_type']   # category, method, narrative
+        search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
 
-# 각 영상의 상세페이지 (/test/detail/pk)
+        # 첫 filtering은 Queryset으로 온다. <Queryset ~~~ > 에서 ~~~만 나오도록. 흡사 list 출력 형태.
+        if stringvideoIdList.startswith("<QuerySet"):
+            videoIdList = stringvideoIdList[10:-1]
+        else:
+            videoIdList = stringvideoIdList
+
+        videoIdList = re.split(r'[ \[\],\']', videoIdList)
+        newVideoIdList = list()
+
+        for videoId in videoIdList:
+            if videoId != "":
+                filterQ = Q()
+                filterQ &= Q(id = videoId)
+                if search_type == "category" :  filterQ &= Q(category__contains = search_detail_type)
+                if search_type == "narrative" : filterQ &= Q(narrative = search_detail_type)
+                if search_type == "method" :    filterQ &= Q(method = search_detail_type)
+                if (not not models.Metadata.objects.filter(filterQ)) :
+                    newVideoIdList.append(videoId)
+
+        categoryList = searchAll.extractCategories(newVideoIdList)
+        typeList = searchAll.extractType(newVideoIdList)
+        dataList = searchAll.extractData(newVideoIdList) 
+        newVideoMetaList = list()
+        for i in newVideoIdList:         # (newVideoIdList)에 저장되어 있는 id로 메타데이터 가져옴
+            newVideoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+
+        if not newVideoIdList :
+            return render(request, renderAppName + '/uploadLists.html', context={'code' : 404})
+        else :
+            return render(request, renderAppName + '/uploadLists.html',
+                context={
+                    'code' : 200,
+                    'categoryList' : categoryList,
+                    "typeList" : typeList,
+                    "dataList" : dataList,
+                    'videoMetaList' : newVideoMetaList,
+                    'videoIdList' : newVideoIdList,
+                })
+
+# 각 영상의 상세페이지 (/detail/pk)
 def detailFile(request, pk):
     videoPath = models.Videopath.objects.get(id = pk).videoaddr
     if OS == 'Windows':
@@ -145,19 +197,23 @@ def detailFile(request, pk):
     keywordQ &= Q(id = pk)
     keywordQ &= Q(expose=True)
 
+    # 이미지 받아오기
+    pptImage = getPPTImage(pk)
+
     return render(
         request,
-        renderAppName + '/test_detail.html',
+        renderAppName + '/detail.html',
         {
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
+            'images' : pptImage,
             'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
             'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
         }
     )
 
-# 업로드 완료 된 영상의 상세페이지 (/test/success/pk)
+# 업로드 완료 된 영상의 상세페이지 (/success/pk)
 def success(request, pk):
     if request.method == "POST":
         sysKEList = request.POST.getlist("sysKEList")
@@ -168,7 +224,11 @@ def success(request, pk):
         userKEList = request.POST.getlist("userKEList")
         userKCList = request.POST.getlist("userKCList")
 
-        print(userKEList)
+        
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        print(sysKEList)
+        print(sysKCList)
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 
         for i in range(len(sysKEList)):
             models.Keywords.objects.filter(id = pk).filter(keyword = sysKCList[i], sysdef=1).update(expose=sysKEList[i])
@@ -181,8 +241,6 @@ def success(request, pk):
                 expose = newUserKEList[i],
                 sysdef = 0
             )
-        
-
 
     videoPath = models.Videopath.objects.get(id = pk).videoaddr
     if OS == 'Windows':
@@ -198,13 +256,18 @@ def success(request, pk):
         print(err)
         scripts = []
 
+        
+    # 이미지 받아오기
+    pptImage = getPPTImage(pk)
+
     return render(
         request,
-        renderAppName + '/test_success.html',
+        renderAppName + '/success.html',
         {
             'pk' : pk,
             'videoaddr' : videoPath4Play,
             'scripts' : scripts,
+            'images' : pptImage,
             'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
             'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
             'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
@@ -216,7 +279,11 @@ def success(request, pk):
 def searchFile(request):
     if request.method == "GET":
         word = request.GET["searchText"]
-        if word == "":
+        title = request.GET['searchTextTitle']
+        keyword = request.GET['searchTextKeyword']
+        presenter = request.GET['searchTextPresenter']
+
+        if word == "" and title == "" and keyword == "" and presenter == "":
             return render(request, renderAppName + '/search.html',
                 context={
                     'code': 404,
@@ -228,6 +295,35 @@ def searchFile(request):
             words = re.split(r'[ ,:]', word)
             for item in words:
                 if item != "": searchWords.append(item)
+            if len(searchWords) == 0:
+                searchWords = None
+
+            searchTitles = []
+            word += (title + " ")
+            words = re.split(r'[ ,:]', title)
+            for item in words:
+                if item != "": searchTitles.append(item)
+            if len(searchTitles) == 0:
+                searchTitles = None
+
+            searchKeywords = []
+            word += (keyword + " ")
+            words = re.split(r'[ ,:]', keyword)
+            for item in words:
+                if item != "": searchKeywords.append(item)
+            if len(searchKeywords) == 0:
+                searchKeywords = None
+
+            searchPresenters = []
+            word += (presenter + " ")
+            words = re.split(r'[ ,:]', presenter)
+            for item in words:
+                if item != "": searchPresenters.append(item)
+            if len(searchPresenters) == 0:
+                searchPresenters = None
+
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            print(searchWords, searchTitles, searchPresenters, searchKeywords)
 
             videoMetaList = []
             videoIdList = {}
@@ -236,25 +332,17 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(searchWords)
-
-            #after
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print(videoIdList, videoMetaList, categoryList, typeList, dataList, rankData)
-            # rankData 순서: title, presenter, index, keyword, total
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
 
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
                 rankDict['title'] = rankData[j][0]
                 rankDict['presenter'] = rankData[j][1]
-                rankDict['index'] = rankData[j][2]
-                rankDict['keyword'] = rankData[j][3]
-                rankDict['total'] = rankData[j][4]
+                rankDict['keyword'] = rankData[j][2]
+                rankDict['total'] = rankData[j][3]
                 rankList.append(rankDict)
             
-            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-            print(rankData)
             print(rankList)
 
             if not videoIdList :
@@ -278,35 +366,67 @@ def searchFile(request):
 
 # category detail search
 def detailSearch(request):
-    word = request.POST['searchWord']
+    #word = request.POST['searchWord']
+    word = request.POST["searchText"]
+    title = request.POST['searchTextTitle']
+    keyword = request.POST['searchTextKeyword']
+    presenter = request.POST['searchTextPresenter']
+
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category , method, narrative
     search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
-    #print(stringvideoIdList) # {14, 15, 16, 17, 18}
     videoIdList = stringvideoIdList[1:-1]
     videoIdList = videoIdList.replace(" ", "") # 공백 제거
     videoIdList = videoIdList.replace("'", "") # 작은 따옴표 제거
     videoIdList = videoIdList.split(',')
     newVideoIdList = list()
 
-    word = word.replace(" ", "") # 공백 제거
-    word = word.replace("'", "") # 작은 따옴표 제거
-    word = word.split(',')
+    searchWords = []
+    words = re.split(r'[ ,:]', word)
+    for item in words:
+        if item != "": searchWords.append(item)
+    if len(searchWords) == 0:
+        searchWords = None
+
+    searchTitles = []
+    word += (title + " ")
+    words = re.split(r'[ ,:]', title)
+    for item in words:
+        if item != "": searchTitles.append(item)
+    if len(searchTitles) == 0:
+        searchTitles = None
+
+    searchKeywords = []
+    word += (keyword + " ")
+    words = re.split(r'[ ,:]', keyword)
+    for item in words:
+        if item != "": searchKeywords.append(item)
+    if len(searchKeywords) == 0:
+        searchKeywords = None
+
+    searchPresenters = []
+    word += (presenter + " ")
+    words = re.split(r'[ ,:]', presenter)
+    for item in words:
+        if item != "": searchPresenters.append(item)
+    if len(searchPresenters) == 0:
+        searchPresenters = None
+
+    #word = word.replace(" ", "") # 공백 제거
+    #word = word.replace("'", "") # 작은 따옴표 제거
+    #word = word.split(',')
+    searchWords = []
+    words = re.split(r'[ ,:]', word)
+    for item in words:
+        if item != "": searchWords.append(item)
 
     videoMetaList = []
     rankData = {}
     rankList = []
-    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, word)
-    # for j in videoIdList:
-    #     rank[j] = rankData[j]
-
-    # for video in videoMetaList:
-    #     print("****")
-    #     print(video['thumbnail'])
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
 
     print(">>>>>>>>>>>>>>>>>>>")
     print(rankData)
-    videoIdList = []
     for j in newVideoIdList:
         rankDict = {}
         rankDict['id'] = j
@@ -316,19 +436,29 @@ def detailSearch(request):
         rankDict['keyword'] = rankData[j][3]
         rankDict['total'] = rankData[j][4]
         rankList.append(rankDict)
-        videoIdList.append(int(j))
-        print(type(videoIdList[0]))
+
+    print(type(videoMetaList[0]['id']))
+    print(type(rankList[0]['id']))
+    print(videoMetaList[0]['id'] == rankList[0]['id'])
+    print(videoMetaList[0])
 
     print(rankList)
-        
-    return render(request, renderAppName + '/test_search.html',
-        context={
-            'code' : 200,
-            'videoMetaList' : videoMetaList,
-            'videoIdList' : videoIdList,
-            'categoryList' : categoryList,
-            "typeList" : typeList,
-            "dataList" : dataList,
-            'searchWord' : word,
-            'rankData': rankList,
-        })
+
+    if not videoIdList :
+        return render(request, renderAppName + '/search.html',
+            context={
+                'code' : 404,
+                'searchWord' : word
+            })
+    else :
+        return render(request, renderAppName + '/search.html',
+            context={
+                'code' : 200,
+                'categoryList' : categoryList,
+                "typeList" : typeList,
+                "dataList" : dataList,
+                'videoMetaList' : videoMetaList,
+                'videoIdList' : newVideoIdList,
+                'searchWord' : word,
+                'rankData': rankList,
+            })
