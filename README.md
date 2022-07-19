@@ -10,7 +10,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 
 ### 2022 한성대학교 컴퓨터공학부 캡스톤디자인 작품 발표회
 
-| ![금상](./report/img/award.jpg) |
+| <img src=./report/img/award.jpg alt="GOLD" width = "500" /> |
 | --- |
 | 모바일부문 최우수상 (1위) |
 
@@ -85,7 +85,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 
 ### Ranking 알고리즘
 
-   ![rankingAlgo](./report/img/rankingWeightTable.jpg)
+   <img src=./report/img/rankingWeightTable.jpg alt="rankingAlgo" width = "500" /> 
     
 <br/>
 <br/>
@@ -133,3 +133,17 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 - 본 프로젝트의 소프트웨어를 대학이나 동영상 플랫폼에 즉각 활용 및 상용화 가능
 - 사용자가 원하는 영상을 정확도 순으로 정렬하여 제공
 - 사용자에게 영상 내에서 원하는 시점과 장면 검색을 용이하게 함
+
+<br/>
+<br/>
+
+---
+
+<br/>
+
+## 📖 참고자료
+- 음성 처리 기술 : ETRI. 2021. ETRI 음성처리기술. https://aiopen.etri.re.kr/# (2022)
+
+- 한국어 전/후처리 : KoNLPy. 2022. KoNLPy. https://github.com/konlpy/konlpy (2022)
+
+- Background task : ParthS007. 2021. background. https://github.com/ParthS007/background/releases/tag/v0.2.1 (2022)
