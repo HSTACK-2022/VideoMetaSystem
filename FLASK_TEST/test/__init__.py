@@ -11,6 +11,7 @@ from . import models
 def create_app():
     app = Flask(__name__)
 
+    app.config.from_pyfile('config.py')
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:hstackdbadmin@localhost/hstackDB_TEST"
     models.db.init_app(app)
 
