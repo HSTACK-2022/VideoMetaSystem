@@ -471,3 +471,71 @@ def detailSearch(request):
                 'searchWordDetailPresenter': presenter,
                 'rankData': rankList,
             })
+        
+        
+def allMetaData(request):
+    imageFilePath = models.Videopath.objects.all().values_list('imageaddr', flat=True).distinct()
+    L = 0
+    P = 0
+    N = 0
+    A = 0
+    
+    for imagePath in imageFilePath:
+        # if OS == "Windows" : 
+        #     imagePaths = imagePath.split('Image\\')[1]
+        # else : 
+        #     imagePaths = imagePath.split('Image/')[1]
+        
+        imageList = os.listdir(imagePath)
+        for image in imageList:
+            if image.startswith("L"): L=L+1
+            elif image.startswith("P"): P=P+1
+            elif image.startswith("N"): N=N+1
+            elif image.startswith("A"): A=A+1
+            else : pass
+    
+            
+    
+    if request.method == "GET":
+        return render(request, renderAppName + '/manage.html',
+                    context={
+                        'code' : 404,
+                        'metadatas' : models.Metadata.objects.all().values(),
+                        'keywords' : models.Keywords.objects.all().values(),
+                        'imagepaths' : imageFilePath,
+                        'len' : len(imageFilePath),
+                        'A': A,
+                        "L": L,
+                        "P": P,
+                        "N": N,     
+                    })
+
+
+def detailMetaData(request,pk):
+    imageFilePath = models.Videopath.objects.filter(id=pk).values_list('imageaddr', flat=True).distinct()
+    L = 0
+    P = 0
+    N = 0
+    A = 0
+    
+    for imagePath in imageFilePath:
+        imageList = os.listdir(imagePath)
+        for image in imageList:
+            if image.startswith("L"): L=L+1
+            elif image.startswith("P"): P=P+1
+            elif image.startswith("N"): N=N+1
+            elif image.startswith("A"): A=A+1
+            else : pass
+    
+    if request.method == "GET":
+        return render(request, renderAppName + '/detailmanage.html',
+                    context={
+                        'code' : 404,
+                        'pk': pk,
+                        'metadata' : models.Metadata.objects.get(id = pk),
+                        'keywords' : list(models.Keywords.objects.filter(id = pk).filter(sysdef = 1).values_list('keyword', flat=True).distinct()),
+                        'A': A,
+                        "L": L,
+                        "P": P,
+                        "N": N,  
+                    })
