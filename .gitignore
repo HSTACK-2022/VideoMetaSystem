@@ -246,10 +246,16 @@ cython_debug/
 
 #가상환경, ffmpeg, test media 제외
 ffmpeg-4.4.1-full_build/
-myenv/
-hstack/media/
-hstack/background/
-hstack/tensorflow/AudioDetect/data
-hstack/tensorflow/ImageSeperate/train/
-hstack/tensorflow/ImageSeperate/validation/
-hstack/secrets.json
+DJANGO/myenv/
+DJANGO/hstack/media/
+DJANGO/hstack/background/
+DJANGO/hstack/tensorflow/AudioDetect/data
+DJANGO/hstack/tensorflow/ImageSeperate/train/
+DJANGO/hstack/tensorflow/ImageSeperate/validation/
+DJANGO/hstack/secrets.json
+
+#FLASK
+FLASK/venv
+FLASK/hstack/media
+FLASK/hstack/__pycache__
+FLASK/hstack/migrations
