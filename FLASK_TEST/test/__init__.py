@@ -11,16 +11,12 @@ from . import models
 def create_app():
     app = Flask(__name__)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:hstackdbadmin@localhost/hstackDB"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:hstackdbadmin@localhost/hstackDB_TEST"
     models.db.init_app(app)
 
     # Blueprint
     from .views import main_views
-    from .views import search_views
-    from .views import detail_views
     app.register_blueprint(main_views.bp)
-    app.register_blueprint(search_views.bp)
-    app.register_blueprint(detail_views.bp)
 
     return app
 

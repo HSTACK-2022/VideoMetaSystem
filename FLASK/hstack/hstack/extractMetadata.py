@@ -29,7 +29,7 @@ def extractMetadata(videoId):
         threads = []
 
         # Step1) 기본 Metadata 추출 : index, keyword 제외
-        basic = threading.Thread(target=opencvService.extBasicInfo, args=([videoId]))
+        basic = threading.Thread(target=opencvService.extBanbsicInfo, args=([videoId]))
         audio = threading.Thread(target=audioService.doAudioService, args=([videoId]))
         video = threading.Thread(target=opencvService.doOpencvService, args=([videoId]))
 
