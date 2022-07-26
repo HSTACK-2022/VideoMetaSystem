@@ -248,8 +248,6 @@ class TextRank:
             both[k] = tuples[k]
             for w in k: used.add(w)
  
-       
- 
         return both
  
     def summarize(self, ratio = 0.333):
@@ -261,15 +259,19 @@ class TextRank:
 
 def doIndexingService(videoId):
     videopath = models.Videopath.objects.get(id = videoId)
-    method = models.Metadata.objects.get(id = videoId).method
     audioScript = videopath.textaddr
     
     resultDictionary = getIndexSentence(audioScript) 
 
-    if method=="PPT":
+    videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
+    isVideoIndexScript = os.path.isfile(videoIndexScript)
+
+    '''
+    if isVideoIndexScript:
         videoIndexScript = os.path.join(videopath.imageaddr, "keyword_line.txt")
         indexFromVideo = videoScript2Dic(videoIndexScript)
         resultDictionary.update(indexFromVideo)
+    '''
 
     resultDictionary = sorted(resultDictionary.items())
 
@@ -310,16 +312,20 @@ def getIndexSentence(audioScriptPath):
 
     tr.build()
     ranks = tr.rank()
+    exList = []
     for k in sorted(ranks, key=ranks.get, reverse=True)[:10]:
         #문장번호/ TR/ 문장내용
         print("\t".join([str(k), str(ranks[k]), str(tr.dictCount[k])]))
+        exList.append(str(tr.dictCount[k]))
 
     print("\n")
     print(tr.summarize(0.1),"\n") #문장 수 조절 
 
-
-    l = tr.summarize(0.1)
-    list = l.split('\n') # k는 list
+    if len(tr.summarize(0.1)) == 0:
+        list = exList
+    else:
+        l = tr.summarize(0.1)
+        list = l.split('\n') # k는 list
     try:
         audioScriptWithSecond = open(audioScriptPath, encoding='UTF-8-sig')
         

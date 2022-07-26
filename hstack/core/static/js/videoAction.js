@@ -2,6 +2,8 @@ var vid = document.getElementById("video");
 function inputMove(time) {
     timeStr = time.split(":");
     timeSec = Number(timeStr[0] * 3600) + Number(timeStr[1] * 60) + Number(timeStr[2]);
+    vid.pause();
+    var t = vid.currentTime;
     vid.currentTime = timeSec;
     vid.play();
 }
@@ -24,15 +26,21 @@ function searchPost(scripts) {
 
             const button = document.createElement("button");
             button.className = "indexTime";
-            button.onclick = "inputMove(timeSec)";
+            button.type = "button";
+            button.addEventListener("click", function(event){
+                inputMove(timeStr);
+            });
             button.innerText = timeStr;
             btnTd.appendChild(button);
 
             const titleTd = document.createElement("td");
             tr.appendChild(titleTd);
 
+
+            // 여기
             const title = document.createElement("div");
             title.className = "indexTitle";
+<<<<<<< HEAD
             title.id = "indexTitle";
 
             var regex = new RegExp(str, "g");
@@ -40,6 +48,16 @@ function searchPost(scripts) {
             title.innerHTML = line;
             
 
+=======
+
+            var regex = new RegExp(str, "g");
+            line = line.replace(regex, "<span style='background-color:#FFE400;'>" + str + "</span>");
+
+       
+
+            title.innerHTML = line;
+            
+>>>>>>> 9521fdf1d1b3ea939940c429a43d800d684c0792
             titleTd.appendChild(title);
         }
     });
@@ -70,7 +88,7 @@ function loadImg(folderName){
     var pptImage = document.getElementById("pptImage");
     var images = pptImage.childNodes;
 
-    var testdiv = document.getElementById("testdiv");
+    //var testdiv = document.getElementById("testdiv");
 
     for(var i=0, count=0; i<images.length; i++){
         if(images[i].nodeName != "IMG") continue;
@@ -80,7 +98,7 @@ function loadImg(folderName){
             var fileName = folderName + count.toString() + ".jpg";
             var imgFile = dataURLtoFile(dataUrl, fileName);
             zip.file(fileName, imgFile);
-            testdiv.innerText = fileName;
+            //testdiv.innerText = fileName;
         });
     }
 }
@@ -122,4 +140,14 @@ function downloadImg(folderName){
             download( zipContents, zipFileName, "application/octet-stream");
         }
     );
+}
+
+function downloadPPT(filepath){
+    var testdiv = document.getElementById("testdiv");
+    var element = document.createElement('a');
+    element.setAttribute('href', filepath);
+    element.setAttribute('download', filepath);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
 }

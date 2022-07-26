@@ -8,8 +8,9 @@
 # - length (HH:MM:SS)
 # 
 # uses
-# - extBasicInfo(videoId)
-# - getImage(videoId)
+# - extBasicInfo(videoId) : 기본 metadata 추출
+# - getImage(videoId) : 장면 추출
+# - getPPTImage(videoId) : 각 장면에서 ppt / lecture인 경우만 추출
 #
 # parameters
 # - videoId : DB Table들의 key로 쓰이는 video의 고유 id
@@ -77,7 +78,7 @@ def doOpencvService(videoId) :
     # L, N, P, A
     # method : PPT, lecture / others
     # narrative : Application / others
-    if type == "P" and type == "L":
+    if type == "P" or type == "L":
         models.Metadata.objects.filter(id=videoId).update(method="PPT")
     else:
         models.Metadata.objects.filter(id=videoId).update(method="실습")

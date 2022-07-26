@@ -13,16 +13,17 @@ body {
 
 /*** <--- CIRCLE STYLES ---> ***/
 .wrap-circles {
-    display: flex;
+    /* display: flex; */
     /* float: inline-start; */
+    text-align: right;
     flex-wrap: nowrap;
     justify-content: right;
-    align-items: center;
+    align-items: right;
     padding: 1rem 1rem;
     /* background: #000; */
     float: top;
     margin-bottom: 120px;
-
+    min-width: 250px;
 }
 
 .circle {
@@ -38,18 +39,22 @@ body {
 }
 
 .circle.per-title {
+    display: inline-block;
     background-image: conic-gradient(#22629d 25%, #dedede 0);
 }
 
 .circle.per-keyword {
+    display: inline-block;
     background-image: conic-gradient(#5b9d22 50%, #dedede 0);
 }
 
 .circle.per-index {
+    display: inline-block;
     background-image: conic-gradient(#9d2230 75%, #dedede 0);
 }
 
 .circle.per-presenter {
+    display: inline-block;
     background-image: conic-gradient(#9d6e22 100%, #dedede 0);
 }
 
@@ -68,4 +73,16 @@ body {
     font-size: 0.7em;
     /* font-weight: 300; */
     color: rgba(0, 0, 0, 0.75);
+}
+
+.total-rank{
+    text-align: right;
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+.total-perc{
+    color: #9d2230;
+    font-size: 17px;
+    margin: 0px 5px;
 }

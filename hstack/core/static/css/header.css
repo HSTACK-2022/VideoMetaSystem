@@ -99,7 +99,6 @@ body {
 header {
     padding: 20px;
     background-color: #ffffff;
-
 }
 
 #header_table {
@@ -125,20 +124,59 @@ header {
     width: 100%;
 }
 
+#searchBar {
+    margin: 50px;
+    min-width: 350px;
+}
+
+#searchBarTable {
+    width: 70%;
+    height: 100%;
+    min-width: 300px;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1pt rgb(118, 118, 118);
+    outline: none;
+    text-indent: 1em;
+    display: inline-block;
+}
+
+.searchNameHidden {
+    width: 60px;
+    height: 100%;
+    background-color: transparent;
+    font-size: 14px;
+    text-align: left;
+}
+
+.searchInput[type=button] {
+    background-color: transparent;
+    border: none;
+}
+
+.searchInputHidden[type=text] {
+    font-family: 'pre2';
+    width: 85%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    display: inline-block;
+    padding: 5px 15px;
+    margin: 3px 0px;
+    border-radius: 20px;
+    border: 1px solid gray;
+}
+
 
 .searchInput[type=text] {
     font-family: 'pre2';
-    width: 70%;
+    width: 85%;
     vertical-align: middle;
-
-
     height: 30px;
     border: none;
-    border-radius: 20px;
-    box-shadow: 0 0 0 1pt rgb(48, 48, 48);
     outline: none;
     text-indent: 1em;
-
 }
 
 .searchInput2[type=submit] {
@@ -155,13 +193,12 @@ header {
     cursor: pointer;
     outline: none;
     border: none;
-
-
 }
 
 #logo {
-    height: 30px;
+    height: 40px;
     margin-right: 20px;
+    margin-bottom: 10px;
 }
 
 #uploadBtnImg {
@@ -175,6 +212,8 @@ header {
     outline: none;
     cursor: pointer;
     margin-right: 5px;
+    font-family: "pre2";
+    color: rgb(95, 95, 95)
 }
 
 #home {
@@ -182,4 +221,28 @@ header {
     border: none;
     outline: none;
     cursor: pointer;
+}
+
+#edit2,
+#upload2 {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin: 10px 10px 0;
+
+
+}
+
+
+#uploadBtn,
+#edit {
+    height: 40px;
+    /* margin-bottom: 3px; */
+
+}
+
+#a {
+    float: right;
+    margin-right: 5px;
 }

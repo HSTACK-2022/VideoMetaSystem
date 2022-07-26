@@ -2,6 +2,11 @@
     font-family: 'S-Core3';
 }
 
+body{
+    margin: 0;
+    padding: 0;
+}
+
 hr {
     width: 100%;
     color: #ccc;
@@ -59,7 +64,7 @@ ul {
 .tabmenu ul li {
     border-radius: 20px 20px 0 0;
     display: inline-block;
-    width: 30%;
+    width: 20%;
     height: 75px;
     float: left;
     text-align: center;
@@ -79,7 +84,7 @@ ul {
     /*tabbar text position*/
     line-height: 30px;
     padding-top: 6px;
-    font-size: 19px;
+    font-size: 17px;
     height: 42px;
     text-decoration: none;
     letter-spacing: 0px;
@@ -369,6 +374,33 @@ div.right {
     color: #5856d6;
     cursor: pointer;
 }
+.indexTime2 {
+    width: 70px;
+    height: 100%;
+    font-family: sans-serif;
+    font-size: 13px;
+    margin-top: 8px;
+
+    border: none;
+    color: #007bff;
+    vertical-align: top;
+    display: inline-block;
+    background-color: transparent;
+
+}
+
+.indexTime:hover, .indexTime2:hover {
+    color: #5856d6;
+    cursor: pointer;
+}
+
+.indexTitle2 {
+    width: 70%;
+    font-family: sans-serif;
+    font-size: 14px;
+    margin: 10px 0px;
+    display: inline-block;
+}
 
 .indexTitle2 {
     width: 70%;
@@ -408,7 +440,7 @@ div.right {
     border-radius: 20px;
     border: 1px solid gray;
     background-color: transparent;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     vertical-align: center;
 }
 
@@ -499,6 +531,8 @@ div.right {
     overflow-x: hidden;
     overflow-y: scroll;
     border-radius: 20px;
+    /* background: rgba(68, 68, 68, 0.1); */
+    /* width: fit-content; */
 }
 
 /* 아래의 모든 코드는 영역::코드로 사용 */
@@ -555,16 +589,6 @@ div.right {
 }
 
 
-.footer {
-    font-family: "S-Core3" !important;
-    font-style: italic;
-
-    text-align: center;
-    color: #ffffff;
-    background-color: #2F5597;
-
-
-}
 
 #save {
 
@@ -580,4 +604,13 @@ div.right {
     font-family: "pre1";
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
 
+}
+
+
+.metadataTR2 {
+    width: 100%;
+    height: 35px;
+    margin: 1px 0px;
+   
+    border-radius: 30px;
 }

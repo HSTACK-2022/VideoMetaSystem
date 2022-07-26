@@ -2,6 +2,11 @@
     font-family: "pre2";
 }
 
+body{
+    margin: 0;
+    padding: 0;
+}
+
 #uploadBody {
 
     width: 100%;

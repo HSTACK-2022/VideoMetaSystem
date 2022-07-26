@@ -212,7 +212,7 @@ def sttAsync(audioPath, endNum):
     resultVector.append(result_4)
 
     try :
-        for i in range(0, 4):
+        for i in range(0, 5):
             th = threading.Thread(target=threadWork, args=([i]))
             th.start()
             threads.append(th)
@@ -244,11 +244,16 @@ def resultFileWrite(textPath, endNum):
             for i in range (0,5):
                 if i==0 and j==0:
                     #sttService.content2file(str((5 * j) + i) + "\n" + resultVector[i][j], filePath, True)
+                    print("##########################################")
+                    print("##########################################")
+                    print("##########################################")
+                    print("##########################################")
                     content2file(resultVector[i][j], textPath, True)
                     continue
                 elif(j>len(resultVector[i])-1):
                     continue
                 #sttService.content2file(str((5 * j) + i) + "\n" + resultVector[i][j], filePath, False)
+                print("##########################################55555555")
                 content2file(resultVector[i][j], textPath, False)
 
         # 저장 후 기존 Vector clear
