@@ -17,7 +17,8 @@ from pathlib import Path
 from http.client import HTTPConnection, ImproperConnectionState
 from urllib.error import HTTPError
 
-from flask import current_app as app
+from test.config import OS
+from test.config import STT_API_KEY
 
 from test import audioService # app.config 사용을 위함
 
@@ -29,25 +30,21 @@ audioContents = None
 audioFile = None
 
 # 파일의 경로를 받아 음원을 추출하고 텍스트파일로 바꾼다.
-def doSttService(fileURL):
+def doSttService(fileURL, finalDic):
     # get from config.py
-    global OS, accessKey
-    OS = app.config.get('OS')
-    accessKey = list(app.config.get('STT_API_KEY'))
-
-    # result
-    resDic = dict()
+    global accessKey
+    accessKey = list(STT_API_KEY)
 
     # get Dir of SplitedAudioFile
     audioFilePath = audioService.video2splitedAudio(fileURL)
-    resDic['audioAddr'] = audioFilePath
+    finalDic['audioAddr'] = audioFilePath
     
     if audioFilePath!=None:
         textName = 'fullScript.txt'
         textPath = os.path.join(os.path.dirname(fileURL), textName)
         sttResult = pcm2text(audioFilePath, textPath)
-        resDic['textAddr'] = sttResult
-        return resDic
+        finalDic['textAddr'] = sttResult
+        return finalDic
     else:
         return None
 

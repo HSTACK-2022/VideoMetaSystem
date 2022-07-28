@@ -18,8 +18,6 @@
 import os
 import math
 import subprocess
-
-from flask import current_app as app
 from mutagen.wave import WAVE
 
 from test.config import OS
@@ -27,8 +25,6 @@ from test.config import OS
 
 #비디오 파일을 10초단위 오디오 파일로 변경
 def video2splitedAudio(fileURL):
-    global OS
-    OS = app.config.get('OS')
     fullAudioFile = video2audio(fileURL)
     if (fullAudioFile != None):
         audioDirPath = splitAudio(fullAudioFile, 10)

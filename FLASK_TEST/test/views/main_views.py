@@ -39,12 +39,13 @@ def uploadFile():
             dupNum += 1
             fileDirPath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), uploadName.split('.')[0])
 
-        #os.makedirs(fileDirPath, 777, True)
-        #uploadURL = os.path.join(fileDirPath, uploadName)
-        #uploadedFile.save(uploadURL)
+        os.makedirs(fileDirPath, 777, True)
+        os.chmod(fileDirPath, 0o777)
+        uploadURL = os.path.join(fileDirPath, uploadName)
+        uploadedFile.save(uploadURL)
 
-        extractMetadata.extract("title", "presenter", ".\\media\\Uploaded\\algo\\algo.mp4")
-        #extractMetadata.extract(fileTitle, filePresenter, uploadURL)
+        #extractMetadata.extract("title", "presenter", ".\\media\\Uploaded\\algo\\algo.mp4")
+        extractMetadata.extract(fileTitle, filePresenter, uploadURL)
         return render_template('success.html')
 
         
