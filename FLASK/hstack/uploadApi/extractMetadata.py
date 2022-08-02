@@ -7,21 +7,30 @@
 # Api calls
 from flask import request
 from flask import current_app as app # app.config 사용을 위함
-from flask_restx import Resource, Namespace
+from flask_restx import Resource, Namespace, reqparse
 
 import os
-from urllib.parse import urlparse
 from werkzeug.utils import secure_filename
 
 Upload = Namespace('Upload')
 
-@Upload.route('/upload')
+@Upload.route('/')
 class ExtractMetadata(Resource):
     def post(self):
-        content_type = request.headers.get('Content-Type')
-        fileTitle = request.form.get("title")
+        parser = reqparse.RequestParser()
+        parser.add_argument('title', type=str)
+        parser.add_argument('presenter', type=str)
+        args = parser.parse_args()
+        for a in args:
+            print(a)
+
+        print("****")
+        fileTitle = request.form.get('title')
+        print(fileTitle)
         filePresenter = request.form.get("presenter")
+        print(filePresenter)
         uploadedFile = request.files["videoFile"]
+        print(uploadedFile)
 
         # if filename Duplicates
         uploadName = secure_filename(uploadedFile.filename)
@@ -42,20 +51,17 @@ class ExtractMetadata(Resource):
         return totalDic
 
 
-
-
 # Todo Works
 import os
 import cv2
 import threading
-import background as bg
 
-from test import calTime
-from test import sttService
-from test import opencvService
-from test import keywordService
-from test import categoryService
-from test import indexingService
+from . import calTime
+from . import sttService
+from . import opencvService
+from . import keywordService
+from . import categoryService
+from . import indexingService
 
 def extract(title, presenter, fileURL):
     try:

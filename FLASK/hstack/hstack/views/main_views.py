@@ -1,18 +1,16 @@
+from aiohttp import FormData
+from attr import dataclass
 from flask import url_for
 from flask import request
 from flask import redirect
 from flask import Blueprint
 from flask import render_template
 
-from hstack import models
-#from hstack import extractMetadata
-
-import re
-import os
+import requests
 import platform
-from urllib import response
 from urllib.parse import urlparse
 from werkzeug.utils import secure_filename
+from requests_toolbelt import MultipartEncoder
 
 # 상수 설정
 OS = platform.system()
@@ -22,11 +20,11 @@ bp = Blueprint('main', __name__, url_prefix='/')
 def home():
     return render_template('home.html')
 
-@bp.route('/upload/', methods=['GET', 'POST'])
+@bp.route('/uploadFile/', methods=['GET', 'POST'])
 def uploadFile():
     if request.method == "POST":
         existError = {}
-        fileTitle = request.form.get("fileTitle")
+        fileTitle = request.form.get("title")
         filePresenter = request.form.get("presenter")
         uploadedFile = request.files["videoFile"]
 
@@ -40,47 +38,13 @@ def uploadFile():
         if existError:
             return render_template('upload.html', error=existError)
 
-        # Fetching the form data
-        # Saving the information in the database
-        else :
-            document = models.Document(
-                title = fileTitle,
-                uploadedFile = uploadedFile
-            )
-            document.save()
-
-            if OS == "Windows" : 
-                dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
-                file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
-                videopath = dir_name + file_name
-
-            else : 
-                dir_name = os.path.dirname(os.path.abspath(__file__)).split("/core")[0]
-                file_name = urlparse(document.uploadedFile.url).path
-                videopath = dir_name + file_name
-            
-            # DB에 Video 저장
-            models.Videopath.objects.create(
-                title = fileTitle,
-                videoaddr = videopath
-            )
-            videoId = models.Videopath.objects.get(videoaddr=videopath).id
-
-            models.Metadata.objects.create(
-                id = models.Videopath.objects.get(id=videoId),
-                title = fileTitle,
-                presenter = filePresenter,
-                uploaddate = document.dateTimeOfUpload
-            )
-
-            if OS == 'Windows':
-                videoPath4Play = "..\\..\\..\\media" + videopath.split("media")[1]
-            else:
-                videoPath4Play = "../../../media" + videopath.split("media")[2]
-            print(videoPath4Play)
-
-            #extractMetadata.extractMetadata(videoId)
-
-            return redirect(url_for('home'))
+        # API로 request
+        data = {'title':fileTitle, 'presenter':filePresenter}
+        files = [('videoFile', ('solid.mp4', open('./media/Uploaded/Video/solid.mp4', 'rb'), 'video/mp4'))]
+        headers = {'Content-Type' : 'multipart/form-data'}
+        res = requests.post('http://127.0.0.1:8000/upload', headers=headers, data=data, files=files)
+        print(res)
+        
+        return redirect(url_for('main.home'))
                         
     return render_template('upload.html', error="")

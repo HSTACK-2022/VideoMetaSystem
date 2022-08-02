@@ -43,13 +43,13 @@ def detailFile(pk):
     #pptImage = getPPTImage(pk)
 
     # PPT 파일 받아오기
-    pptFile = makePPT.getPPTFile(pk)
+    #pptFile = makePPT.getPPTFile(pk)
 
     return render_template( '/detail.html',
         videoaddr = videoPath,
         scripts = scripts,
         #images = pptImage,
-        pptFile = pptFile,
+        #pptFile = pptFile,
         keywords = Keyword.query.filter(keywordQ).all(),
         metadatas = Metadatum.query.filter(Metadatum.id == pk).all(),
         timestamps =  Timestamp.query.filter(Timestamp.id == pk).all(),

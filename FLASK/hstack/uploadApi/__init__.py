@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_restx import Api
 
-from test import extractMetadata
+from . import extractMetadata
+
 
 def create_app():
     app = Flask(__name__)
@@ -10,10 +11,10 @@ def create_app():
     app.config.from_pyfile('config.py')
 
     # Namespace
-    api.add_namespace(extractMetadata.Upload, '/')
+    api.add_namespace(extractMetadata.Upload, '/upload')
 
     return app
 
 if __name__ == '__main__':
     app = create_app()
-    app.run()
+    app.run(host='0.0.0.0', port='8000', debug=True)
