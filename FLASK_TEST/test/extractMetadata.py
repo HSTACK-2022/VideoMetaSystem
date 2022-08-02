@@ -11,8 +11,10 @@ import background as bg
 from test import calTime
 from test import sttService
 from test import opencvService
+from test import keywordService
+from test import categoryService
+from test import indexingService
 
-@bg.task
 def extract(title, presenter, fileURL):
     try:
         totalDic = dict()
@@ -26,6 +28,7 @@ def extract(title, presenter, fileURL):
         audio = threading.Thread(target=sttService.doSttService, args=(fileURL, totalDic))
         image = threading.Thread(target=opencvService.doOpencvService, args=(fileURL, totalDic))
 
+        '''
         basic.start()
         audio.start()
         image.start()
@@ -33,6 +36,21 @@ def extract(title, presenter, fileURL):
         threads.append(basic)
         threads.append(audio)
         threads.append(image)
+
+        for t in threads:
+            t.join()
+        '''
+
+        keywordService.doKeywordService(fileURL, totalDic)
+
+        category = threading.Thread(target=categoryService.extractCategory, args=(fileURL, totalDic))
+        indexing = threading.Thread(target=indexingService.doIndexingService, args=(fileURL, totalDic))
+
+        category.start()
+        indexing.start()
+
+        threads.append(category)
+        threads.append(indexing)
 
         for t in threads:
             t.join()

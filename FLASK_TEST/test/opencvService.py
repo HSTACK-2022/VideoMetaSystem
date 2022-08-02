@@ -35,7 +35,7 @@ def doOpencvService(fileURL, finalDic) :
 
     getImage(fileURL, imagePath)
     sceneText.sceneSeperate(imagePath)
-    type = sceneText.sceneText(fileURL, os.path.dirname(fileURL))
+    type = sceneText.sceneText(imagePath, os.path.dirname(fileURL))
     
     # L, N, P, A
     # method : PPT, lecture / others

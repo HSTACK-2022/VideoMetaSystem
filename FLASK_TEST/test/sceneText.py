@@ -44,10 +44,11 @@ def sceneText(imagePath, textPath):
     count = 0
     typeCount = [0, 0, 0, 0]        #순서대로 L, N, PPT, A
 
-    #test code
-    for images in imagePath:
+    imageList = os.listdir(imagePath)
+    for images in imageList:
         imageName = images.split(".jpg")[0]
         images = os.path.join(imagePath, images)
+        print(images)
 
         # 이론, 실습을 체크해 이론인 경우에만 OCR
         if imageName.startswith("P"):
@@ -98,13 +99,15 @@ def sceneSeperate(imagePath):
         modelPath = os.path.join(os.getcwd(), "tensorflow\\ImageSeperate\\test.py")
     else :
         modelPath = os.path.join(os.getcwd(), "tensorflow/ImageSeperate/test.py")
+
+    print(modelPath)
     
     #>python tensorflow\ImageSeperate\test.py -f dirname
     result = subprocess.Popen(['python', modelPath, '-f', imagePath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = result.communicate()
     exitcode = result.returncode
     if exitcode != 0:
-        print(exitcode, out.decode('utf8'), err.decode('utf8'))
+        print(exitcode, out.decode('utf8-sig'), err.decode('utf8-sig'))
     else:
         print('Completed')
 
