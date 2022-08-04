@@ -5,6 +5,8 @@ OS = platform.system()
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_FILE_DIR = os.path.join('.', 'media', 'Uploaded')
 
+JSON_AS_ASCII = False
+
 STT_API_KEY = {
     "2d40b072-37f1-4317-9899-33e0b3f5fb90",
     "80ff5736-f813-4686-aca6-472739d8ebe0",

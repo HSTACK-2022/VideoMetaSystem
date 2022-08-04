@@ -1,4 +1,5 @@
 # Api calls
+from flask import jsonify
 from flask import request
 from flask import current_app as app # app.config 사용을 위함
 from flask_restx import Resource, Namespace
@@ -20,4 +21,4 @@ class ExtractMetadata(Resource):
         print(uploadURL)
         
         totalDic = extractMetadata.extract(fileTitle, filePresenter, uploadURL)
-        return totalDic
+        return jsonify(totalDic)
