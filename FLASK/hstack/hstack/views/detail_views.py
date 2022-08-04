@@ -28,7 +28,7 @@ def data(filepath):
 @bp.route('/detail/<int:pk>', methods=['GET'])
 def detailFile(pk):
     videoPath = Videopath.query.filter(Videopath.id == pk).first().videoAddr 
-    textPath = Videopath.query.filter(Videopath.id == pk).first().textAddr
+    textPath = Videopath.query.filter(Videopath.id == pk).first().textAddr.split("hstack\\")[1]
 
     try:
         with open(textPath, 'r', encoding='UTF-8-sig') as f:
@@ -37,19 +37,22 @@ def detailFile(pk):
         print(err)
         scripts = []
 
+    print("############################")
+    print(textPath)
+
     keywordQ = and_(Keyword.id == pk, Keyword.expose == True)
 
     # 이미지 받아오기
     #pptImage = getPPTImage(pk)
 
     # PPT 파일 받아오기
-    pptFile = makePPT.getPPTFile(pk)
+    #pptFile = makePPT.getPPTFile(pk)
 
     return render_template( '/detail.html',
         videoaddr = videoPath,
         scripts = scripts,
         #images = pptImage,
-        pptFile = pptFile,
+        #pptFile = pptFile,
         keywords = Keyword.query.filter(keywordQ).all(),
         metadatas = Metadatum.query.filter(Metadatum.id == pk).all(),
         timestamps =  Timestamp.query.filter(Timestamp.id == pk).all(),
