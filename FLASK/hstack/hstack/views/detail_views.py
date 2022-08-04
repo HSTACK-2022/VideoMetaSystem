@@ -28,7 +28,7 @@ def data(filepath):
 @bp.route('/detail/<int:pk>', methods=['GET'])
 def detailFile(pk):
     videoPath = Videopath.query.filter(Videopath.id == pk).first().videoAddr 
-    textPath = Videopath.query.filter(Videopath.id == pk).first().textAddr
+    textPath = Videopath.query.filter(Videopath.id == pk).first().textAddr.split("hstack\\")[1]
 
     try:
         with open(textPath, 'r', encoding='UTF-8-sig') as f:
@@ -36,6 +36,9 @@ def detailFile(pk):
     except FileNotFoundError as err:
         print(err)
         scripts = []
+
+    print("############################")
+    print(textPath)
 
     keywordQ = and_(Keyword.id == pk, Keyword.expose == True)
 

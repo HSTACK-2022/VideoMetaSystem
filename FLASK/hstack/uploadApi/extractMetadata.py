@@ -3,54 +3,6 @@
 # video를 통해 metadata를 추출합니다.
 # 
 
-
-# Api calls
-from flask import request
-from flask import current_app as app # app.config 사용을 위함
-from flask_restx import Resource, Namespace, reqparse
-
-import os
-from werkzeug.utils import secure_filename
-
-Upload = Namespace('Upload')
-
-@Upload.route('/')
-class ExtractMetadata(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('title', type=str)
-        parser.add_argument('presenter', type=str)
-        args = parser.parse_args()
-        for a in args:
-            print(a)
-
-        print("****")
-        fileTitle = request.form.get('title')
-        print(fileTitle)
-        filePresenter = request.form.get("presenter")
-        print(filePresenter)
-        uploadedFile = request.files["videoFile"]
-        print(uploadedFile)
-
-        # if filename Duplicates
-        uploadName = secure_filename(uploadedFile.filename)
-        fileDirPath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), uploadName.split('.')[0])
-        dupNum = 1
-        while os.path.exists(fileDirPath):
-            splitedName = uploadName.split('.')
-            uploadName = splitedName[0] + "_" + str(dupNum) + '.' + splitedName[1]
-            dupNum += 1
-            fileDirPath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), uploadName.split('.')[0])
-
-        os.makedirs(fileDirPath, 777, True)
-        os.chmod(fileDirPath, 0o777)
-        uploadURL = os.path.join(fileDirPath, uploadName)
-        uploadedFile.save(uploadURL)
-        
-        totalDic = extract(fileTitle, filePresenter, uploadURL)
-        return totalDic
-
-
 # Todo Works
 import os
 import cv2

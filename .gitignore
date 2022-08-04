@@ -259,6 +259,8 @@ FLASK/venv
 FLASK/hstack/media/
 FLASK/hstack/migrations/
 FLASK/hstack/__pycache__/
+FLASK/hstack/background/
+
 
 #FLASK_TEST
 FLASK_TEST/media/

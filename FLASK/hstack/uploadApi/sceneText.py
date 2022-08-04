@@ -107,7 +107,7 @@ def sceneSeperate(imagePath):
     out, err = result.communicate()
     exitcode = result.returncode
     if exitcode != 0:
-        print(exitcode, out.decode('utf8-sig'), err.decode('utf8-sig'))
+        print(exitcode, out.decode('utf-8-sig'), err.decode('utf-8-sig'))
     else:
         print('Completed')
 

@@ -1,16 +1,17 @@
-from aiohttp import FormData
-from attr import dataclass
+from flask import jsonify
 from flask import url_for
 from flask import request
 from flask import redirect
 from flask import Blueprint
 from flask import render_template
+from flask import current_app as app # app.config 사용을 위함
 
+import os
 import requests
 import platform
-from urllib.parse import urlparse
+import background
+
 from werkzeug.utils import secure_filename
-from requests_toolbelt import MultipartEncoder
 
 # 상수 설정
 OS = platform.system()
@@ -38,13 +39,36 @@ def uploadFile():
         if existError:
             return render_template('upload.html', error=existError)
 
+        # save Video
+        
+        # if filename Duplicates
+        uploadName = secure_filename(uploadedFile.filename)
+        fileDirPath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), uploadName.split('.')[0])
+        dupNum = 1
+        while os.path.exists(fileDirPath):
+            splitedName = uploadName.split('.')
+            uploadName = splitedName[0] + "_" + str(dupNum) + '.' + splitedName[1]
+            dupNum += 1
+            fileDirPath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), uploadName.split('.')[0])
+
+        os.makedirs(fileDirPath, 777, True)
+        os.chmod(fileDirPath, 0o777)
+        uploadURL = os.path.join(fileDirPath, uploadName)
+        uploadedFile.save(uploadURL)
+
         # API로 request
-        data = {'title':fileTitle, 'presenter':filePresenter}
-        files = [('videoFile', ('solid.mp4', open('./media/Uploaded/Video/solid.mp4', 'rb'), 'video/mp4'))]
-        headers = {'Content-Type' : 'multipart/form-data'}
-        res = requests.post('http://127.0.0.1:8000/upload', headers=headers, data=data, files=files)
-        print(res)
+        send2API(fileTitle, filePresenter, uploadURL)
         
         return redirect(url_for('main.home'))
                         
     return render_template('upload.html', error="")
+
+
+@background.task
+def send2API(title, presenter, uploadURL):
+    # API로 request
+    reqUrl = 'http://127.0.0.1:8000/upload'
+    data = {'title' : title, 'presenter' : presenter, 'uploadURL' : uploadURL}
+    res = requests.post(reqUrl, data=data)
+    res.encoding = 'utf-8-sig'
+    print(res.text)
