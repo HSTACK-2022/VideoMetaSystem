@@ -121,6 +121,7 @@ const dataURLtoFile = (dataurl, fileName) => {
 }
 
 function downloadImg(folderName){
+    console.log("clicked");
     var zipFileName = folderName + ".zip";
     zip.generateAsync({
         type: "blob",
@@ -132,12 +133,12 @@ function downloadImg(folderName){
     );
 }
 
-function downloadPPT(filepath){
-    var testdiv = document.getElementById("testdiv");
-    var element = document.createElement('a');
-    element.setAttribute('href', filepath);
-    element.setAttribute('download', filepath);
+function downloadPPT(path, title){
+    console.log(`hello ${path}, ${title}`);
+    var element = document.createElement('form');
+    element.setAttribute('method', 'GET');
+    element.setAttribute('action', `http://localhost:5000/detail/download/${path}/${title}`);
     document.body.appendChild(element);
-    element.click();
+    element.submit();
     document.body.removeChild(element);
 }

@@ -53,19 +53,6 @@ def doOpencvService(fileURL, finalDic) :
     finalDic['imageAddr'] = imagePath
 
 
-def getPPTImage(imagePath):
-    pptImage = set()
-    imageList = os.listdir(imagePath)
-    print(imageList)
-
-    for image in imageList:
-        if image.startswith("L") or image.startswith("P"):
-            imageSrc = os.path.join(imagePath, image)
-            pptImage.add(imageSrc)
-    
-    return pptImage
-
-
 import cv2
 from cv2 import FORMATTER_FMT_NUMPY 
 import numpy as np

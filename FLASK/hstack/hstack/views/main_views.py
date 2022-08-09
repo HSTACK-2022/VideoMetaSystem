@@ -1,3 +1,4 @@
+from urllib.parse import urlencode
 from flask import jsonify
 from flask import url_for
 from flask import request
@@ -47,7 +48,7 @@ def uploadFile():
         dupNum = 1
         while os.path.exists(fileDirPath):
             splitedName = uploadName.split('.')
-            uploadName = splitedName[0] + "_" + str(dupNum) + '.' + splitedName[1]
+            uploadName = splitedName[0] + str(dupNum) + '.' + splitedName[1]
             dupNum += 1
             fileDirPath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), uploadName.split('.')[0])
 
@@ -70,5 +71,6 @@ def send2API(title, presenter, uploadURL):
     reqUrl = 'http://127.0.0.1:8000/upload'
     data = {'title' : title, 'presenter' : presenter, 'uploadURL' : uploadURL}
     res = requests.post(reqUrl, data=data)
-    res.encoding = 'utf-8-sig'
+    res.apparent_encoding
+    print(res.encoding)
     print(res.text)

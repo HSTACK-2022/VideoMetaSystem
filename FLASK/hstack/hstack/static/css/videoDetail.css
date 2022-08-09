@@ -253,6 +253,18 @@ div.right {
 
 }
 
+.metadataTitle3 {
+    /* font-family: 'S-Core4'; */
+    font-family: "pre2";
+    font-size: 15px;
+    width: 100%;
+    margin-top: 8px;
+    margin-left: 15px;
+    display: inline-block;
+    color: rgb(59, 59, 59);
+
+}
+
 .metadataContent {
     /* font-family: 'S-Core4'; */
     font-family: "pre2";
@@ -524,7 +536,7 @@ div.right {
     overflow-y: scroll;
     border-radius: 20px;
     /* background: rgba(68, 68, 68, 0.1); */
-    /* width: fit-content; */
+    width: 90%;
 }
 
 /* 아래의 모든 코드는 영역::코드로 사용 */
@@ -583,7 +595,6 @@ div.right {
 
 
 #save {
-
     margin: 5px 15px;
 
     font-size: 15px;
@@ -605,4 +616,16 @@ div.right {
     margin: 1px 0px;
    
     border-radius: 30px;
+}
+
+
+.sceneDownloadBtn {
+    font-family: 'pre2';
+    color: rgb(95, 95, 95);
+}
+
+.imageLists {
+    height: 300px;
+    border-radius: 10px;
+    overflow: hidden;
 }

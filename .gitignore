@@ -260,10 +260,9 @@ FLASK/hstack/media/
 FLASK/hstack/migrations/
 FLASK/hstack/__pycache__/
 FLASK/hstack/background/
+FLASK/hstack/tensorflow/ImageSeperate/train/
+FLASK/hstack/tensorflow/ImageSeperate/validation/
 
 
 #FLASK_TEST
-FLASK_TEST/media/
-FLASK_TEST/background/
-FLASK_TEST/tensorflow/ImageSeperate/train/
-FLASK_TEST/tensorflow/ImageSeperate/validation/
+FLASK_TEST/
