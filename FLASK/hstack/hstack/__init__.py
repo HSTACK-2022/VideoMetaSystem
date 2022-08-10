@@ -1,17 +1,20 @@
 from venv import create
 from flask import Flask
+from flask_restx import Api
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, text
 
-from . import config
 from . import models
 
 
 def create_app():
     app = Flask(__name__)
 
+
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:csedbadmin@localhost/hstackdb"
+    app.config.from_pyfile('config.py')
+
     models.db.init_app(app)
 
     # Blueprint

@@ -379,7 +379,8 @@ class Total:
             filePath = Videopath.query.filter(Videopath.id == videoId).first().imageAddr.split('media')[2]
 
         count = 0
-        for file in os.listdir(Videopath.query.filter(Videopath.id == videoId).first().imageAddr):
+        imageList = os.listdir(Videopath.query.filter(Videopath.id == videoId).first().imageAddr.split("hstack\\")[1])
+        for file in imageList:
             if file.split(".")[1] == "jpg":
                 count+=1
                 if count > 1:
