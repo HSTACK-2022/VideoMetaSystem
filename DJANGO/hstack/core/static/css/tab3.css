@@ -1,0 +1,57 @@
+#pptImage {
+    text-align: center;
+
+
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+
+#spacingImg {
+    display: inline-block;
+    margin: 5px 5px 0px 5px; 
+
+
+
+    border-radius: 10px;
+    overflow: hidden;
+  
+
+
+}
+
+#down{
+   
+    width: 30px;
+}
+
+
+#downloadImg {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: block;
+    /* margin: 20px 20px 20px 20px; */
+    font-family: "pre1";
+    font-size: 14px;
+    width: auto;
+    /* margin-left: 490px; */
+    float: right;
+    /* padding-top: 10px; */
+}
+
+#edit {
+    width: 40px;
+    height: auto;
+}
+
+#downloadImg{
+    margin-bottom: 20px;
+}
+
+.donwloadBtns{
+    width: 50px;
+    float: right;
+}

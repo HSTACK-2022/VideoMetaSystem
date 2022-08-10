@@ -6,6 +6,29 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 ---
 <br/>
 
+## 🏆 수상 내역
+
+### 2022 한성대학교 컴퓨터공학부 캡스톤디자인 작품 발표회
+
+| <img src=./report/img/award.jpg alt="GOLD" width = "500" /> |
+| --- |
+| 모바일부문 최우수상 (1위) |
+
+<br/>
+
+---
+<br/>
+
+## 📷 소개 영상
+
+하단 이미지를 클릭하시면 영상을 시청하실 수 있습니다:)
+
+[<img src="https://user-images.githubusercontent.com/73868349/171586152-85d907ca-51e4-4186-998c-c3c808e651e2.jpg" alt="VMeta"
+ width = "480" height="270" />](https://youtu.be/-k8TcLdf65s)
+
+---
+<br/>
+
 ## 📌 작품 소개
 
 ```
@@ -50,7 +73,19 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 <br/>
 
 ## ⚙️ 시스템 구조
+
+### 전체 구조
+
    ![sysArch](./report/img/arch.jpg)
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+### Ranking 알고리즘
+
+   <img src=./report/img/rankingWeightTable.jpg alt="rankingAlgo" width = "500" /> 
     
 <br/>
 <br/>
@@ -98,3 +133,17 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 - 본 프로젝트의 소프트웨어를 대학이나 동영상 플랫폼에 즉각 활용 및 상용화 가능
 - 사용자가 원하는 영상을 정확도 순으로 정렬하여 제공
 - 사용자에게 영상 내에서 원하는 시점과 장면 검색을 용이하게 함
+
+<br/>
+<br/>
+
+---
+
+<br/>
+
+## 📖 참고자료
+- 음성 처리 기술 : ETRI. 2021. ETRI 음성처리기술. https://aiopen.etri.re.kr/# (2022)
+
+- 한국어 전/후처리 : KoNLPy. 2022. KoNLPy. https://github.com/konlpy/konlpy (2022)
+
+- Background task : ParthS007. 2021. background. https://github.com/ParthS007/background/releases/tag/v0.2.1 (2022)

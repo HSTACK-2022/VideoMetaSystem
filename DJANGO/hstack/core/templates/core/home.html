@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <title>VMeta</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/home.css' %}">
+        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
+    </head>
+
+    <body onload="onloads();">
+        <table id="home_table">
+            <tr>
+                <td style="height: 100px"><img id="logo" src="{% static 'img/logo_title.png' %}"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <div id="home_search">
+                        <form
+                            name="search"
+                            action="{% url 'Core:searchFile' %}"
+                            method="GET"
+                            enctype="multipart/form-data">
+                            <table id="home_search_input_table">
+                                <tr>
+                                    <td style="width:40px;">
+                                        <button id="showDetailBtn" class="searchInput" type="button" onclick="visible();">▼</button>
+                                    </td>
+                                    <td>
+                                        <input
+                                            id="searchShownInput"
+                                            class="searchInput"
+                                            type="text"
+                                            name="searchText"
+                                            placeholder="검색어를 입력하세요">
+                                    </td>
+
+                                    <!-- Please enter your search words. -->
+
+                                    <td style="width:40px;">
+                                        {% csrf_token %}
+                                        <input
+                                            id="searchShownSubmit"
+                                            class="searchInput"
+                                            type="submit" value="">
+                                    </td>
+                                </tr>
+                                <tr class="searchHidden" style="display:none;">
+                                    <td>
+                                        <div class="searchNameHidden">제목</div>
+                                    </td>
+                                    <td>
+                                        <input
+                                        id="searchTextTitle"
+                                        class="searchInputHidden"
+                                        type="text"
+                                        name="searchTextTitle"
+                                        placeholder="제목을 입력하세요">
+                                    </td>
+                                    <td style="width:40px;">
+                                        {% csrf_token %}
+                                        <input class="searchInput" type="submit" value="">
+                                    </td>
+                                </tr>
+                                <tr class="searchHidden" style="display:none;">
+                                    <td>
+                                        <div class="searchNameHidden">키워드</div>
+                                    </td>
+                                    <td>
+                                        <input
+                                        id="searchTextKeyword"
+                                        class="searchInputHidden"
+                                        type="text"
+                                        name="searchTextKeyword"
+                                        placeholder="키워드를 입력하세요">
+                                    </td>
+                                </tr>
+                                <tr class="searchHidden" style="display:none;">
+                                    <td>
+                                        <div class="searchNameHidden">발표자</div>
+                                    </td>
+                                    <td>
+                                        <input
+                                        id="searchTextPresenter"
+                                        class="searchInputHidden"
+                                        type="text"
+                                        name="searchTextPresenter"
+                                        placeholder="발표자를 입력하세요">
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <button id="upload" onclick="location.href='/upload/'"><img id="uploadBtn" src="{% static 'img/uploadBtn.png' %}"><br>Video Upload</button>
+                    <button id="upload" onclick="location.href='/upload/lists'"><img id="edit" src="{% static 'img/edit.png' %}"><br>Edit List</button>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

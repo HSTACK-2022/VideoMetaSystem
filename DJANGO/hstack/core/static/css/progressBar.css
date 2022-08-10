@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:300");
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Lato";
+    font-size: 16px;
+}
+
+/*** <--- CIRCLE STYLES ---> ***/
+.wrap-circles {
+    /* display: flex; */
+    /* float: inline-start; */
+    text-align: right;
+    flex-wrap: nowrap;
+    justify-content: right;
+    align-items: right;
+    padding: 1rem 1rem;
+    /* background: #000; */
+    float: top;
+    margin-bottom: 120px;
+    min-width: 250px;
+}
+
+.circle {
+    position: relative;
+    width: 45px;
+    /*150*/
+    height: 45px;
+    /*150*/
+    margin: 0.2rem;
+    border-radius: 50%;
+    background: #dedede;
+    overflow: hidden;
+}
+
+.circle.per-title {
+    display: inline-block;
+    background-image: conic-gradient(#22629d 25%, #dedede 0);
+}
+
+.circle.per-keyword {
+    display: inline-block;
+    background-image: conic-gradient(#5b9d22 50%, #dedede 0);
+}
+
+.circle.per-index {
+    display: inline-block;
+    background-image: conic-gradient(#9d2230 75%, #dedede 0);
+}
+
+.circle.per-presenter {
+    display: inline-block;
+    background-image: conic-gradient(#9d6e22 100%, #dedede 0);
+}
+
+.circle .inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 35px;
+    height: 35px;
+    background: #eeeeee;
+    border-radius: 50%;
+    font-size: 0.7em;
+    /* font-weight: 300; */
+    color: rgba(0, 0, 0, 0.75);
+}
+
+.total-rank{
+    text-align: right;
+    margin-top: 5px;
+    font-size: 15px;
+}
+
+.total-perc{
+    color: #9d2230;
+    font-size: 17px;
+    margin: 0px 5px;
+}
