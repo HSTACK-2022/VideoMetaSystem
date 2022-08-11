@@ -13,8 +13,6 @@ def create_app():
 
 
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:csedbadmin@localhost/hstackdb"
-    app.config.from_pyfile('config.py')
-
     models.db.init_app(app)
 
     # Blueprint
