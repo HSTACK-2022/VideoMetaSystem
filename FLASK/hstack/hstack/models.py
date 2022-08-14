@@ -216,6 +216,7 @@ class Keyword(db.Model):
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
+    percent = db.Column(db.Integer, nullable=False, default=0)
 
     videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
 
@@ -259,3 +260,4 @@ class Metadatum(Videopath):
     uploadDate = db.Column(db.Date)
     voiceManRate = db.Column(db.Float)
     voiceWomanRate = db.Column(db.Float)
+    category_percent = db.Column(db.String(30))
