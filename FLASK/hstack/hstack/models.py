@@ -216,6 +216,7 @@ class Keyword(db.Model):
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
+    percent = db.Column(db.Integer, nullable=False, default=0)
 
     videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
 
@@ -238,6 +239,7 @@ class Videopath(db.Model):
     textAddr = db.Column(db.String(200))
     imageAddr = db.Column(db.String(200))
     extracted = db.Column(db.Integer, server_default=db.FetchedValue())
+    password = db.Column(db.String(10), nullable=True, default=None)
 
 class Metadatum(Videopath):
     __tablename__ = 'metadata'
@@ -250,6 +252,7 @@ class Metadatum(Videopath):
     title = db.Column(db.String(50), nullable=False)
     presenter = db.Column(db.String(50))
     category = db.Column(db.String(20))
+    category_percent = db.Column(db.String(30))
     narrative = db.Column(db.String(30))
     method = db.Column(db.String(10))
     videoLength = db.Column(db.String(10))
