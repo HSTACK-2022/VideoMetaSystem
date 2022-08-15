@@ -1,26 +1,28 @@
-<!-- extends 'core/upload_detail.html' %} -->
 <script
     src="https://code.jquery.com/jquery-3.6.0.slim.js"
     integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
     crossorigin="anonymous"></script>
 <!DOCTYPE html>
-{% load static %}
 <html>
     {% for metadata in metadatas %}
     <head>
         <title>VMeta - {{metadata.title}} </title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
-        <link rel="stylesheet" href="{% static 'css/tab3.css' %}">
-        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/videoDetail.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/tab3.css') }}">
+        <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
         <!-- submit check -->
     </head>
 
-    {% include 'core/header.html' %}
+    {% include 'header.html' %}
 
     <body class="bodyArea" onload="loadImg('{{ metadata.title }}'); onloads();">
         <form name="modify" method="POST" id="form">
-        {% csrf_token %}
 
         <script>
             function validCheck() {
@@ -63,7 +65,7 @@
                     document.getElementById('form').append(kk);
                     i++;
                 }
-                document.modify.action = "{% url 'Core:success' pk=pk %}"
+                document.modify.action = "{{ url_for('detail.editFile', pk = pk ) }}"
                 document.modify.submit();
             }
         </script>
@@ -76,7 +78,7 @@
                     height="450"
                     class="videoPlayer"
                     id="video"
-                    src="{{videoaddr}}"
+                    src="{{ url_for('detail.data', filepath = videoaddr) }}"
                     controls="controls"
                     autoplay muted></video>
 
@@ -86,7 +88,7 @@
                         <!-- 키워드 3개만 수정@@@@@@@@@@@-->
                         <div class="keyTag">
                             {% for keyword in keywords %}
-                                {% if keyword != "" and forloop.counter < 4 %}
+                                {% if keyword != "" and loop.index < 4 %}
                                     #{{keyword.keyword}}
                                 {% endif %}
                             {% endfor %}
@@ -213,8 +215,6 @@
 
                                         <tr>
                                             <td>
-                                                <input type="hidden" value={{keyword.keyword}}="}" name="keywordsBtnContentList">
-
                                                 {% for keyword in keywords %}
                                                     <input type="hidden" value={{keyword.keyword}} name="sysKCList">
                                                     <script>sysKEList.push({{keyword.expose}})</script>
@@ -329,27 +329,19 @@
 
 
                             <li id="tab4" class="btnCon">
-                                <a class="btn third" href="#tab4">Images</a>
+                                <a class="btn fourth" href="#tab4">Images</a>
                                 <div class="tabCon">
-                                <!--
-                                <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
-                                    <img id="down" src="{% static 'img/download.png' %}">
-                                    <br>
-                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">장면</span><br>
-                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">저장</span><br>
-                                    <span style="font-family: 'pre2'; color: rgb(95, 95, 95);">(jpg)</span>
-                                </button>
-                                -->
-                                    
                                     <div class="searchScroll">
                                         <div class="metadataTR2">
-                                            <div class="metadataTitle2" style="width: 100%;">{{metadata.title}}에서 총 {{images|length}} 개의 장면을 감지했습니다.</div>
+                                            <div class="metadataTitle3">{{metadata.title}}에서 총 {{images|length}} 개의 장면을 감지했습니다.</div>
                                         </div>  
-
                                         <div id = "pptImage">
                                             {% for image in images %}
-                                                <image id="{{image}}" src="{{image}}" style="width: inherit;border-radius: 10px;
-                                                overflow: hidden; "></image>
+                                                <image
+                                                    id="{{image}}"
+                                                    class="imageLists"
+                                                    src="{{ url_for('detail.data', filepath=image) }}">
+                                                </image>
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -360,13 +352,6 @@
                         </div>
                         <!-- end of the "detailMetadata" div-->
                     </div>
-
-                    <script>location.href = "#tab1";</script>
-                    <script type="text/javascript" src="{% static 'js/jszip/download.js' %}"></script>
-                    <script type="text/javascript" src="{% static 'js/jszip/jszip.min.js' %}"></script>
-                    <script type="text/javascript" src="{% static 'js/jszip/jszip-utils.min.js' %}"></script>
-                    <script type="text/javascript" src="{% static 'js/jszip/jszip-utils-ie.min.js' %}"></script>
-                    <script type="text/javascript" src="{% static 'js/videoAction.js' %}"></script>
                 <!--end of the "divParent" div-->
             </div>
         </form>

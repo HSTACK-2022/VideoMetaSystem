@@ -28,12 +28,15 @@ def uploadFile():
         existError = {}
         fileTitle = request.form.get("title")
         filePresenter = request.form.get("presenter")
+        password = request.form.get("password")
         uploadedFile = request.files["videoFile"]
 
         if (fileTitle == ""):
             existError['nameError'] = "영상 제목을 입력해주세요."
         if (filePresenter == ""):
             existError['presenterError'] = "영상 소유자를 입력해주세요."
+        if (password == ""):
+            existError['passwordError'] = "파일 수정을 위한 비밀번호를 입력해주세요."
         if (secure_filename(uploadedFile.filename) == ""):
             existError['fileError'] = "영상 파일을 첨부해주세요."
 
@@ -58,7 +61,7 @@ def uploadFile():
         uploadedFile.save(uploadURL)
 
         # API로 request
-        send2API(fileTitle, filePresenter, uploadURL)
+        send2API(fileTitle, filePresenter, password, uploadURL)
         
         return redirect(url_for('main.home'))
                         
@@ -66,7 +69,7 @@ def uploadFile():
 
 
 @background.task
-def send2API(title, presenter, uploadURL):
+def send2API(title, presenter, password, uploadURL):
     # API로 request
     reqUrl = 'http://127.0.0.1:8000/upload'
     data = {'title' : title, 'presenter' : presenter, 'uploadURL' : uploadURL}
@@ -74,3 +77,4 @@ def send2API(title, presenter, uploadURL):
     res.apparent_encoding
     print(res.encoding)
     print(res.text)
+    print("password for Editing : " + password)
