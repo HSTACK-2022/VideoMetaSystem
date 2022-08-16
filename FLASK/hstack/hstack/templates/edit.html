@@ -1,29 +1,26 @@
-<script
-    src="https://code.jquery.com/jquery-3.6.0.slim.js"
-    integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
-    crossorigin="anonymous"></script>
+
 <!DOCTYPE html>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 <html>
     {% for metadata in metadatas %}
     <head>
         <title>VMeta - {{metadata.title}} </title>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/videoDetail.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/tab3.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/tab3.css') }}">        
         <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
-        <!-- submit check -->
     </head>
 
     {% include 'header.html' %}
 
     <body class="bodyArea" onload="loadImg('{{ metadata.title }}'); onloads();">
         <form name="modify" method="POST" id="form">
-
+        <input type="hidden" name="password" value="{{pw}}">   
         <script>
             function validCheck() {
                 var i = 0;
@@ -65,7 +62,7 @@
                     document.getElementById('form').append(kk);
                     i++;
                 }
-                document.modify.action = "{{ url_for('detail.editFile', pk = pk ) }}"
+                document.modify.action = "{{ url_for('edit.editFile', pk = pk ) }}"
                 document.modify.submit();
             }
         </script>
@@ -98,6 +95,14 @@
                         <!-- Post meta content-->
                         <div class="videoUploadDate">{{metadata.uploaddate}}</div>
                         <div class="videoPresenter">by {{metadata.presenter}}</div>
+                    </div>
+                    <div class="right">
+                        <button
+                            type="button"
+                            id="save"
+                            onclick="location.href='{{ url_for("detail.detailFile", pk=pk ) }}'">
+                            FINISH
+                        </button>
                     </div>
                 </div>
              </div>
@@ -355,6 +360,9 @@
                 <!--end of the "divParent" div-->
             </div>
         </form>
+        <script>
+            location.href = "#tab1";
+        </script>
     </body>
 {% endfor %}
 </html>

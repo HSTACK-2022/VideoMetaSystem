@@ -50,11 +50,16 @@
                             <div class="videoPresenter">
                                 by
                                 {{metadata.presenter}}</div>
-
                         </div>
-
+                        <div class="right">
+                            <button
+                                type="button"
+                                id="save"
+                                onclick="location.href='{{url_for("edit.editFile", pk=pk ) }}'">
+                                EDIT
+                            </button>
+                        </div>
                     </div>
-
                 </div>
                 <!-- end of detail Header-->
 
