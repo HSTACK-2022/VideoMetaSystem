@@ -13,10 +13,6 @@ import base64
 import urllib3
 import threading
 
-from pathlib import Path
-from http.client import HTTPConnection, ImproperConnectionState
-from urllib.error import HTTPError
-
 from flask import current_app as app
 
 from test import audioService # app.config 사용을 위함
