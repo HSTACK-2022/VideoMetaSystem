@@ -25,6 +25,13 @@ body{
     font-size: 40px;
 }
 
+#uploadFileSubtitle {
+    width: 650px;
+    margin: auto;
+    padding: 0px 0 30px 100px;
+    font-size: 16px;
+}
+
 #uploadFileTable {
     width: 650px;
     margin: auto;
