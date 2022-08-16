@@ -7,16 +7,34 @@ from flask import Blueprint
 from flask import render_template
 from flask import current_app as app # app.config 사용을 위함
 
+from hstack import searchAll
+from hstack.config import OS
+from hstack.models import Videopath
+
+import re
 import os
 import requests
-import platform
 import background
 
 from werkzeug.utils import secure_filename
 
 # 상수 설정
-OS = platform.system()
 bp = Blueprint('main', __name__, url_prefix='/')
+
+
+# send to uploadAPI
+@background.task
+def send2API(title, presenter, password, uploadURL):
+    # API로 request
+    reqUrl = 'http://127.0.0.1:8000/upload'
+    data = {'title' : title, 'presenter' : presenter, 'uploadURL' : uploadURL}
+    res = requests.post(reqUrl, data=data)
+    res.apparent_encoding
+    print(res.encoding)
+    print(res.text)
+    print("password for Editing : " + password)
+
+
 
 @bp.route('/')
 def home():
@@ -68,13 +86,82 @@ def uploadFile():
     return render_template('upload.html', error="")
 
 
-@background.task
-def send2API(title, presenter, password, uploadURL):
-    # API로 request
-    reqUrl = 'http://127.0.0.1:8000/upload'
-    data = {'title' : title, 'presenter' : presenter, 'uploadURL' : uploadURL}
-    res = requests.post(reqUrl, data=data)
-    res.apparent_encoding
-    print(res.encoding)
-    print(res.text)
-    print("password for Editing : " + password)
+@bp.route('/uploadFile/lists', methods=['GET', 'POST'])
+def uploadList():
+    if request.method == "GET":
+        videoPathList = Videopath.query.filter(Videopath.extracted == True).all()
+        videoIdList = list()
+        for videopath in videoPathList:
+            videoIdList.append(videopath.id)
+        
+        categoryList = searchAll.extractCategories(videoIdList)
+        typeList = searchAll.extractType(videoIdList)
+        dataList = searchAll.extractData(videoIdList)
+        
+        videoMetaList = list()
+        for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
+            videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+
+        print("********************")
+        print(videoIdList)
+        print(categoryList)
+        print(videoMetaList)
+
+        if not videoIdList :
+            return render_template('uploadLists.html', code = 404)
+        else :
+            return render_template('uploadLists.html',
+                code = 200,
+                categoryList = categoryList,
+                typeList = typeList,
+                dataList = dataList,
+                videoMetaList = videoMetaList,
+                videoIdList = videoIdList
+            )
+    else:
+        # 이하 detailSearch : 수정필요
+        '''
+        # POST인 경우에는 Category, Type, Method 등 필터가 있다.
+        # 현재 videoIdList를 받아 필터링 후 return
+        stringvideoIdList = request.POST['videoIdList']
+        search_type = request.POST['search_type']   # category, method, narrative
+        search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
+
+        # 첫 filtering은 Queryset으로 온다. <Queryset ~~~ > 에서 ~~~만 나오도록. 흡사 list 출력 형태.
+        if stringvideoIdList.startswith("<QuerySet"):
+            videoIdList = stringvideoIdList[10:-1]
+        else:
+            videoIdList = stringvideoIdList
+
+        videoIdList = re.split(r'[ \[\],\']', videoIdList)
+        newVideoIdList = list()
+
+        for videoId in videoIdList:
+            if videoId != "":
+                filterQ = Q()
+                filterQ &= Q(id = videoId)
+                if search_type == "category" :  filterQ &= Q(category__contains = search_detail_type)
+                if search_type == "narrative" : filterQ &= Q(narrative = search_detail_type)
+                if search_type == "method" :    filterQ &= Q(method = search_detail_type)
+                if (not not models.Metadata.objects.filter(filterQ)) :
+                    newVideoIdList.append(videoId)
+
+        categoryList = searchAll.extractCategories(newVideoIdList)
+        typeList = searchAll.extractType(newVideoIdList)
+        dataList = searchAll.extractData(newVideoIdList) 
+        newVideoMetaList = list()
+        for i in newVideoIdList:         # (newVideoIdList)에 저장되어 있는 id로 메타데이터 가져옴
+            newVideoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+
+        if not newVideoIdList :
+            return render_template('uploadLists.html', code = 404)
+        else :
+            return render_template('uploadLists.html',
+                code = 200,
+                categoryList = categoryList,
+                typeList = typeList,
+                dataList = dataList,
+                videoMetaList = newVideoMetaList,
+                videoIdList = newVideoIdList
+            )
+        '''
