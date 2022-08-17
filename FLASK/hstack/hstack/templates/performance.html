@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <title>VMeta - SEARCH {{searchWord}}</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/videoList.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/progressBar.css') }}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <meta charset="UTF-8">
+        <script>
+            function first_load(){
+                new Chart(document.getElementById("category-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{category|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#E4D192","#FBA1A1","#4CACBC"],
+                            data: {{category_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,      // width, height 지정 위해서 필수
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'CATEGORY RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("narrative-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{narrative|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#3e95cd", "#8e5ea2"],
+                            data: {{narrative_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'NARRATIVE RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("method-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{method|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#c45850","#E4D192"],
+                            data: {{method_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'METHOD RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("line-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: [16.9,16.9,16.9,18,18,18,82.4,82.4,82.4],
+                        datasets: [{ 
+                            data: [30.2,33.7,30.8,76.3,64.9,66.3,190.1,187.0,193.8],
+                            //label: "Europe",
+                            borderColor: "#3cba9f",
+                            fill: false
+                        }
+                        ]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '동영상 크기(MB) 당 업로드 시간(s)'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    new Chart(document.getElementById("detailSearch-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: ["운영", "계층", "라즈베리", "모바일", "황", "황기", "볼트", "배터리", "마이너스", "파이"],
+                        datasets: [{ 
+                            data: [50,68,43,35,10,2,25,88,65,72],
+                            label: "제목",
+                            borderColor: "#3cba9f",
+                            fill: false
+                        },{ 
+                            data: [80,71,55,69,30,12,67,84,35,45],
+                            label: "키워드",
+                            borderColor: "#c45850",
+                            fill: false
+                        },{ 
+                            data: [20,11,34,65,85,72,32,9,1,24],
+                            label: "발표자",
+                            borderColor: "#e8c3b9",
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '세부 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+            }
+            
+            
+        </script>
+    </head>
+    <body class="bodyArea" onload="first_load();">
+        {% include 'header.html' %}
+        {% if code == 200 %}
+
+        <canvas id="category-chart" width="500" height="500"></canvas>
+        <canvas id="narrative-chart" width="400" height="400"></canvas>
+        <canvas id="method-chart" width="400" height="400"></canvas>
+<br><br>
+        <canvas id="line-chart" width="500" height="400"></canvas>
+
+        <canvas id="detailSearch-chart" width="500" height="400"></canvas>
+
+        {% endif %}
+    </body>
+</html>

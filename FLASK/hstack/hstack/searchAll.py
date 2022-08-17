@@ -13,7 +13,6 @@ from .models import Keyword
 from .models import Videopath
 from .models import Metadatum
 from .models import Timestamp
-from unicodedata import category
 
 from sqlalchemy import and_
 

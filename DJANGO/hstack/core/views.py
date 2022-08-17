@@ -508,6 +508,8 @@ def performance(request):
     categories = models.Metadata.objects.all().values_list('category', flat=True).distinct()
     print(categories)
     for item in categories:
+        if item is None:
+            continue
         words = re.split(r'[ ,:]',item)
         for word in words:
             if word in categories_dict:
@@ -520,6 +522,8 @@ def performance(request):
     narrative = models.Metadata.objects.all().values_list('narrative', flat=True)
     print(narrative)
     for item in narrative:
+        if item is None:
+            continue
         if item in narrative_dict:
             narrative_dict[item] += 1
         else:
@@ -529,6 +533,8 @@ def performance(request):
     method = models.Metadata.objects.all().values_list('method', flat=True)
     print(method)
     for item in method:
+        if item is None:
+            continue
         if item in method_dict:
             method_dict[item] += 1
         else:
