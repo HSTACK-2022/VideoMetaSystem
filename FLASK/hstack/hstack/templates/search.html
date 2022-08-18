@@ -9,8 +9,7 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
         <script>
             function searchDetail(search_type, search_detail_type) {
-                document.getElementById("search_detail_type").value = search_detail_type;
-                document.getElementById("search_type") .value = search_type;
+                document.getElementById(search_type).value = search_detail_type;
                 document.getElementById("form").submit();
             }
             function Change() {
@@ -121,11 +120,12 @@
                
                     <td class="aside">
                             
-                            <form action='http://localhost:5000/detailSearch' method="POST" id="form">
-                                <input type="hidden" name="videoIdList" value="{{videoIdList}}">
-                                <input type="hidden" name="search_type" id="search_type">
-                                <input type="hidden" name="search_detail_type" id="search_detail_type">
-                                <input type="hidden" name="searchWord" value="{{searchWord}}">
+                            <form action='http://localhost:5000/search' method="GET" id="form">
+                                <input type="hidden" name="isDetail" value="True">
+                                <input type="hidden" name="category" id="category" value="{{category}}">
+                                <input type="hidden" name="method" id="method" value="{{method}}">
+                                <input type="hidden" name="narrative" id="narrative" value="{{narrative}}">
+                                <input type="hidden" name="searchText" value="{{searchWord}}">
                                 <input type="hidden" name="searchWordTitle" value="{{searchWordDetailTitle}}">
                                 <input type="hidden" name="searchWordKeyword" value="{{searchWordDetailKeyword}}">
                                 <input type="hidden" name="searchWordPresenter" value="{{searchWordDetailPresenter}}">

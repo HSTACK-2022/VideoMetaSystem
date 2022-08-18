@@ -216,7 +216,7 @@ class Keyword(db.Model):
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
-    percent = db.Column(db.Integer, nullable=False, default=0)
+    percent = db.Column(db.Float, nullable=False, default=0)
 
     videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
 
