@@ -1,5 +1,3 @@
-from urllib.parse import urlencode
-from flask import jsonify
 from flask import url_for
 from flask import request
 from flask import redirect
@@ -7,11 +5,18 @@ from flask import Blueprint
 from flask import render_template
 from flask import current_app as app # app.config 사용을 위함
 
-from hstack import searchAll
-from hstack.config import OS
-from hstack.models import Videopath
+import pymysql
+from sqlalchemy import exc
 
-import re
+from hstack import searchAll
+from hstack.config import DB
+from hstack.models import Videopath
+from hstack.models import Metadatum
+from hstack.models import Keyword
+from hstack.models import Timestamp
+
+from datetime import datetime
+
 import os
 import requests
 import background
@@ -23,7 +28,7 @@ bp = Blueprint('main', __name__, url_prefix='/')
 
 
 # send to uploadAPI
-@background.task
+#@background.task
 def send2API(title, presenter, password, uploadURL):
     # API로 request
     reqUrl = 'http://127.0.0.1:8000/upload'
@@ -34,6 +39,71 @@ def send2API(title, presenter, password, uploadURL):
     print(res.text)
     print("password for Editing : " + password)
 
+    if (res.status_code == 200):
+        jsonData = res.json()
+
+        # DB 저장
+        videoPath = Videopath(
+            title = jsonData["title"],
+            videoAddr = jsonData["videoAddr"],
+            audioAddr = jsonData["audioAddr"],
+            textAddr = jsonData["textAddr"],
+            imageAddr = jsonData["imageAddr"],
+            extracted = 2,
+            password = password
+        )
+        
+        DB.session.add(videoPath)
+        DB.session.commit()
+        
+        id = videoPath.id
+
+        category = ""
+        categoryPerc = ""
+        for c in jsonData["category"]:
+            category += (c + ", ")
+            categoryPerc += ((str)(round(jsonData["category"][c], 3)) + ", ")
+
+        metadata = Metadatum(
+            id = id,
+            title = jsonData["title"],
+            presenter = jsonData["presenter"],
+            category = category[0:-2],
+            category_percent = categoryPerc[0:-2],
+            narrative = jsonData["narrative"],
+            method = jsonData["method"],
+            videoLength = jsonData["videoLength"],
+            videoFrame = jsonData["videoFrame"],
+            videoSize = jsonData["videoSize"],
+            videoType = jsonData["videoType"],
+            uploadDate = datetime.now().date()
+        )
+        DB.session.add(metadata)
+        DB.session.commit()
+
+        for key in jsonData["keyword"]:
+            k = Keyword(
+                id = id,
+                keyword = key,
+                percent = float(jsonData["keyword"][key]),
+                expose = 1,
+                sysdef = 1
+            )
+            DB.session.add(k)
+            DB.session.flush()
+
+        for time in jsonData["index"]:
+            i = Timestamp(
+                id = id,
+                time = time,
+                subtitle = jsonData["index"][time],
+                expose = 1,
+                sysdef = 1
+            )
+            DB.session.add(i)
+            DB.session.flush()
+
+        DB.session.commit()
 
 
 @bp.route('/')

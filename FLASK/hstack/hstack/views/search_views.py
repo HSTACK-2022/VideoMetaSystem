@@ -1,18 +1,12 @@
-from flask import url_for
 from flask import request
-from flask import redirect
 from flask import Blueprint
 from flask import render_template
 from flask import send_from_directory
 
-from hstack import models
 from hstack import searchAll
 
-import os
 import re
-import platform
 
-OS = platform.system()
 bp = Blueprint('search', __name__, url_prefix='/')
 
 @bp.route('/data/<path:filepath>')

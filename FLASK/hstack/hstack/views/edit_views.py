@@ -18,7 +18,7 @@ bp = Blueprint('edit', __name__, url_prefix='/')
 
 def checkPW(pk, inputPW):
     res = dict()
-    password = Videopath.query.filter(Videopath.id == pk).first().password
+    password = DB.session.query(Videopath).filter(Videopath.id == pk).first().password
 
     if password == None:
         res['isValid'] = True
@@ -66,7 +66,7 @@ def editFile(pk):
         DB.session.flush()
     for i in range(len(newUserKCList)):
         k = Keyword(
-            id = Videopath.query.filter(Videopath.id == pk).first().id,
+            id = DB.session.query(Videopath).filter(Videopath.id == pk).first().id,
             keyword = newUserKCList[i],
             expose = newUserKEList[i],
             sysdef = 0
@@ -76,8 +76,8 @@ def editFile(pk):
 
     DB.session.commit()
     
-    videoPath = Videopath.query.filter(Videopath.id == pk).first().videoAddr 
-    textPath = Videopath.query.filter(Videopath.id == pk).first().textAddr.split("hstack\\")[1]
+    videoPath = DB.session.query(Videopath).filter(Videopath.id == pk).first().videoAddr 
+    textPath = DB.session.query(Videopath).filter(Videopath.id == pk).first().textAddr
 
     try:
         with open(textPath, 'r', encoding='UTF-8-sig') as f:

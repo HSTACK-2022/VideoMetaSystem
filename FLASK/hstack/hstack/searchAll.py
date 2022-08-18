@@ -3,7 +3,9 @@
 
 import re
 import os
-import platform
+
+from .config import OS
+from .config import DB
 
 from .models import Keyword
 from .models import Videopath
@@ -12,9 +14,6 @@ from .models import Timestamp
 
 from sqlalchemy import and_
 
-
-# 상수 설정
-OS = platform.system()
 
 class Total:
 
@@ -36,7 +35,7 @@ class Total:
         self.finalDict = {} # 초기화
         keywordQ = and_(Keyword.id == videoId, Keyword.expose == True)
         
-        mdlist = Metadatum.query.filter(Metadatum.id == videoId).first()              # values_list()로 하면 key없는 list형태로 반환
+        mdlist = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first()              # values_list()로 하면 key없는 list형태로 반환
         mdlistDict = dict()
         mdlistDict['id'] = mdlist.id
         mdlistDict['title'] = mdlist.title
@@ -55,7 +54,7 @@ class Total:
         metadataList.append(mdlistDict)
         
         keywordList = list()
-        for kwlist in Keyword.query.filter(keywordQ).with_entities(Keyword.keyword).all(): # list형태
+        for kwlist in DB.session.query(Keyword).filter(keywordQ).with_entities(Keyword.keyword).all(): # list형태
             for kw in kwlist:
                 keywordList.append(kw)
 
@@ -67,12 +66,12 @@ class Total:
         self.finalDict['thumbnail'] = None
 
         if OS == 'Windows':
-            filePath = Videopath.query.filter(Videopath.id == videoId).first().imageAddr.split('media')[1]
+            filePath = DB.session.query(Videopath).filter(Videopath.id == videoId).first().imageAddr.split('media')[1]
         else :
-            filePath = Videopath.query.filter(Videopath.id == videoId).first().imageAddr.split('media')[2]
+            filePath = DB.session.query(Videopath).filter(Videopath.id == videoId).first().imageAddr.split('media')[2]
 
         count = 0
-        imageList = os.listdir(Videopath.query.filter(Videopath.id == videoId).first().imageAddr.split("hstack\\")[1])
+        imageList = os.listdir(DB.session.query(Videopath).filter(Videopath.id == videoId).first().imageAddr)
         for file in imageList:
             if file.split(".")[1] == "jpg":
                 count+=1
@@ -93,12 +92,12 @@ class Total:
 def getCategoryPerc(videoid, searchText):
     k_v=[]
     k_v2=[]
-    for res in Metadatum.query.filter(Metadatum.id == videoid).with_entities(Metadatum.category_percent).all():
+    for res in DB.session.query(Metadatum).filter(Metadatum.id == videoid).with_entities(Metadatum.category_percent).all():
         for k in res:
             words = re.split(r'[ ,:]', k)
             for w in words:
                 k_v.append(float(w))
-    for res in Metadatum.query.filter(Metadatum.id == videoid).filter(Metadatum.category.contains(searchText)).with_entities(Metadatum.category).all():
+    for res in DB.session.query(Metadatum).filter(Metadatum.id == videoid).filter(Metadatum.category.contains(searchText)).with_entities(Metadatum.category).all():
         for k in res:
             words = re.split(r'[ ,:]', k)
             for w in words:
@@ -130,10 +129,10 @@ def getKeywordPerc(videoid, searchText):
     # k_v --> keyword의 전체 확률 리스트
     # k_v2 --> searchText의 확률
     k_v=[]
-    for res in Keyword.query.filter(Keyword.id == videoid).with_entities(Keyword.percent).all():
+    for res in DB.session.query(Keyword).filter(Keyword.id == videoid).with_entities(Keyword.percent).all():
         for k in res:
             k_v.append(k)
-    for res in Keyword.query.filter(Keyword.id == videoid).filter(Keyword.keyword.contains(searchText)).with_entities(Keyword.percent).all():
+    for res in DB.session.query(Keyword).filter(Keyword.id == videoid).filter(Keyword.keyword.contains(searchText)).with_entities(Keyword.percent).all():
         for k in res:
             k_v2 = k
     # max 값 구하고 싶다면 아래처럼 - Django에서
@@ -175,23 +174,23 @@ def organize_weight(weight, whatzero):
 
 
 # 특정 단어가 들어있는 video들을 찾는다.
-def findAt(searchTexts, index, idList=None):
+def findAt(searchTexts, index):
     result = set()
     for searchText in searchTexts:
         if index == 0:
-            for title in Metadatum.query.filter(Metadatum.title.contains(searchText)).with_entities(Metadatum.id).all():
+            for title in DB.session.query(Metadatum).filter(Metadatum.title.contains(searchText)).with_entities(Metadatum.id).all():
                 for ti in title:
                     result.add(ti)
         elif index == 1:
-            for pre in Metadatum.query.filter(Metadatum.presenter.contains(searchText)).with_entities(Metadatum.id).all():
+            for pre in DB.session.query(Metadatum).filter(Metadatum.presenter.contains(searchText)).with_entities(Metadatum.id).all():
                 for p in pre:
                     result.add(p)
         elif index == 2:
-            for key in Keyword.query.filter(and_(Keyword.keyword.contains(searchText), Keyword.expose!=0)).with_entities(Keyword.id).all():
+            for key in DB.session.query(Keyword).filter(and_(Keyword.keyword.contains(searchText), Keyword.expose!=0)).with_entities(Keyword.id).all():
                 for k in key:
                     result.add(k)
         elif index == 3:
-            for cat in Metadatum.query.filter((Metadatum.category.contains(searchText))).with_entities(Metadatum.id).all():
+            for cat in DB.session.query(Metadatum).filter((Metadatum.category.contains(searchText))).with_entities(Metadatum.id).all():
                 for c in cat:
                     result.add(c)
 
@@ -202,8 +201,8 @@ def findAt(searchTexts, index, idList=None):
 def extractType(videoIdList):
     typeList = set()
     for videoId in videoIdList:
-        if(Metadatum.query.filter(Metadatum.id == videoId).first().narrative):
-            types = Metadatum.query.filter(Metadatum.id == videoId).first().narrative
+        if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().narrative):
+            types = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().narrative
             types = types.split(',')
             print(types)
             for c in types:
@@ -215,8 +214,8 @@ def extractType(videoIdList):
 def extractCategories(videoIdList):
     categoryList = set()
     for videoId in videoIdList:
-        if(Metadatum.query.filter(Metadatum.id == videoId).first().category):
-            category = Metadatum.query.filter(Metadatum.id == videoId).first().category
+        if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category):
+            category = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category
             category = category.split(',')
             print(category)
             for c in category:
@@ -228,9 +227,8 @@ def extractCategories(videoIdList):
 def extractData(videoIdList):
     dataList = set()
     for videoId in videoIdList:
-        print(Metadatum.query.filter(Metadatum.id == videoId).first().method)
-        if(Metadatum.query.filter(Metadatum.id == videoId).first().method):
-            datas = Metadatum.query.filter(Metadatum.id == videoId).first().method
+        if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().method):
+            datas = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().method
             datas = datas.split(',')
             print(datas)
             for c in datas:
@@ -397,7 +395,7 @@ def search(All, T, K, P):
     return (videoIdList, searchResultMeta, tttt)
 
 
-# 2022년 5월 16일 videoIdList를 받아와 filter search를 할 때 쓰임
+# videoIdList를 받아와 filter search
 def detailSearch(All, T, K, P, category, narrative, method):
     excpIdList = set()
     newVideoIdList = list()
@@ -407,25 +405,16 @@ def detailSearch(All, T, K, P, category, narrative, method):
     # metadata와 rankdata를 다시 받기 위해 검색 재실행
     videoIdList, videoMetaList, rankData = search(All=All, T=T, P=P, K=K)
 
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print("$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print(category)
-    print(narrative)
-    print(method)
-
     # filter를 통해 빼는 것들의 index 받기
     for id in videoIdList:
         if category != "":
-            if Metadatum.query.filter(and_(Metadatum.id == id, Metadatum.category.contains(category))).first() == None:
+            if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.category.contains(category))).first() == None:
                 excpIdList.add(id)
         if narrative != "":
-            if Metadatum.query.filter(and_(Metadatum.id == id, Metadatum.narrative.contains(narrative))).first() == None:
+            if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.narrative.contains(narrative))).first() == None:
                 excpIdList.add(id)
         if method != "":
-            if Metadatum.query.filter(and_(Metadatum.id == id, Metadatum.method.contains(method))).first() == None:
+            if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.method.contains(method))).first() == None:
                 excpIdList.add(id)
 
     # id 제거
