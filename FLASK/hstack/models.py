@@ -208,14 +208,14 @@ class PresenterSearch(db.Model):
 
 
 
-class ScriptSearch(db.Model):
-    __tablename__ = 'script_search'
+# class ScriptSearch(db.Model):
+#     __tablename__ = 'script_search'
 
-    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
-    sKeyword = db.Column(db.String(50), primary_key=True, nullable=False)
-    cnt = db.Column(db.Integer, nullable=False)
+#     id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
+#     sKeyword = db.Column(db.String(50), primary_key=True, nullable=False)
+#     cnt = db.Column(db.Integer, nullable=False)
 
-    videopath = db.relationship('Videopath', primaryjoin='ScriptSearch.id == Videopath.id', backref='script_searches')
+#     videopath = db.relationship('Videopath', primaryjoin='ScriptSearch.id == Videopath.id', backref='script_searches')
 
 
 
