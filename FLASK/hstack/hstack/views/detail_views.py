@@ -29,7 +29,7 @@ def download(path, title):
 @bp.route('/detail/<int:pk>', methods=['GET'])
 def detailFile(pk):
     videoPath = DB.session.query(Videopath).filter(Videopath.id == pk).first().videoAddr 
-    textPath = DB.session.query(Videopath).filter(Videopath.id == pk).first().textAddr.split("hstack\\")[1]
+    textPath = DB.session.query(Videopath).filter(Videopath.id == pk).first().textAddr
 
     try:
         with open(textPath, 'r', encoding='UTF-8-sig') as f:

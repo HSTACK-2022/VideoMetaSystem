@@ -1,8 +1,5 @@
 # coding: utf-8
-from flask_sqlalchemy import SQLAlchemy
-
-
-db = SQLAlchemy()
+from .config import DB as db
 
 class AuthGroup(db.Model):
     __tablename__ = 'auth_group'
