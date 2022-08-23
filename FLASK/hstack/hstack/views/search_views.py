@@ -39,7 +39,7 @@ def searchFile():
     print(presenter)
     print(isDetail)
 
-    if word == None and title == None and keyword == None and presenter == None:
+    if word == "" and title == "" and keyword == "" and presenter == "":
         return render_template('search.html',
             code = 404,
             searchWord = "",
