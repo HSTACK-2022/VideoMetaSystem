@@ -1,3 +1,4 @@
+from flask import request
 from flask import Blueprint
 from flask import send_file
 from flask import render_template
@@ -11,6 +12,7 @@ from hstack.models import Timestamp
 from sqlalchemy import and_
 
 from hstack import makePPT
+
 import os
 
 bp = Blueprint('detail', __name__, url_prefix='/')
@@ -55,12 +57,13 @@ def detailFile(pk):
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     print(pptPath)
 
-    return render_template( 'detail.html',
+    return render_template('detail.html',
         pk = pk,
         videoaddr = videoPath,
         scripts = scripts,
         images = pptImage,
         pptPath = pptPath,
+        #sKeyword = ScriptSearch.query.filter(ScriptSearch.sKeyword == words),
         keywords = DB.session.query(Keyword).filter(keywordQ).all(),
         metadatas = DB.session.query(Metadatum).filter(Metadatum.id == pk).all(),
         timestamps =  DB.session.query(Timestamp).filter(Timestamp.id == pk).all(),

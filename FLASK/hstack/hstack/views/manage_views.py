@@ -10,7 +10,6 @@ from hstack import searchAll
 
 # from sqlalchemy import SQLAlchemy
 from hstack.models import TotalSearch
-from hstack.models import ScriptSearch
 import os
 import re
 import platform

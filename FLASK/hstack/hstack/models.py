@@ -2,81 +2,29 @@
 from .config import DB as db
 
 
-class BackgroundTask(db.Model):
-    __tablename__ = 'background_task'
-    __table_args__ = (
-        db.CheckConstraint('(`creator_object_id` >= 0)'),
-    )
-
-    id = db.Column(db.BigInteger, primary_key=True)
-    task_name = db.Column(db.String(190), nullable=False, index=True)
-    task_params = db.Column(db.String, nullable=False)
-    task_hash = db.Column(db.String(40), nullable=False, index=True)
-    verbose_name = db.Column(db.String(255))
-    priority = db.Column(db.Integer, nullable=False, index=True)
-    run_at = db.Column(db.DateTime, nullable=False, index=True)
-    repeat = db.Column(db.BigInteger, nullable=False)
-    repeat_until = db.Column(db.DateTime)
-    queue = db.Column(db.String(190), index=True)
-    attempts = db.Column(db.Integer, nullable=False, index=True)
-    failed_at = db.Column(db.DateTime, index=True)
-    last_error = db.Column(db.String, nullable=False)
-    locked_by = db.Column(db.String(64), index=True)
-    locked_at = db.Column(db.DateTime, index=True)
-    creator_object_id = db.Column(db.Integer)
-    creator_content_type_id = db.Column(db.ForeignKey('django_content_type.id'), index=True)
-
-    creator_content_type = db.relationship('DjangoContentType', primaryjoin='BackgroundTask.creator_content_type_id == DjangoContentType.id', backref='background_tasks')
-
-class BackgroundTaskCompletedtask(db.Model):
-    __tablename__ = 'background_task_completedtask'
-    __table_args__ = (
-        db.CheckConstraint('(`creator_object_id` >= 0)'),
-    )
-
-    id = db.Column(db.BigInteger, primary_key=True)
-    task_name = db.Column(db.String(190), nullable=False, index=True)
-    task_params = db.Column(db.String, nullable=False)
-    task_hash = db.Column(db.String(40), nullable=False, index=True)
-    verbose_name = db.Column(db.String(255))
-    priority = db.Column(db.Integer, nullable=False, index=True)
-    run_at = db.Column(db.DateTime, nullable=False, index=True)
-    repeat = db.Column(db.BigInteger, nullable=False)
-    repeat_until = db.Column(db.DateTime)
-    queue = db.Column(db.String(190), index=True)
-    attempts = db.Column(db.Integer, nullable=False, index=True)
-    failed_at = db.Column(db.DateTime, index=True)
-    last_error = db.Column(db.String, nullable=False)
-    locked_by = db.Column(db.String(64), index=True)
-    locked_at = db.Column(db.DateTime, index=True)
-    creator_object_id = db.Column(db.Integer)
-    creator_content_type_id = db.Column(db.ForeignKey('django_content_type.id'), index=True)
-
-    creator_content_type = db.relationship('DjangoContentType', primaryjoin='BackgroundTaskCompletedtask.creator_content_type_id == DjangoContentType.id', backref='background_task_completedtasks')
-
-
-
-
-
 class Keyword(db.Model):
     __tablename__ = 'keywords'
 
     id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
-    expose = db.Column(db.Integer, nullable=False)
+    expose = db.Column(db.Integer, server_default=db.FetchedValue())
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
     percent = db.Column(db.Float, nullable=False, default=0)
 
     videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
 
+
 class Timestamp(db.Model):
     __tablename__ = 'timestamp'
 
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
     time = db.Column(db.String(10), primary_key=True, nullable=False)
     subtitle = db.Column(db.String(100))
-    expose = db.Column(db.Integer, nullable=False)
+    expose = db.Column(db.Integer, server_default=db.FetchedValue())
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
+
+    videopath = db.relationship('Videopath', primaryjoin='Timestamp.id == Videopath.id', backref='timestamps')
+
 
 class Videopath(db.Model):
     __tablename__ = 'videopath'
@@ -89,6 +37,7 @@ class Videopath(db.Model):
     imageAddr = db.Column(db.String(200))
     extracted = db.Column(db.Integer)
     password = db.Column(db.String(10), nullable=True, default=None)
+
 
 class Metadatum(db.Model):
     __tablename__ = 'metadata'
@@ -117,11 +66,7 @@ class Metadatum(db.Model):
 
 
 
-class KeywordSearch(db.Model):
-    __tablename__ = 'keyword_search'
 
-    kKeyword = db.Column(db.String(50), primary_key=True)
-    cnt = db.Column(db.Integer, nullable=False)
 
 
 class PresenterSearch(db.Model):
@@ -129,17 +74,27 @@ class PresenterSearch(db.Model):
 
     pKeyword = db.Column(db.String(50), primary_key=True)
     cnt = db.Column(db.Integer, nullable=False)
+    
+    def __init__(self, pKeyword, cnt, **kwargs):
+        self.pKeyword = pKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<PresenterSearch('{self.pKeyword}', '{self.cnt}')>"
 
 
-class ScriptSearch(db.Model):
-    __tablename__ = 'script_search'
+class KeywordSearch(db.Model):
+    __tablename__ = 'keyword_search'
 
-    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
-    sKeyword = db.Column(db.String(50), primary_key=True, nullable=False)
+    kKeyword = db.Column(db.String(50), primary_key=True)
     cnt = db.Column(db.Integer, nullable=False)
 
-    videopath = db.relationship('Videopath', primaryjoin='ScriptSearch.id == Videopath.id', backref='script_searches')
+    def __init__(self, kKeyword, cnt, **kwargs):
+        self.kKeyword = kKeyword
+        self.cnt = cnt
 
+    def __repr__(self):
+        return f"<KeywordSearch('{self.kKeyword}', '{self.cnt}')>"    
 
 
 class TitleSearch(db.Model):
@@ -148,6 +103,12 @@ class TitleSearch(db.Model):
     tiKeyword = db.Column(db.String(50), primary_key=True)
     cnt = db.Column(db.Integer, nullable=False)
 
+    def __init__(self, tiKeyword, cnt, **kwargs):
+        self.tiKeyword = tiKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<TitleSearch('{self.tiKeyword}', '{self.cnt}')>"
 
 
 class TotalSearch(db.Model):
@@ -155,3 +116,10 @@ class TotalSearch(db.Model):
 
     tKeyword = db.Column(db.String(50), primary_key=True)
     cnt = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, tKeyword, cnt, **kwargs):
+        self.tKeyword = tKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<TotalKeyword('{self.tKeyword}', '{self.cnt}')>"

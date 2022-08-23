@@ -35,7 +35,11 @@ class Total:
         self.finalDict = {} # 초기화
         keywordQ = and_(Keyword.id == videoId, Keyword.expose == True)
         
-        mdlist = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first()              # values_list()로 하면 key없는 list형태로 반환
+        # dict로 만들기
+        mdlist = Metadatum.query.filter(Metadatum.id == videoId).first()
+        #mdlist = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first()
+        
+
         mdlistDict = dict()
         mdlistDict['id'] = mdlist.id
         mdlistDict['title'] = mdlist.title
@@ -48,8 +52,8 @@ class Total:
         mdlistDict['videoType'] = mdlist.videoType
         mdlistDict['videoSize'] = mdlist.videoSize
         mdlistDict['uploadDate'] = mdlist.uploadDate
-        mdlistDict['voiceManRate'] = mdlist.voiceManRate
-        mdlistDict['voiceWomanRate'] = mdlist.voiceWomanRate
+        #mdlistDict['voiceManRate'] = mdlist.voiceManRate
+        #mdlistDict['voiceWomanRate'] = mdlist.voiceWomanRate
         metadataList = list()
         metadataList.append(mdlistDict)
         
