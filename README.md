@@ -74,14 +74,14 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 
 ## ⚙️ 시스템 구조
 
-### Django를 이용한 시스템 구조
+### √ Django를 이용한 시스템 구조
 
    ![djangoArch](./report/img/djangoArch.jpg)
 
 <br/>
 <br/>
 
-### Flask를 이용한 시스템 구조
+### √ Flask를 이용한 시스템 구조
 
    ![flaskArch](./report/img/flaskArch.jpg)
 
@@ -90,7 +90,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 <br/>
 <br/>
 
-### Ranking 알고리즘
+### √ Ranking 알고리즘
 
    <img src=./report/img/rankingWeightTable.jpg alt="rankingAlgo" width = "500" /> 
     
