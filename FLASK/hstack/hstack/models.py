@@ -1,8 +1,5 @@
 # coding: utf-8
-from flask_sqlalchemy import SQLAlchemy
-
-
-db = SQLAlchemy()
+from .config import DB as db
 
 class AuthGroup(db.Model):
     __tablename__ = 'auth_group'
@@ -216,7 +213,7 @@ class Keyword(db.Model):
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
-    percent = db.Column(db.Integer, nullable=False, default=0)
+    percent = db.Column(db.Float, nullable=False, default=0)
 
     videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
 
@@ -238,17 +235,17 @@ class Videopath(db.Model):
     audioAddr = db.Column(db.String(200))
     textAddr = db.Column(db.String(200))
     imageAddr = db.Column(db.String(200))
-    extracted = db.Column(db.Integer, server_default=db.FetchedValue())
+    extracted = db.Column(db.Integer)
     password = db.Column(db.String(10), nullable=True, default=None)
 
-class Metadatum(Videopath):
+class Metadatum(db.Model):
     __tablename__ = 'metadata'
     __table_args__ = (
         db.CheckConstraint("(`method` in (_utf8mb3'PPT',_utf8mb3'실습'))"),
         db.CheckConstraint("(`narrative` in (_utf8mb3'description',_utf8mb3'application',_utf8mb3'description/application'))")
     )
 
-    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True)
+    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
     title = db.Column(db.String(50), nullable=False)
     presenter = db.Column(db.String(50))
     category = db.Column(db.String(20))
@@ -262,3 +259,5 @@ class Metadatum(Videopath):
     uploadDate = db.Column(db.Date)
     voiceManRate = db.Column(db.Float)
     voiceWomanRate = db.Column(db.Float)
+
+    videopath = db.relationship('Videopath', primaryjoin='Metadatum.id == Videopath.id', backref='metadata')

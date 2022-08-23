@@ -1,5 +1,6 @@
 import os
 import platform
+from flask_sqlalchemy import SQLAlchemy
 
 OS = platform.system()
 BASE_DIR = os.path.dirname(__file__)
@@ -22,5 +23,7 @@ db = {
     'port' : 3306,
     'database' : 'hstackDB'
 }
+
+DB = SQLAlchemy()
 
 DB_URL = f"mysql+mysqlconnector://{db['user']}:{db['password']}@{db['host']}:{db['port']}/{db['database']}?charset=utf8"

@@ -1,11 +1,7 @@
-from flask import url_for
-from flask import request
-from flask import redirect
 from flask import Blueprint
 from flask import send_file
 from flask import render_template
 from flask import send_from_directory
-from flask_sqlalchemy import SQLAlchemy
 
 from hstack.config import DB
 from hstack.models import Videopath
@@ -32,8 +28,8 @@ def download(path, title):
 
 @bp.route('/detail/<int:pk>', methods=['GET'])
 def detailFile(pk):
-    videoPath = Videopath.query.filter(Videopath.id == pk).first().videoAddr 
-    textPath = Videopath.query.filter(Videopath.id == pk).first().textAddr.split("hstack\\")[1]
+    videoPath = DB.session.query(Videopath).filter(Videopath.id == pk).first().videoAddr 
+    textPath = DB.session.query(Videopath).filter(Videopath.id == pk).first().textAddr
 
     try:
         with open(textPath, 'r', encoding='UTF-8-sig') as f:
@@ -51,7 +47,7 @@ def detailFile(pk):
     pptImage = makePPT.getPPTImage(videoPath)
 
     # PPT 파일 생성
-    title = Videopath.query.filter(Videopath.id == pk).first().title
+    title = DB.session.query(Videopath).filter(Videopath.id == pk).first().title
     makePPT.getPPTFile(videoPath, title)
 
     # PPT 파일을 얻기 위한 폴더명 얻기
@@ -65,7 +61,7 @@ def detailFile(pk):
         scripts = scripts,
         images = pptImage,
         pptPath = pptPath,
-        keywords = Keyword.query.filter(keywordQ).all(),
-        metadatas = Metadatum.query.filter(Metadatum.id == pk).all(),
-        timestamps =  Timestamp.query.filter(Timestamp.id == pk).all(),
+        keywords = DB.session.query(Keyword).filter(keywordQ).all(),
+        metadatas = DB.session.query(Metadatum).filter(Metadatum.id == pk).all(),
+        timestamps =  DB.session.query(Timestamp).filter(Timestamp.id == pk).all(),
     )

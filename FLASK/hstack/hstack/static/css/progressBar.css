@@ -48,6 +48,11 @@ body {
     background-image: conic-gradient(#5b9d22 50%, #dedede 0);
 }
 
+.circle.per-caregory {
+    display: inline-block;
+    background-image: conic-gradient(#c45850 50%, #dedede 0);
+}
+
 .circle.per-index {
     display: inline-block;
     background-image: conic-gradient(#9d2230 75%, #dedede 0);
@@ -70,7 +75,7 @@ body {
     height: 35px;
     background: #eeeeee;
     border-radius: 50%;
-    font-size: 0.7em;
+    font-size: 0.5em;
     /* font-weight: 300; */
     color: rgba(0, 0, 0, 0.75);
 }
