@@ -3,18 +3,25 @@
     <head>
         {% for metadata in metadatas %}
             <link rel="stylesheet" href="{{ url_for('static', filename='css/videoDetail.css') }}">
-            <link rel="stylesheet" href="{{ url_for('static', filename='css/csstab3.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/tab3.css') }}">
             <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
-            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
+            <title>VMeta - {{metadata.title}}
+            </title>
+            <meta charset="UTF-8">
+
             <script type="text/javascript">
-              
+            
                 function writeLog(script) {
                     var script = '{{scripts}};'
                     var os = navigator.userAgent;
                     var videoPath = '{{videoaddr}};';
-                    var videoID = '{{metadata.id}}';
+                    var videoID = {{metadata.id}};
                     console.log(videoPath);
-                    
 
                     var logPath = videoPath.split('Video');
                     var logPath2 = logPath[0] + "\Log";
@@ -29,17 +36,12 @@
                     data.searchContent = searchContent;
                 
                     const request = new XMLHttpRequest();
-                    request.open('Post', `/detail/${videoID}/ProcessKeywordinfo/${JSON.stringify(searchContent)}`);
+                    request.open('Post', `/detail/${videoID}/ProcessUserinfo/${JSON.stringify(searchContent)}`);
                     request.send();
 
-                }   
-
+                }
                 
             </script>
-            <title>VMeta - {{metadata.title}}
-            </title>
-            <meta charset="UTF-8">
-
         </head>
         {% include 'header.html' %}
         <body class="bodyArea" onload="loadImg('{{ metadata.title }}'); onloads();">
@@ -76,11 +78,16 @@
                             <div class="videoPresenter">
                                 by
                                 {{metadata.presenter}}</div>
-
                         </div>
-
+                        <div class="right">
+                            <button
+                                type="button"
+                                id="save"
+                                onclick="location.href='{{url_for("edit.editFile", pk=pk ) }}'">
+                                EDIT
+                            </button>
+                        </div>
                     </div>
-
                 </div>
                 <!-- end of detail Header-->
 
@@ -158,23 +165,19 @@
                                         <input
                                             type="text"
                                             placeholder="Search in &quot;{{ metadata.title }}&quot;"
-                                            name="searchScriptKeyword"
                                             id="searchContent"></input>
                                         <input
-                                            type="submit"
+                                            type="button"
                                             class="searchBtn"
-                                            
                                             value=""
-                                            onclick="searchPost({{scripts}});writeLog();"
+                                            onclick="searchPost({{scripts}}); writeLog();"
                                             ></input>
                                     </div>
-
                                     <div class="searchScroll">
                                         <table id="searchResArea" class="" ></table>
                                     </div>
                                 </div>
                             </li>
-
                             
                              <!-- @@@@@@@@@세번째 탭 목차 -->
                              <li id="tab3" class="btnCon">
@@ -211,17 +214,46 @@
                                 </div>
                             </li>
 
-
+                            <li id="tab4" class="btnCon">
+                                <a class="btn fourth" href="#tab4">Images</a>
+                                <div class="tabCon">
+                                    <div class="donwloadBtns">
+                                        <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
+                                            <img id="down" src="{{ url_for('static', filename='img/download.png') }}">
+                                            <br>
+                                            <span class="sceneDownloadBtn">장면</span><br>
+                                            <span class="sceneDownloadBtn">저장</span><br>
+                                            <span class="sceneDownloadBtn">(jpg)</span>
+                                        </button>
+                                        <button id="downloadImg" type="button" onclick="downloadPPT('{{pptPath}}', '{{metadata.title}}')">
+                                            <img id="down" src="{{ url_for('static', filename='img/download.png') }}">
+                                            <br>
+                                            <span lass="sceneDownloadBtn">장면</span><br>
+                                            <span lass="sceneDownloadBtn">저장</span><br>
+                                            <span lass="sceneDownloadBtn">(ppt)</span>
+                                        </button>
+                                    </div>
+                                    <div class="searchScroll">
+                                        <div class="metadataTR2">
+                                            <div class="metadataTitle3">{{metadata.title}}에서 총 {{images|length}} 개의 장면을 감지했습니다.</div>
+                                        </div>  
+                                        <div id = "pptImage">
+                                            {% for image in images %}
+                                                <image
+                                                    id="{{image}}"
+                                                    class="imageLists"
+                                                    src="{{ url_for('detail.data', filepath=image) }}">
+                                                </image>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
 
                         </ul>
                     </div>
                 </div>
             </div>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
             
             <script>
                 location.href = "#tab1";
