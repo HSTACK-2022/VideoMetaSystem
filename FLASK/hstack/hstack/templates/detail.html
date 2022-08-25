@@ -5,6 +5,37 @@
             <link rel="stylesheet" href="{{ url_for('static', filename='css/videoDetail.css') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='css/csstab3.css') }}">
             <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+            <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script type="text/javascript">
+              
+                function writeLog(script) {
+                    var script = '{{scripts}};'
+                    var os = navigator.userAgent;
+                    var videoPath = '{{videoaddr}};';
+                    var videoID = '{{metadata.id}}';
+                    console.log(videoPath);
+                    
+
+                    var logPath = videoPath.split('Video');
+                    var logPath2 = logPath[0] + "\Log";
+                    var filename = logPath[1].split('.');
+                    var logfilename = filename[0]+ ".txt";
+                    var logAddr = logPath2 + logfilename;
+                    console.log(logPath2);
+                    console.log(logAddr);
+
+                    var searchContent = document.getElementById("searchContent").value;
+                    var data = new Object();
+                    data.searchContent = searchContent;
+                
+                    const request = new XMLHttpRequest();
+                    request.open('Post', `/detail/${videoID}/ProcessKeywordinfo/${JSON.stringify(searchContent)}`);
+                    request.send();
+
+                }   
+
+                
+            </script>
             <title>VMeta - {{metadata.title}}
             </title>
             <meta charset="UTF-8">
@@ -127,12 +158,14 @@
                                         <input
                                             type="text"
                                             placeholder="Search in &quot;{{ metadata.title }}&quot;"
+                                            name="searchScriptKeyword"
                                             id="searchContent"></input>
                                         <input
                                             type="submit"
                                             class="searchBtn"
+                                            
                                             value=""
-                                            onclick="searchPost({{scripts}});"
+                                            onclick="searchPost({{scripts}});writeLog();"
                                             ></input>
                                     </div>
 

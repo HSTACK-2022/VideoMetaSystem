@@ -1,8 +1,10 @@
 # coding: utf-8
+from turtle import update
 from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
+
 
 class AuthGroup(db.Model):
     __tablename__ = 'auth_group'
@@ -10,31 +12,41 @@ class AuthGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False, unique=True)
 
+
 class AuthGroupPermission(db.Model):
     __tablename__ = 'auth_group_permissions'
     __table_args__ = (
-        db.Index('auth_group_permissions_group_id_permission_id_0cd325b0_uniq', 'group_id', 'permission_id'),
+        db.Index('auth_group_permissions_group_id_permission_id_0cd325b0_uniq',
+                 'group_id', 'permission_id'),
     )
 
     id = db.Column(db.BigInteger, primary_key=True)
     group_id = db.Column(db.ForeignKey('auth_group.id'), nullable=False)
-    permission_id = db.Column(db.ForeignKey('auth_permission.id'), nullable=False, index=True)
+    permission_id = db.Column(db.ForeignKey(
+        'auth_permission.id'), nullable=False, index=True)
 
-    group = db.relationship('AuthGroup', primaryjoin='AuthGroupPermission.group_id == AuthGroup.id', backref='auth_group_permissions')
-    permission = db.relationship('AuthPermission', primaryjoin='AuthGroupPermission.permission_id == AuthPermission.id', backref='auth_group_permissions')
+    group = db.relationship(
+        'AuthGroup', primaryjoin='AuthGroupPermission.group_id == AuthGroup.id', backref='auth_group_permissions')
+    permission = db.relationship(
+        'AuthPermission', primaryjoin='AuthGroupPermission.permission_id == AuthPermission.id', backref='auth_group_permissions')
+
 
 class AuthPermission(db.Model):
     __tablename__ = 'auth_permission'
     __table_args__ = (
-        db.Index('auth_permission_content_type_id_codename_01ab375a_uniq', 'content_type_id', 'codename'),
+        db.Index('auth_permission_content_type_id_codename_01ab375a_uniq',
+                 'content_type_id', 'codename'),
     )
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    content_type_id = db.Column(db.ForeignKey('django_content_type.id'), nullable=False)
+    content_type_id = db.Column(db.ForeignKey(
+        'django_content_type.id'), nullable=False)
     codename = db.Column(db.String(100), nullable=False)
 
-    content_type = db.relationship('DjangoContentType', primaryjoin='AuthPermission.content_type_id == DjangoContentType.id', backref='auth_permissions')
+    content_type = db.relationship(
+        'DjangoContentType', primaryjoin='AuthPermission.content_type_id == DjangoContentType.id', backref='auth_permissions')
+
 
 class AuthUser(db.Model):
     __tablename__ = 'auth_user'
@@ -51,32 +63,41 @@ class AuthUser(db.Model):
     is_active = db.Column(db.Integer, nullable=False)
     date_joined = db.Column(db.DateTime, nullable=False)
 
+
 class AuthUserGroup(db.Model):
     __tablename__ = 'auth_user_groups'
     __table_args__ = (
-        db.Index('auth_user_groups_user_id_group_id_94350c0c_uniq', 'user_id', 'group_id'),
+        db.Index('auth_user_groups_user_id_group_id_94350c0c_uniq',
+                 'user_id', 'group_id'),
     )
 
     id = db.Column(db.BigInteger, primary_key=True)
     user_id = db.Column(db.ForeignKey('auth_user.id'), nullable=False)
-    group_id = db.Column(db.ForeignKey('auth_group.id'), nullable=False, index=True)
+    group_id = db.Column(db.ForeignKey('auth_group.id'),
+                         nullable=False, index=True)
 
-    group = db.relationship('AuthGroup', primaryjoin='AuthUserGroup.group_id == AuthGroup.id', backref='auth_user_groups')
-    user = db.relationship('AuthUser', primaryjoin='AuthUserGroup.user_id == AuthUser.id', backref='auth_user_groups')
+    group = db.relationship(
+        'AuthGroup', primaryjoin='AuthUserGroup.group_id == AuthGroup.id', backref='auth_user_groups')
+    user = db.relationship(
+        'AuthUser', primaryjoin='AuthUserGroup.user_id == AuthUser.id', backref='auth_user_groups')
+
 
 class AuthUserUserPermission(db.Model):
     __tablename__ = 'auth_user_user_permissions'
     __table_args__ = (
-        db.Index('auth_user_user_permissions_user_id_permission_id_14a6b632_uniq', 'user_id', 'permission_id'),
+        db.Index('auth_user_user_permissions_user_id_permission_id_14a6b632_uniq',
+                 'user_id', 'permission_id'),
     )
 
     id = db.Column(db.BigInteger, primary_key=True)
     user_id = db.Column(db.ForeignKey('auth_user.id'), nullable=False)
-    permission_id = db.Column(db.ForeignKey('auth_permission.id'), nullable=False, index=True)
+    permission_id = db.Column(db.ForeignKey(
+        'auth_permission.id'), nullable=False, index=True)
 
-    permission = db.relationship('AuthPermission', primaryjoin='AuthUserUserPermission.permission_id == AuthPermission.id', backref='auth_user_user_permissions')
-    user = db.relationship('AuthUser', primaryjoin='AuthUserUserPermission.user_id == AuthUser.id', backref='auth_user_user_permissions')
-
+    permission = db.relationship(
+        'AuthPermission', primaryjoin='AuthUserUserPermission.permission_id == AuthPermission.id', backref='auth_user_user_permissions')
+    user = db.relationship(
+        'AuthUser', primaryjoin='AuthUserUserPermission.user_id == AuthUser.id', backref='auth_user_user_permissions')
 
 
 class BackgroundTask(db.Model):
@@ -101,9 +122,12 @@ class BackgroundTask(db.Model):
     locked_by = db.Column(db.String(64), index=True)
     locked_at = db.Column(db.DateTime, index=True)
     creator_object_id = db.Column(db.Integer)
-    creator_content_type_id = db.Column(db.ForeignKey('django_content_type.id'), index=True)
+    creator_content_type_id = db.Column(
+        db.ForeignKey('django_content_type.id'), index=True)
 
-    creator_content_type = db.relationship('DjangoContentType', primaryjoin='BackgroundTask.creator_content_type_id == DjangoContentType.id', backref='background_tasks')
+    creator_content_type = db.relationship(
+        'DjangoContentType', primaryjoin='BackgroundTask.creator_content_type_id == DjangoContentType.id', backref='background_tasks')
+
 
 class BackgroundTaskCompletedtask(db.Model):
     __tablename__ = 'background_task_completedtask'
@@ -127,9 +151,12 @@ class BackgroundTaskCompletedtask(db.Model):
     locked_by = db.Column(db.String(64), index=True)
     locked_at = db.Column(db.DateTime, index=True)
     creator_object_id = db.Column(db.Integer)
-    creator_content_type_id = db.Column(db.ForeignKey('django_content_type.id'), index=True)
+    creator_content_type_id = db.Column(
+        db.ForeignKey('django_content_type.id'), index=True)
 
-    creator_content_type = db.relationship('DjangoContentType', primaryjoin='BackgroundTaskCompletedtask.creator_content_type_id == DjangoContentType.id', backref='background_task_completedtasks')
+    creator_content_type = db.relationship(
+        'DjangoContentType', primaryjoin='BackgroundTaskCompletedtask.creator_content_type_id == DjangoContentType.id', backref='background_task_completedtasks')
+
 
 class CoreCategory(db.Model):
     __tablename__ = 'core_category'
@@ -138,6 +165,7 @@ class CoreCategory(db.Model):
     name = db.Column(db.String(50), nullable=False, unique=True)
     slug = db.Column(db.String(200), nullable=False, unique=True)
 
+
 class CoreDocument(db.Model):
     __tablename__ = 'core_document'
 
@@ -145,6 +173,7 @@ class CoreDocument(db.Model):
     title = db.Column(db.String(200), nullable=False)
     uploadedFile = db.Column(db.String(100), nullable=False)
     dateTimeOfUpload = db.Column(db.DateTime, nullable=False)
+
 
 class CorePost(db.Model):
     __tablename__ = 'core_post'
@@ -160,8 +189,8 @@ class CorePost(db.Model):
     author_id = db.Column(db.Integer, index=True)
     category_id = db.Column(db.ForeignKey('core_category.id'), index=True)
 
-    category = db.relationship('CoreCategory', primaryjoin='CorePost.category_id == CoreCategory.id', backref='core_posts')
-
+    category = db.relationship(
+        'CoreCategory', primaryjoin='CorePost.category_id == CoreCategory.id', backref='core_posts')
 
 
 class DjangoAdminLog(db.Model):
@@ -176,21 +205,28 @@ class DjangoAdminLog(db.Model):
     object_repr = db.Column(db.String(200), nullable=False)
     action_flag = db.Column(db.SmallInteger, nullable=False)
     change_message = db.Column(db.String, nullable=False)
-    content_type_id = db.Column(db.ForeignKey('django_content_type.id'), index=True)
-    user_id = db.Column(db.ForeignKey('auth_user.id'), nullable=False, index=True)
+    content_type_id = db.Column(db.ForeignKey(
+        'django_content_type.id'), index=True)
+    user_id = db.Column(db.ForeignKey('auth_user.id'),
+                        nullable=False, index=True)
 
-    content_type = db.relationship('DjangoContentType', primaryjoin='DjangoAdminLog.content_type_id == DjangoContentType.id', backref='django_admin_logs')
-    user = db.relationship('AuthUser', primaryjoin='DjangoAdminLog.user_id == AuthUser.id', backref='django_admin_logs')
+    content_type = db.relationship(
+        'DjangoContentType', primaryjoin='DjangoAdminLog.content_type_id == DjangoContentType.id', backref='django_admin_logs')
+    user = db.relationship(
+        'AuthUser', primaryjoin='DjangoAdminLog.user_id == AuthUser.id', backref='django_admin_logs')
+
 
 class DjangoContentType(db.Model):
     __tablename__ = 'django_content_type'
     __table_args__ = (
-        db.Index('django_content_type_app_label_model_76bd3d3b_uniq', 'app_label', 'model'),
+        db.Index('django_content_type_app_label_model_76bd3d3b_uniq',
+                 'app_label', 'model'),
     )
 
     id = db.Column(db.Integer, primary_key=True)
     app_label = db.Column(db.String(100), nullable=False)
     model = db.Column(db.String(100), nullable=False)
+
 
 class DjangoMigration(db.Model):
     __tablename__ = 'django_migrations'
@@ -200,6 +236,7 @@ class DjangoMigration(db.Model):
     name = db.Column(db.String(255), nullable=False)
     applied = db.Column(db.DateTime, nullable=False)
 
+
 class DjangoSession(db.Model):
     __tablename__ = 'django_session'
 
@@ -208,16 +245,18 @@ class DjangoSession(db.Model):
     expire_date = db.Column(db.DateTime, nullable=False, index=True)
 
 
-
 class Keyword(db.Model):
     __tablename__ = 'keywords'
 
-    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
+    id = db.Column(db.ForeignKey('videopath.id'),
+                   primary_key=True, nullable=False)
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
 
-    videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
+    videopath = db.relationship(
+        'Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
+
 
 class Timestamp(db.Model):
     __tablename__ = 'timestamp'
@@ -228,6 +267,7 @@ class Timestamp(db.Model):
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
 
+
 class Videopath(db.Model):
     __tablename__ = 'videopath'
 
@@ -237,13 +277,16 @@ class Videopath(db.Model):
     audioAddr = db.Column(db.String(200))
     textAddr = db.Column(db.String(200))
     imageAddr = db.Column(db.String(200))
+    logAddr = db.Column(db.String(100))
     extracted = db.Column(db.Integer, server_default=db.FetchedValue())
+
 
 class Metadatum(Videopath):
     __tablename__ = 'metadata'
     __table_args__ = (
         db.CheckConstraint("(`method` in (_utf8mb3'PPT',_utf8mb3'실습'))"),
-        db.CheckConstraint("(`narrative` in (_utf8mb3'description',_utf8mb3'application',_utf8mb3'description/application'))")
+        db.CheckConstraint(
+            "(`narrative` in (_utf8mb3'description',_utf8mb3'application',_utf8mb3'description/application'))")
     )
 
     id = db.Column(db.ForeignKey('videopath.id'), primary_key=True)
@@ -259,3 +302,79 @@ class Metadatum(Videopath):
     uploadDate = db.Column(db.Date)
     voiceManRate = db.Column(db.Float)
     voiceWomanRate = db.Column(db.Float)
+
+
+class TotalSearch(db.Model):
+    __tablename__ = 'total_search'
+
+    tKeyword = db.Column(db.String(50), primary_key=True)
+    cnt = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, tKeyword, cnt, **kwargs):
+        self.tKeyword = tKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<TotalSearch('{self.tKeyword}', '{self.cnt}')>"
+
+
+class TitleSearch(db.Model):
+    __tablename__ = 'title_search'
+
+    tiKeyword = db.Column(db.String(50), primary_key=True)
+    cnt = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, tiKeyword, cnt, **kwargs):
+        self.tiKeyword = tiKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<TitleSearch('{self.tiKeyword}', '{self.cnt}')>"
+
+
+class KeywordSearch(db.Model):
+    __tablename__ = 'keyword_search'
+
+    kKeyword = db.Column(db.String(50), primary_key=True)
+    cnt = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, kKeyword, cnt, **kwargs):
+        self.kKeyword = kKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<KeywordSearch('{self.kKeyword}', '{self.cnt}')>"
+
+
+class PresenterSearch(db.Model):
+    __tablename__ = 'presenter_search'
+
+    pKeyword = db.Column(db.String(50), primary_key=True)
+    cnt = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, pKeyword, cnt, **kwargs):
+        self.pKeyword = pKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<PresenterSearch('{self.pKeyword}', '{self.cnt}')>"
+
+
+class ScriptSearch(db.Model):
+    __tablename__ = 'script_search'
+
+    id = db.Column(db.ForeignKey('videopath.id'),
+                   primary_key=True, nullable=False)
+    sKeyword = db.Column(db.String(50), primary_key=True, nullable=False)
+    cnt = db.Column(db.Integer, nullable=False)
+
+    videopath = db.relationship(
+        'Videopath', primaryjoin='ScriptSearch.id == Videopath.id', backref='script_search')
+
+    def __init__(self, id, sKeyword, cnt, **kwargs):
+        self.id = id
+        self.sKeyword = sKeyword
+        self.cnt = cnt
+
+    def __repr__(self):
+        return f"<ScriptSearch('{self.sKeyword}','{self.pKeyword}', '{self.cnt}')>"

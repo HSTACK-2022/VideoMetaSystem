@@ -11,9 +11,13 @@ from . import models
 def create_app():
     app = Flask(__name__)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:hstackdbadmin@localhost/hstackDB"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:1891265@localhost/hstackdb"
     models.db.init_app(app)
-
+    db = SQLAlchemy(app)
+    migrate = Migrate(app, db)
+    
+    
+    
     # Blueprint
     from .views import main_views
     from .views import search_views

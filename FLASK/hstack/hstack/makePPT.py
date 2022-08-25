@@ -15,7 +15,7 @@ OS = platform.system()
 def getPPTFile(videoId):
     pptFile = Presentation()
     videoPathObj = Videopath.query.filter(Videopath.id == videoId)  #DB에서 videoId에 해당하는 객체를 가져옴
-    imageFilePath = videoPathObj.imageaddr                          #DB에서 imageAddr 추출
+    imageFilePath = videoPathObj.imageAddr                          #DB에서 imageAddr 추출
     title = videoPathObj.title
 
     if OS == "Windows" : 
