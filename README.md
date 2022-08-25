@@ -98,7 +98,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 - 기본적으로 적용되는 가중치는 <b>Title : Presenter : Keyword : Category = 3 : 3 : 2 : 2</b>입니다.
 - 만약 특정 기준에 대해 검색 결과가 없을 경우, 아래의 가중치 표를 따릅니다. 
 
-   <img src=./report/img/rankingWeightTable_flask.jpg alt="rankingAlgo" width = "500" /> 
+   <img src=./report/img/rankingWeightTable_Flask.jpg alt="rankingAlgo" width = "500" /> 
     
 <br/>
 <br/>
