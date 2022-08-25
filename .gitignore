@@ -253,11 +253,10 @@ DJANGO/hstack/tensorflow/AudioDetect/data
 DJANGO/hstack/tensorflow/ImageSeperate/train/
 DJANGO/hstack/tensorflow/ImageSeperate/validation/
 DJANGO/hstack/secrets.json
-Flask/myenv/
-Flask/flaskenv/
 
 #FLASK
 FLASK/venv
+FLASK/hstack/logs/
 FLASK/hstack/media/
 FLASK/hstack/migrations/
 FLASK/hstack/__pycache__/
@@ -267,4 +266,6 @@ FLASK/hstack/tensorflow/ImageSeperate/validation/
 
 
 #FLASK_TEST
+Flask/myenv/
+Flask/flaskenv/
 FLASK_TEST/

@@ -6,6 +6,14 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 ---
 <br/>
 
+## ✔ NOTICE
+
+2022년 7월부터, 본 프로젝트는 <b>Flask Framework를 사용합니다.</b><br/>
+이전 Django Framework를 사용한 프로젝트는 [여기](https://github.com/yeondelight/VideoMetaSystem/tree/c8f0593a7dfdaf904dcb72204b0092fa8b1f5429)를 참고해주세요.
+
+---
+<br/>
+
 ## 🏆 수상 내역
 
 ### 2022 한성대학교 컴퓨터공학부 캡스톤디자인 작품 발표회
@@ -74,14 +82,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 
 ## ⚙️ 시스템 구조
 
-### √ Django를 이용한 시스템 구조
-
-   ![djangoArch](./report/img/djangoArch.jpg)
-
-<br/>
-<br/>
-
-### √ Flask를 이용한 시스템 구조
+### √ 전체 구조
 
    ![flaskArch](./report/img/flaskArch.jpg)
 
@@ -90,9 +91,14 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 <br/>
 <br/>
 
+
 ### √ Ranking 알고리즘
 
-   <img src=./report/img/rankingWeightTable.jpg alt="rankingAlgo" width = "500" /> 
+- Ranking 알고리즘은 영상의 Title, Presenter, Keyword, Category를 기준으로 영상의 정확도를 계산합니다.
+- 기본적으로 적용되는 가중치는 <b>Title : Presenter : Keyword : Category = 3 : 3 : 2 : 2</b>입니다.
+- 만약 특정 기준에 대해 검색 결과가 없을 경우, 아래의 가중치 표를 따릅니다. 
+
+   <img src=./report/img/rankingWeightTable_Flask.jpg alt="rankingAlgo" width = "500" /> 
     
 <br/>
 <br/>
@@ -136,7 +142,29 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 ## 🖼 프로젝트 결과
 
 ### 1. 작품 사진
-   ![result](./report/img/VMSresult.jpg)
+
+<b> 
+
+- 검색 화면 
+ <img src=./report/img/executeScreenshot1.jpg alt="executeScreenshot1" width = "1000" />
+ 
+<br/><br/>
+
+ - 영상 업로드 화면
+ <img src=./report/img/executeScreenshot2.jpg alt="executeScreenshot2" width = "1000" />
+ 
+<br/><br/>
+
+ - 영상 상세 정보 확인 화면
+ <img src=./report/img/executeScreenshot3.jpg alt="executeScreenshot3" width = "1000" />
+ 
+<br/><br/>
+
+ - 영상 메타데이터 수정 화면
+ <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot4" width = "600" />
+ 
+<br/><br/>
+</b>
    
 <br/>
 

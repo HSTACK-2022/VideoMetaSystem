@@ -279,6 +279,10 @@ def search(All, T, K, P):
         weight[3] = 0
         whatzero.append(3)
 
+    # 검색 결과가 없는 경우 return
+    if (len(whatzero) == 4):
+        return {}, {}, {}
+
     # weight 정리
     weight = organize_weight(weight, whatzero)
     # 검색 대상이 되는 비디오 리스트 = video (type = set)
