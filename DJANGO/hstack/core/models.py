@@ -41,6 +41,7 @@ class Keywords(models.Model):
     keyword = models.CharField(max_length=10)
     expose = models.IntegerField(default=True)
     sysdef = models.IntegerField(default=True)
+    percent = models.FloatField(default=0)
 
     class Meta:
         managed = False

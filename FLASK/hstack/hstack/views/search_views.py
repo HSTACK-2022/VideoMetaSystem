@@ -60,7 +60,7 @@ def searchFile():
         words = re.split(r'[ ,:]', word)
         for item in words:
             if item != "":
-                searchWords.append(item)
+                #searchWords.append(item)
 
                 #DB에서 전체 단어 검색
                 print(TotalSearch.query.filter(TotalSearch.tKeyword == item))

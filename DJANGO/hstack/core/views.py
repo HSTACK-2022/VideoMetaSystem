@@ -334,8 +334,8 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
-
+            #videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.searchTest(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
@@ -385,6 +385,37 @@ def detailSearch(request):
     videoIdList = videoIdList.split(',')
     newVideoIdList = list()
 
+    searchWords = []
+    words = re.split(r'[ ,:]', word)
+    for item in words:
+        if item != "": searchWords.append(item)
+    if len(searchWords) == 0:
+        searchWords = None
+
+    searchTitles = []
+    word += (title + " ")
+    words = re.split(r'[ ,:]', title)
+    for item in words:
+        if item != "": searchTitles.append(item)
+    if len(searchTitles) == 0:
+        searchTitles = None
+
+    searchKeywords = []
+    word += (keyword + " ")
+    words = re.split(r'[ ,:]', keyword)
+    for item in words:
+        if item != "": searchKeywords.append(item)
+    if len(searchKeywords) == 0:
+        searchKeywords = None
+
+    searchPresenters = []
+    word += (presenter + " ")
+    words = re.split(r'[ ,:]', presenter)
+    for item in words:
+        if item != "": searchPresenters.append(item)
+    if len(searchPresenters) == 0:
+        searchPresenters = None
+
     #word = word.replace(" ", "") # 공백 제거
     #word = word.replace("'", "") # 작은 따옴표 제거
     #word = word.split(',')
@@ -431,7 +462,6 @@ def detailSearch(request):
     rankList = []
     newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
 
-
     print(">>>>>>>>>>>>>>>>>>>")
     print(rankData)
     for j in newVideoIdList:
@@ -471,3 +501,58 @@ def detailSearch(request):
                 'searchWordDetailPresenter': presenter,
                 'rankData': rankList,
             })
+
+def performance(request):
+
+    categories_dict = {}
+    categories = models.Metadata.objects.all().values_list('category', flat=True).distinct()
+    print(categories)
+    for item in categories:
+        if item is None:
+            continue
+        words = re.split(r'[ ,:]',item)
+        for word in words:
+            if word in categories_dict:
+                categories_dict[word] += 1
+            else:
+                categories_dict[word] = 1
+    print(categories_dict)
+
+    narrative_dict = {}
+    narrative = models.Metadata.objects.all().values_list('narrative', flat=True)
+    print(narrative)
+    for item in narrative:
+        if item is None:
+            continue
+        if item in narrative_dict:
+            narrative_dict[item] += 1
+        else:
+            narrative_dict[item] = 1
+
+    method_dict = {}
+    method = models.Metadata.objects.all().values_list('method', flat=True)
+    print(method)
+    for item in method:
+        if item is None:
+            continue
+        if item in method_dict:
+            method_dict[item] += 1
+        else:
+            method_dict[item] = 1
+            
+    # for item in categories:
+    #     words = re.split(r'[ ,:]',item)
+    #     if words != "": categories2.append(words)
+    #     if len(categories2) == 0:
+    #         categories2 = None
+    # print(categories2)
+
+    return render(request, renderAppName + '/performance.html',
+        context={
+            'category':list(categories_dict.keys()),
+            'category_data':list(categories_dict.values()),
+            'narrative':list(narrative_dict.keys()),
+            'narrative_data':list(narrative_dict.values()),
+            'method':list(method_dict.keys()),
+            'method_data':list(method_dict.values()),
+        })

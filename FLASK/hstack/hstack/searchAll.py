@@ -151,7 +151,7 @@ def getKeywordPerc(videoid, searchText):
     if max(k_v) == 0 or k_v2 == 0:
         return 0
     m = round(1/max(k_v),3)
-    print(m)
+    print(round(k_v2*m,3))
     return round(k_v2*m,3)
 
 def organize_weight(weight, whatzero):
@@ -436,4 +436,3 @@ def detailSearch(All, T, K, P, category, narrative, method):
 
     return (newVideoIdList, newVideoMetaList, newRankData)
     
-

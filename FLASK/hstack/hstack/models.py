@@ -61,6 +61,9 @@ class Metadatum(db.Model):
     voiceManRate = db.Column(db.Float)
     voiceWomanRate = db.Column(db.Float)
 
+    category_percent = db.Column(db.String(30))
+
+
     videopath = db.relationship('Videopath', primaryjoin='Metadatum.id == Videopath.id', backref='metadata')
 
 
@@ -123,3 +126,4 @@ class TotalSearch(db.Model):
 
     def __repr__(self):
         return f"<TotalKeyword('{self.tKeyword}', '{self.cnt}')>"
+
