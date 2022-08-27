@@ -69,7 +69,6 @@ def ratio():
     #     if len(categories2) == 0:
     #         categories2 = None
     # print(categories2)
-
     return render_template('/performance.html',
         code = 200,
         category = list(categories_dict.keys()),
