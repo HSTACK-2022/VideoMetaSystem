@@ -256,6 +256,7 @@ DJANGO/hstack/secrets.json
 
 #FLASK
 FLASK/venv
+FLASK/hstack/logs/
 FLASK/hstack/media/
 FLASK/hstack/migrations/
 FLASK/hstack/__pycache__/
@@ -265,4 +266,6 @@ FLASK/hstack/tensorflow/ImageSeperate/validation/
 
 
 #FLASK_TEST
+Flask/myenv/
+Flask/flaskenv/
 FLASK_TEST/

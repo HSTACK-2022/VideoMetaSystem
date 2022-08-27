@@ -1,8 +1,7 @@
-var vid = document.getElementById("video");
 function inputMove(time) {
+    var vid = document.getElementById("video");
     timeStr = time.split(":");
     timeSec = Number(timeStr[0] * 3600) + Number(timeStr[1] * 60) + Number(timeStr[2]);
-    vid.pause();
     var t = vid.currentTime;
     vid.currentTime = timeSec;
     vid.play();

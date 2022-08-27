@@ -1,6 +1,8 @@
 import os
 import platform
 
+from flask_sqlalchemy import SQLAlchemy
+
 OS = platform.system()
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_FILE_DIR = os.path.join('.', 'media', 'Uploaded')
@@ -20,5 +22,7 @@ db = {
     'port' : 3306,
     'database' : 'hstackdb'
 }
+
+DB = SQLAlchemy()
 
 DB_URL = f"mysql+mysqlconnector://{db['user']}:{db['password']}@{db['host']}:{db['port']}/{db['database']}?charset=utf8"

@@ -1,30 +1,25 @@
 # coding: utf-8
 from .config import DB as db
 
-
 class Keyword(db.Model):
     __tablename__ = 'keywords'
 
     id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
-    expose = db.Column(db.Integer, server_default=db.FetchedValue())
+    expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
     percent = db.Column(db.Float, nullable=False, default=0)
 
     videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
 
-
 class Timestamp(db.Model):
     __tablename__ = 'timestamp'
 
-    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     time = db.Column(db.String(10), primary_key=True, nullable=False)
     subtitle = db.Column(db.String(100))
-    expose = db.Column(db.Integer, server_default=db.FetchedValue())
+    expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
-
-    videopath = db.relationship('Videopath', primaryjoin='Timestamp.id == Videopath.id', backref='timestamps')
-
 
 class Videopath(db.Model):
     __tablename__ = 'videopath'
@@ -37,7 +32,6 @@ class Videopath(db.Model):
     imageAddr = db.Column(db.String(200))
     extracted = db.Column(db.Integer)
     password = db.Column(db.String(10), nullable=True, default=None)
-
 
 class Metadatum(db.Model):
     __tablename__ = 'metadata'
@@ -61,69 +55,4 @@ class Metadatum(db.Model):
     voiceManRate = db.Column(db.Float)
     voiceWomanRate = db.Column(db.Float)
 
-    category_percent = db.Column(db.String(30))
-
-
     videopath = db.relationship('Videopath', primaryjoin='Metadatum.id == Videopath.id', backref='metadata')
-
-
-
-
-
-
-
-class PresenterSearch(db.Model):
-    __tablename__ = 'presenter_search'
-
-    pKeyword = db.Column(db.String(50), primary_key=True)
-    cnt = db.Column(db.Integer, nullable=False)
-    
-    def __init__(self, pKeyword, cnt, **kwargs):
-        self.pKeyword = pKeyword
-        self.cnt = cnt
-
-    def __repr__(self):
-        return f"<PresenterSearch('{self.pKeyword}', '{self.cnt}')>"
-
-
-class KeywordSearch(db.Model):
-    __tablename__ = 'keyword_search'
-
-    kKeyword = db.Column(db.String(50), primary_key=True)
-    cnt = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, kKeyword, cnt, **kwargs):
-        self.kKeyword = kKeyword
-        self.cnt = cnt
-
-    def __repr__(self):
-        return f"<KeywordSearch('{self.kKeyword}', '{self.cnt}')>"    
-
-
-class TitleSearch(db.Model):
-    __tablename__ = 'title_search'
-
-    tiKeyword = db.Column(db.String(50), primary_key=True)
-    cnt = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, tiKeyword, cnt, **kwargs):
-        self.tiKeyword = tiKeyword
-        self.cnt = cnt
-
-    def __repr__(self):
-        return f"<TitleSearch('{self.tiKeyword}', '{self.cnt}')>"
-
-
-class TotalSearch(db.Model):
-    __tablename__ = 'total_search'
-
-    tKeyword = db.Column(db.String(50), primary_key=True)
-    cnt = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, tKeyword, cnt, **kwargs):
-        self.tKeyword = tKeyword
-        self.cnt = cnt
-
-    def __repr__(self):
-        return f"<TotalKeyword('{self.tKeyword}', '{self.cnt}')>"
-

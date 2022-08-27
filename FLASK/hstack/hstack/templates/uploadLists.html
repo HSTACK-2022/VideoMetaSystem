@@ -1,26 +1,22 @@
-<!-- test_uploadLists.html -->
-
 <!DOCTYPE html>
-{% load static %}
 <html>
 <head>
         <title>VMeta - Edit List</title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'css/videoList.css' %}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/videoList.css') }}">
 
         <script src="http://code.jquery.com/jquery-latest.js"></script>
-        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/serach.js') }}"></script>
         <script>
             function searchDetail(search_type, search_detail_type){
-                document.getElementById("search_detail_type").value = search_detail_type;
-                document.getElementById("search_type").value = search_type;
+                document.getElementById(search_type).value = search_detail_type;
                 document.getElementById("form").submit();
             }
         </script>
 </head>
 <body class="bodyArea" onload="onloads();">
     
-    {% include 'core/header.html' %}
+    {% include 'header.html' %}
     {% if code == 200 %}
     <table class="bodyTable">
         <tr>
@@ -28,14 +24,13 @@
             <td class="section">
                 <p style="text-align:left; margin-left:35px;">✔ {{videoIdList|length}}개의 동영상을 수정할 수 있습니다.</p>
                 {% for meta in videoMetaList %}
-                    <!-- video id:{{ii.id_id}} <br> -->
                     {% for ii in meta.metadata %}
                         <table
                             class="videoListTable"
-                            onclick="location.href='/success/{{ii.id_id}}'">
+                            onclick="location.href='/detail/{{ii.id}}/edit'">
                             <tr>
                                 <td style="width: 300px;">
-                                    <image class="VT_thumbnail" src="{{meta.thumbnail}}"></image>
+                                    <image class="VT_thumbnail" src="{{ url_for('search.data', filepath = meta.thumbnail) }}"></image>
                                 </td>
                                 <td>
                                     <table class="videoTable">
@@ -52,7 +47,7 @@
                                         <tr>
                                             <td>
                                                 {% for key in meta.keyword %}
-                                                    {% if key != "" and forloop.counter < 6 %}
+                                                    {% if key != "" and loop.index < 6 %}
                                                         <div class="VT_keywords">#{{key}}</div>
                                                     {% endif %}
                                                 {% endfor %}
@@ -62,7 +57,7 @@
                                             <td>
                                                 <div class="VT_presenter">
                                                     <image
-                                                        src="{% static 'img/user.png' %}"
+                                                        src="{{ url_for('static', filename='img/user.png') }}"
                                                         style="height: 17px; align-items: center;"></image>
                                                     {{ii.presenter}}
                                                 </div>
@@ -82,17 +77,10 @@
 
             <div class= side>
             <td class="aside">
-                {% comment %} 
-                videoIdList = 
-                {% for id in videoIdList %}
-                {{id}}
-                {%endfor%} {% endcomment %}
-                    
-                    <form action="{% url 'Core:uploadLists'%}" method="POST" id="form">
-                        {% csrf_token %}
-                        <input type="hidden" name="videoIdList" value="{{videoIdList}}">
-                        <input type="hidden" name="search_type" id="search_type">
-                        <input type="hidden" name="search_detail_type" id="search_detail_type">
+                    <form action="http://localhost:5000/uploadFile/lists" method="POST" id="form">
+                        <input type="hidden" name="category" id="category" value="{{category}}">
+                        <input type="hidden" name="method" id="method" value="{{method}}">
+                        <input type="hidden" name="narrative" id="narrative" value="{{narrative}}">
                         <div class="category">
                             <h2 class="todo-cmp__header">검색 내 세부검색</h2>
                             

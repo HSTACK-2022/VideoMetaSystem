@@ -71,7 +71,7 @@ def getCategoryFromJson(responseData):
     #totalPerc 조정
     weight = round(1.0 / totalPerc, 1)
     for key in returnTypes:
-        returnTypes[key] = weight * returnTypes[key]
+        returnTypes[key] = round(weight * returnTypes[key], 3)
         
     return returnTypes
 

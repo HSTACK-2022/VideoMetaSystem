@@ -14,6 +14,34 @@
             </title>
             <meta charset="UTF-8">
 
+            <script type="text/javascript">
+            
+                function writeLog(script) {
+                    var script = '{{scripts}};'
+                    var os = navigator.userAgent;
+                    var videoPath = '{{videoaddr}};';
+                    var videoID = {{metadata.id}};
+                    console.log(videoPath);
+
+                    var logPath = videoPath.split('Video');
+                    var logPath2 = logPath[0] + "\Log";
+                    var filename = logPath[1].split('.');
+                    var logfilename = filename[0]+ ".txt";
+                    var logAddr = logPath2 + logfilename;
+                    console.log(logPath2);
+                    console.log(logAddr);
+
+                    var searchContent = document.getElementById("searchContent").value;
+                    var data = new Object();
+                    data.searchContent = searchContent;
+                
+                    const request = new XMLHttpRequest();
+                    request.open('Post', `/detail/${videoID}/ProcessUserinfo/${JSON.stringify(searchContent)}`);
+                    request.send();
+
+                }
+                
+            </script>
         </head>
         {% include 'header.html' %}
         <body class="bodyArea" onload="loadImg('{{ metadata.title }}'); onloads();">
@@ -50,11 +78,16 @@
                             <div class="videoPresenter">
                                 by
                                 {{metadata.presenter}}</div>
-
                         </div>
-
+                        <div class="right">
+                            <button
+                                type="button"
+                                id="save"
+                                onclick="location.href='{{url_for("edit.editFile", pk=pk ) }}'">
+                                EDIT
+                            </button>
+                        </div>
                     </div>
-
                 </div>
                 <!-- end of detail Header-->
 
@@ -134,19 +167,17 @@
                                             placeholder="Search in &quot;{{ metadata.title }}&quot;"
                                             id="searchContent"></input>
                                         <input
-                                            type="submit"
+                                            type="button"
                                             class="searchBtn"
                                             value=""
-                                            onclick="searchPost({{scripts}});"
+                                            onclick="searchPost({{scripts}}); writeLog();"
                                             ></input>
                                     </div>
-
                                     <div class="searchScroll">
                                         <table id="searchResArea" class="" ></table>
                                     </div>
                                 </div>
                             </li>
-
                             
                              <!-- @@@@@@@@@세번째 탭 목차 -->
                              <li id="tab3" class="btnCon">
