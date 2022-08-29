@@ -16,7 +16,7 @@ import platform
 import datetime #로그파일 시간
 
 from flask_sqlalchemy import SQLAlchemy
-
+from hstack import countSearch
 
 db = SQLAlchemy()
 
@@ -27,4 +27,8 @@ bp = Blueprint('manage', __name__, url_prefix='/')
 
 @bp.route('/manage/', methods=['GET', 'POST'])
 def manage():
+    text = countSearch.total_search
+    print("^^^^^^66K6DW;LDFKG")
+    print(text)
+
     return render_template('data.html')

@@ -74,7 +74,7 @@ def ProcessUserinfo(keywordinfo, pk):
     print()
     date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S ')
     
-    f = open("media\\Uploaded\\LogFile\\log_"+videoID+".txt", 'a')
+    f = open("log\\log_"+videoID+".txt", 'a')
     f.write(date+keyword+"\n")
     f.close()
     return('/')

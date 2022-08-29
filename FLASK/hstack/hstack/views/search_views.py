@@ -72,7 +72,7 @@ def searchFile():
                         TotalSearch.tKeyword == item))
 
                     #전체 검색 LOG 파일 생성 (필요 없으면 삭제해도 됨)
-                    file = open('media\\Uploaded\\LogFile\\id.txt','a',encoding='UTF-8') #a : 이어쓰기
+                    file = open('log\\total.txt','a',encoding='UTF-8') #a : 이어쓰기
                     date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     print(item)
                     file.write(date+" "+item+"\n")
