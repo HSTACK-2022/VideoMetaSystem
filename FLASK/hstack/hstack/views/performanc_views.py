@@ -1,19 +1,20 @@
-from urllib.parse import urlencode
-from flask import jsonify
-from flask import url_for
-from flask import request
-from flask import redirect
 from flask import Blueprint
 from flask import render_template
 from flask import current_app as app # app.config 사용을 위함
 
 import platform
 import re
+from ..config import DB
 
 from ..models import Keyword
 from ..models import Videopath
 from ..models import Metadatum
 from ..models import Timestamp
+from ..models import TotalSearch
+from ..models import TitleSearch
+from ..models import KeywordSearch
+from ..models import PresenterSearch
+
 
 # 상수 설정
 OS = platform.system()
@@ -21,6 +22,7 @@ bp = Blueprint('performance', __name__, url_prefix='/')
 
 @bp.route('/performance/')
 def ratio():
+    # 메타데이터 비율 그래프
     categories_dict = {}
     categories=[]
     for res in Metadatum.query.with_entities(Metadatum.category).all():
@@ -69,6 +71,29 @@ def ratio():
     #     if len(categories2) == 0:
     #         categories2 = None
     # print(categories2)
+
+    # 단어 그래프
+    # 1. 단어 종류
+    # 2. 제목, 키워드, 발표자 각 비율 + 전체
+    totalWord = {}
+    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(10):
+        totalWord[res.tKeyword] = res.cnt
+    print("Total Search에서 나온 단어>>")
+    print(totalWord)
+
+    titleWord = {}
+    keyWord = {}
+    presenterWord = {}
+    for res in DB.session.query(TitleSearch).order_by(TitleSearch.cnt.desc()).limit(10):
+        titleWord[res.tiKeyword] = res.cnt
+    for res in DB.session.query(KeywordSearch).order_by(KeywordSearch.cnt.desc()).limit(10):
+        keyWord[res.kKeyword] = res.cnt
+    for res in DB.session.query(PresenterSearch).order_by(PresenterSearch.cnt.desc()).limit(10):
+        presenterWord[res.pKeyword] = res.cnt
+
+    
+
+
     return render_template('/performance.html',
         code = 200,
         category = list(categories_dict.keys()),
@@ -77,4 +102,6 @@ def ratio():
         narrative_data = list(narrative_dict.values()),
         method = list(method_dict.keys()),
         method_data = list(method_dict.values()),
+        totalWord = list(totalWord.keys()),
+        totalWord_data = list(totalWord.values()),
     )
