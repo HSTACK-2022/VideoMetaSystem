@@ -133,6 +133,7 @@ def getKeywordPerc(videoid, searchText):
     # k_v --> keyword의 전체 확률 리스트
     # k_v2 --> searchText의 확률
     k_v=[]
+    k_v2=0
     for res in DB.session.query(Keyword).filter(Keyword.id == videoid).with_entities(Keyword.percent).all():
         for k in res:
             k_v.append(k)
@@ -244,25 +245,47 @@ def extractData(videoIdList):
 # not DetailSearch
 def search(All, T, K, P):
     # searchTexts로 저장
-    searchTexts = []
+    searchTexts = {}    # 0-All, 1-title, 2-presenter, 3-keyword
+    searchText = []
+    titleSet = set()
+    presenterSet = set()
+    keywordSet = set()
+    categorySet = set()
     if All != None:
         for i in All:
-            searchTexts.append(i)
+            #searchTexts.append(i)
+            searchText.append(i)
+        searchTexts[0] = searchText
+        titleSet = findAt(searchTexts[0], 0)
+        presenterSet = findAt(searchTexts[0], 1)
+        keywordSet = findAt(searchTexts[0], 2)
+        categorySet = findAt(searchTexts[0], 3)
+            
     else:
         if T != None:
+            searchText = []
             for i in T:
-                searchTexts.append(i)
+                searchText.append(i)
+            searchTexts[1] = searchText
+            titleSet = findAt(searchTexts[1], 0)
         if K != None:
+            searchText = []
             for i in K:
-                searchTexts.append(i)
+                searchText.append(i)
+            searchTexts[3] = searchText
+            keywordSet = findAt(searchTexts[3], 2)
         if P != None:
+            searchText = []
             for i in P:
-                searchTexts.append(i)
+                searchText.append(i)
+            searchTexts[2] = searchText
+            presenterSet = findAt(searchTexts[2], 1)
+        categorySet = set()
 
-    titleSet = findAt(searchTexts, 0)
-    presenterSet = findAt(searchTexts, 1)
-    keywordSet = findAt(searchTexts, 2)
-    categorySet = findAt(searchTexts, 3)
+    # titleSet = findAt(searchTexts, 0)
+    # presenterSet = findAt(searchTexts, 1)
+    # keywordSet = findAt(searchTexts, 2)
+    # categorySet = findAt(searchTexts, 3)
     
     weight = [0.3,0.3,0.2,0.2] # Title Presenter Keyword Category
     whatzero = []
@@ -299,7 +322,11 @@ def search(All, T, K, P):
         in_perc = []
         if weight[0] != 0:  # T의 확률 구하기
             p = 0
-            for searchText in searchTexts:
+            if All == None:
+                s_Texts = searchTexts[1]
+            else:
+                s_Texts = searchTexts[0]
+            for searchText in s_Texts:
                 if vi in titleSet:
                     p += 1
             if p > 0:
@@ -310,7 +337,11 @@ def search(All, T, K, P):
             in_perc.append(0)
         if weight[1] != 0: # P의 확률 구하기
             p = 0
-            for searchText in searchTexts:
+            if All == None:
+                s_Texts = searchTexts[2]
+            else:
+                s_Texts = searchTexts[0]
+            for searchText in s_Texts:
                 if vi in presenterSet:
                     p += 1
             if p > 0:
@@ -322,7 +353,11 @@ def search(All, T, K, P):
         if weight[2] != 0: # K의 확률 구하기
             if vi in keywordSet:
                 p = 0
-                for searchText in searchTexts:
+                if All == None:
+                    s_Texts = searchTexts[3]
+                else:
+                    s_Texts = searchTexts[0]
+                for searchText in s_Texts:
                     print(searchText)
                     p += getKeywordPerc(vi,searchText)
                     print(p)
@@ -332,9 +367,9 @@ def search(All, T, K, P):
         else:
             in_perc.append(0)
         if weight[3] != 0: # C의 확률 구하기
-            if vi in keywordSet:
+            if vi in categorySet:
                 p = 0
-                for searchText in searchTexts:
+                for searchText in searchTexts[0]:
                     p += getCategoryPerc(vi,searchText)
                 in_perc.append(p*100)
             else:
@@ -381,7 +416,6 @@ def search(All, T, K, P):
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     print(maxlist)
     for j in maxlist:
-        print("////////////////////////")
         a.getVideoMetadataFromID(j) #id 받아오기
         searchResultMeta.append(a.finalDict)
         #print(a.finalDict)
@@ -389,7 +423,7 @@ def search(All, T, K, P):
         #print(perc[j])
 
     tttt ={}
-    print(maxlist)
+    #print(maxlist)
     for m in maxlist:
         newlist = []
         newlist = perc[m]

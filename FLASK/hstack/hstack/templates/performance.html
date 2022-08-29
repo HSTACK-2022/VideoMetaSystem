@@ -126,6 +126,27 @@
                     }
                     });
 
+                    new Chart(document.getElementById("search-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: {{totalWord|safe}},
+                        datasets: [{ 
+                            data: {{totalWord_data|safe}},
+                            label: "전체 검색 단어",
+                            borderColor: "#e8c3b9",
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '전체 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
                     new Chart(document.getElementById("detailSearch-chart"), {
                     type: 'line',
                     data: {
@@ -171,6 +192,7 @@
 <br><br>
         <canvas id="line-chart" width="500" height="400"></canvas>
 
+        <canvas id="search-chart" width="500" height="400"></canvas>
         <canvas id="detailSearch-chart" width="500" height="400"></canvas>
 
         {% endif %}
