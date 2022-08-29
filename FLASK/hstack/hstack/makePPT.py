@@ -1,33 +1,33 @@
 import os
 import platform
 
+from .models import Keyword
+from .models import Videopath
+from .models import Metadatum
+from .models import Timestamp
 from pptx import Presentation
 from pptx.util import Inches
-from .config import OS
 
 
-# 화면에 띄우기 위한 PPT 이미지 얻기
-def getPPTImage(fileURL):
-    pptImage = set()
-    imagePath = os.path.join(os.path.dirname(fileURL), 'Image')
-    imageList = os.listdir(imagePath)
-    print(imageList)
-
-    for image in imageList:
-        if image.startswith("L") or image.startswith("P"):
-            imageSrc = os.path.join(imagePath, image)
-            pptImage.add(imageSrc)
-
-    return pptImage
+# 상수 설정
+OS = platform.system()
 
 
-# PPT 파일 얻기
-def getPPTFile(fileURL, title):
+def getPPTFile(videoId):
     pptFile = Presentation()
-    imagePath = os.path.join(os.path.dirname(fileURL), 'Image')
+    videoPathObj = Videopath.query.filter(
+        Videopath.id == videoId)  # DB에서 videoId에 해당하는 객체를 가져옴
+    imageFilePath = videoPathObj.imageaddr  # DB에서 imageAddr 추출
+    title = videoPathObj.title
 
-    imageList = os.listdir(imagePath)
+    if OS == "Windows":
+        imagePath = (imageFilePath + "\\").replace("/", "\\")
+    else:
+        imagePath = (imageFilePath + "\\").replace("\\", "/")
+
+    print(imageFilePath)
     print(imagePath)
+    imageList = os.listdir(imageFilePath)
     print(imageList)
 
     slide_layout = pptFile.slide_layouts[6]
@@ -35,10 +35,18 @@ def getPPTFile(fileURL, title):
     for image in imageList:
         if image.startswith("L") or image.startswith("P"):
             print("**")
-            path = os.path.join(imagePath, image)
             slide = pptFile.slides.add_slide(slide_layout)
             slide.shapes.add_picture(
-                path, 0, 0, pptFile.slide_width, pptFile.slide_height)
+                imagePath + image, 0, 0, pptFile.slide_width, pptFile.slide_height)
 
-    pptPathRel = os.path.join(os.path.dirname(fileURL), title + '.pptx')
-    pptFile.save(pptPathRel)
+    if OS == "Windows":
+        pptPathRel = "../../../media/Uploaded/Image/" + \
+            imageFilePath.split('Image\\')[1].replace(
+                "\\", "/") + "/" + title + '.pptx'
+    else:
+        pptPathRel = "../../../media/Uploaded/Image/" + \
+            imageFilePath.split('Image/')[1] + "/" + title + ".pptx"
+
+    pptFile.save(imagePath + title + '.pptx')
+
+    return pptPathRel
