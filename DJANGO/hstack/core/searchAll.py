@@ -1,6 +1,7 @@
 # 2022.04.28
 # search(searchTexts)로 실행 -> list로 메타데이터 가져옴
 
+from imghdr import what
 from operator import index
 import os
 import platform
@@ -177,8 +178,10 @@ class Total:
                 else:
                     k_i = (k+i)/2
 
-                if t==100 or p==100 :
+                if t==100 and p==100:                                       ###########################################################
                     percSum += 95 + k_i*0.05
+                elif t==100 or p==100 :
+                    percSum += 90 + k_i*0.05
                 else :
                     percSum += k_i
 
@@ -425,7 +428,189 @@ class Total:
                 finalDict['thumbnail'] = os.path.join(filePath, fileName)
 
         return finalDict
-        
+
+from django.db.models import Max, Min, Avg
+def searchTest(All, T, K, P):
+    # searchTexts로 저장
+    searchTexts = []
+    if All != None:
+        for i in All:
+            searchTexts.append(i)
+    else:
+        if T != None:
+            for i in T:
+                searchTexts.append(i)
+        if K != None:
+            for i in K:
+                searchTexts.append(i)
+        if P != None:
+            for i in P:
+                searchTexts.append(i)
+
+    titleSet = findAt(searchTexts, 0)
+    presenterSet = findAt(searchTexts, 1)
+    keywordSet = findAt(searchTexts, 2)
+    categorySet = findAt(searchTexts, 3)
+    
+    weight = [0.3,0.3,0.2,0.2] # Title Presenter Keyword Category
+    whatzero = []
+    if len(titleSet) == 0:
+        weight[0] = 0
+        whatzero.append(0)
+    if len(presenterSet) == 0:
+        weight[1] = 0
+        whatzero.append(1)
+    if len(keywordSet) == 0:
+        weight[2] = 0
+        whatzero.append(2)
+    if len(categorySet) == 0:
+        weight[3] = 0
+        whatzero.append(3)
+
+    # weight 정리
+    weight = organize_weight(weight, whatzero)
+    # 검색 대상이 되는 비디오 리스트 = video (type = set)
+    video = set()
+    video = titleSet.union(presenterSet)
+    video.update(keywordSet)
+    video.update(categorySet)
+    print(video)
+    # id 당 T P K C 확률 구하기
+    perc = {}
+    for vi in video:
+        print("$$$$$$$$$$$$$$$$$$")
+        print(vi)
+        in_perc = []
+        if weight[0] != 0:  # T의 확률 구하기
+            p = 0
+            for searchText in searchTexts:
+                if vi in titleSet:
+                    p += 1
+            if p > 0:
+                in_perc.append(1)
+            else:
+                in_perc.append(0)
+        else:
+            in_perc.append(0)
+        if weight[1] != 0: # P의 확률 구하기
+            p = 0
+            for searchText in searchTexts:
+                if vi in presenterSet:
+                    p += 1
+            if p > 0:
+                in_perc.append(1)
+            else:
+                in_perc.append(0)
+        else:
+            in_perc.append(0)
+        if weight[2] != 0: # K의 확률 구하기
+            if vi in keywordSet:
+                p = 0
+                for searchText in searchTexts:
+                    print(searchText)
+                    p += getKeywordPerc(vi,searchText)
+                    print(p)
+                in_perc.append(p)
+            else:
+                in_perc.append(0)
+        else:
+            in_perc.append(0)
+        #if weight[3] != 0: # C의 확률 구하기
+        #     if vi in keywordSet:
+        #         p = 0
+        #         for searchText in searchTexts:
+        #             p += getCategoryPerc(vi,searchText)
+        #         in_perc.append(p)
+        #     else:
+        #         in_perc.append(0)
+        # else:
+        #     in_perc.append(0)
+        perc[vi] = in_perc
+        print(in_perc)
+        print(perc)
+    print("^^^^^^^^^^^")
+    print(in_perc)
+    print(perc)
+    # ranking 결과
+    print(weight)
+    ranking_res = {}
+    for videoid in perc:
+        print(perc[videoid])
+        cnt = 0
+        sum = 0
+        for p in perc[videoid]:
+            sum+=p*weight[cnt]
+            print(p*weight[cnt])
+            cnt+=1
+        print("**!!")
+        print(sum)
+        # if sum == 0:
+        #     continue
+        ranking_res[videoid]=sum
+    print("***************")
+    print(ranking_res)
+    
+
+def getKeywordPerc(videoid, searchText):
+    # keyword의 값 구해보기 예시: 77번
+    # keyword는 포함이 아니라 정확히 같은 경우, 즉 1개만 나올때만 해야함
+    # 이게 맞나싶지만 확률을 구하기 위해선 그래야 함
+    # 누가 나 좀 살려줘
+    k_v = list(models.Keywords.objects.filter(id = videoid).values_list('percent', flat=True).distinct())
+    k_v2 = list(models.Keywords.objects.filter(id = videoid).filter(keyword = searchText).values_list('percent', flat=True).distinct())
+    # max 값 구하고 싶다면 아래처럼 - Django에서
+    # obj = models.Keywords.objects.filter(id = 77).aggregate(percent=Max('percent'))
+    # print(obj)
+    # print(obj['percent'])
+    if max(k_v) == 0 or len(k_v2) == 0:
+        return 0
+    m = round(1/max(k_v),3)
+    print(k_v2)
+    print(k_v2[0])
+    print(m)
+    return round(k_v2[0]*m,3)
+
+def organize_weight(weight, whatzero):
+    n = 4 - len(whatzero)
+    sum = 0
+    while len(whatzero)>0:
+        p = whatzero.pop()
+        if p==2:
+            sum += round(0.2 / n,2)
+        elif p == 3:
+            sum += round(0.2 / n,2)
+        elif p==0:
+            sum += round(0.3 / n,2)
+        elif p==1:
+            sum += round(0.3 / n,2)
+    #print(sum)
+    c = 0
+    for w in weight:
+        if w != 0:
+            weight[c] += sum
+        c+=1
+    #print(weight)
+    return weight                  
+def findAt(searchTexts, index):
+    result = set()
+    for searchText in searchTexts:
+        if index == 0:
+            sql = list(models.Metadata.objects.filter(title__contains = searchText).values_list('id', flat=True).distinct())
+        elif index == 1:
+            sql = list(models.Metadata.objects.filter(presenter__contains = searchText).values_list('id', flat=True).distinct())
+        elif index == 2:
+            sql = list(models.Keywords.objects.filter(keyword__contains = searchText).values_list('id', flat=True).distinct())
+        elif index == 3:
+            sql = list(models.Metadata.objects.filter(category__contains = searchText).values_list('id', flat=True).distinct())
+
+        for l in sql:
+            result.add(l)
+    print(result)
+    if len(result) == 0:
+        return set()
+    else:
+        return result
+
 #searchTexts = ["황기", "메모리"]   
 def search(All, T, K, P):
     # searchTexts로 저장
@@ -561,15 +746,16 @@ def detailSearch(videoIdList, search_type, search_detail_type, All, T, K, P):
         searchResultMeta.append(a.finalDict)
         searchResultMeta.append(a.detail[j])
 
-    newVideoIdList = list(maxlist.keys())
-    print(newVideoIdList)
+    videoIdList = list(maxlist.keys())
+    searchResultMeta = list(searchResultMeta)
+    print(videoIdList)
     ##
     
-    categoryList = extractCategories(newVideoIdList)
-    typeList = extractType(newVideoIdList)
-    dataList = extractData(newVideoIdList)
+    categoryList = extractCategories(videoIdList)
+    typeList = extractType(videoIdList)
+    dataList = extractData(videoIdList)
 
-    return (newVideoIdList, searchResultMeta, categoryList, typeList, dataList, tttt)
+    return (videoIdList, searchResultMeta, categoryList, typeList, dataList, tttt)
 
 
 # 각 videoId에서 narrative를 뽑아낸다.

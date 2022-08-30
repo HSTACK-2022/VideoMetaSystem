@@ -14,6 +14,7 @@ urlpatterns = [
     path('detail/<int:pk>', views.detailFile, name="detailFile"),
     path('success/<int:pk>', views.success, name="success"),
     path('search/detailSearch/', views.detailSearch, name="detailSearch"),
+    path('performance/',views.performance, name="performance"),
 ]
 
 if settings.DEBUG: 

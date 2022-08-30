@@ -22,6 +22,7 @@
                             action="http://localhost:5000/search"
                             method="GET"
                             enctype="multipart/form-data">
+                            <input type="hidden" name="isDetail" value="False">
                             <table id="home_search_input_table">
                                 <tr>
                                     <td style="width:40px;">
@@ -95,8 +96,8 @@
 
             <tr>
                 <td>
-                    <button id="upload" onclick="location.href='/upload/'"><img id="uploadBtn" src="{{ url_for('static', filename='img/uploadBtn.png') }}"><br>Video Upload</button>
-                    <button id="upload" onclick="location.href='/upload/lists'"><img id="edit" src="{{ url_for('static', filename='img/edit.png') }}"><br>Edit List</button>
+                    <button id="upload" onclick="location.href='/uploadFile/'"><img id="uploadBtn" src="{{ url_for('static', filename='img/uploadBtn.png') }}"><br>Video Upload</button>
+                    <button id="upload" onclick="location.href='/uploadFile/lists'"><img id="edit" src="{{ url_for('static', filename='img/edit.png') }}"><br>Edit List</button>
                 </td>
             </tr>
         </table>

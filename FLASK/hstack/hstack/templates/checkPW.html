@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VMeta - File Upload</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}">
+        <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+    </head>
+    <body class="bodyArea" onload="onloads();">
+        {% include 'header.html' %}
+        <div id="uploadFileTitle">User confirmation</div>
+        <div id="uploadFileSubtitle">
+            영상 업로드시 작성한 비밀번호를 입력해주세요.<br>
+            비밀번호 없이는 편집 페이지에 접근할 수 없습니다.</div>
+        <form
+            action="{{ url_for('edit.editFile', pk = pk ) }}"
+            method="POST"
+            enctype="multipart/form-data">
+            <table id="uploadFileTable">
+                <tr>
+                    <td class="uploadFileTableTD">
+                        <div class="tags">Password :
+                        </div>
+                    </td>
+                    <td class="uploadFileTableTD">
+                        <input type="password" name="password" class="inputText" maxlength="10" placeholder="max length is 10.">
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <div class="errorMsg">{{error}}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="uploadFileTableTD"></td>
+                    <td id="uploadFileSubmit">
+                        <input id="inputSubmit" type="submit" value="Submit">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
