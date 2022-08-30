@@ -14,6 +14,7 @@ from ..models import TotalSearch
 from ..models import TitleSearch
 from ..models import KeywordSearch
 from ..models import PresenterSearch
+from ..models import UpoladTime
 
 
 # 상수 설정
@@ -72,9 +73,16 @@ def ratio():
     #         categories2 = None
     # print(categories2)
 
-    # 단어 그래프
-    # 1. 단어 종류
-    # 2. 제목, 키워드, 발표자 각 비율 + 전체
+
+    # 업로드 시간 그래프
+    uploadTime = []
+    uploadSize = []
+    for res in DB.session.query(UpoladTime).order_by(UpoladTime.size).limit(20):
+        uploadTime.append(res.time)
+        uploadSize.append(res.size)
+
+
+    # 검색 단어 그래프
     totalWord = {}
     for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(10):
         totalWord[res.tKeyword] = res.cnt
@@ -91,8 +99,22 @@ def ratio():
     for res in DB.session.query(PresenterSearch).order_by(PresenterSearch.cnt.desc()).limit(10):
         presenterWord[res.pKeyword] = res.cnt
 
-    
-
+    # detailWord = {}
+    # for t in titleWord:
+    #     if t in detailWord:
+    #         detailWord[t] = detailWord[t]+titleWord[t]
+    #     else:
+    #         detailWord[t] = titleWord[t]
+    # for k in keyWord:
+    #     if k in detailWord:
+    #         detailWord[k] = detailWord[k]+keyWord[k]
+    #     else:
+    #         detailWord[k] = keyWord[k]
+    # for p in presenterWord:
+    #     if p in detailWord:
+    #         detailWord[p] = detailWord[p]+presenterWord[p]
+    #     else:
+    #         detailWord[p] = presenterWord[p]
 
     return render_template('/performance.html',
         code = 200,
@@ -102,6 +124,14 @@ def ratio():
         narrative_data = list(narrative_dict.values()),
         method = list(method_dict.keys()),
         method_data = list(method_dict.values()),
+        upload_time = uploadTime,
+        upload_size = uploadSize,
         totalWord = list(totalWord.keys()),
         totalWord_data = list(totalWord.values()),
+        titleWord = list(titleWord.keys()),
+        titleWord_data = list(titleWord.values()),
+        presenterWord = list(presenterWord.keys()),
+        presenterWord_data = list(presenterWord.values()),
+        keyWord = list(keyWord.keys()),
+        keyWord_data = list(keyWord.values()),
     )
