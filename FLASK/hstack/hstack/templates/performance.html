@@ -107,11 +107,11 @@
                 new Chart(document.getElementById("line-chart"), {
                     type: 'line',
                     data: {
-                        labels: [16.9,16.9,16.9,18,18,18,82.4,82.4,82.4],
+                        labels: {{upload_size|safe}},
                         datasets: [{ 
-                            data: [30.2,33.7,30.8,76.3,64.9,66.3,190.1,187.0,193.8],
+                            data: {{upload_time|safe}},
                             //label: "Europe",
-                            borderColor: "#3cba9f",
+                            borderColor: "#8e5ea2",
                             fill: false
                         }
                         ]
@@ -126,23 +126,13 @@
                     }
                     });
 
-                    new Chart(document.getElementById("detailSearch-chart"), {
+                    new Chart(document.getElementById("search-chart"), {
                     type: 'line',
                     data: {
-                        labels: ["운영", "계층", "라즈베리", "모바일", "황", "황기", "볼트", "배터리", "마이너스", "파이"],
+                        labels: {{totalWord|safe}},
                         datasets: [{ 
-                            data: [50,68,43,35,10,2,25,88,65,72],
-                            label: "제목",
-                            borderColor: "#3cba9f",
-                            fill: false
-                        },{ 
-                            data: [80,71,55,69,30,12,67,84,35,45],
-                            label: "키워드",
-                            borderColor: "#c45850",
-                            fill: false
-                        },{ 
-                            data: [20,11,34,65,85,72,32,9,1,24],
-                            label: "발표자",
+                            data: {{totalWord_data|safe}},
+                            label: "전체 검색 단어",
                             borderColor: "#e8c3b9",
                             fill: false
                         }]
@@ -151,11 +141,105 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '세부 검색 단어 빈도수'
+                        text: '전체 검색 단어 빈도수'
                         },
                         legend: {display: false}    // label 안보이게
                     }
                     });
+
+                    new Chart(document.getElementById("title-search-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: {{titleWord|safe}},
+                        datasets: [{ 
+                            data: {{titleWord_data|safe}},
+                            label: "제목 검색 단어",
+                            borderColor: "#3cba9f",
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '제목 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    new Chart(document.getElementById("presenter-search-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: {{presenterWord|safe}},
+                        datasets: [{ 
+                            data: {{presenterWord_data|safe}},
+                            label: "발표자 검색 단어",
+                            borderColor: "#e8c3b9",
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '발표자 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    new Chart(document.getElementById("keyword-search-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: {{keyWord|safe}},
+                        datasets: [{ 
+                            data: {{keyWord_data|safe}},
+                            label: "키워드 검색 단어",
+                            borderColor: "#c45850",
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '키워드 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    // new Chart(document.getElementById("detailSearch-chart"), {
+                    // type: 'line',
+                    // data: {
+                    //     labels: ["운영", "계층", "라즈베리", "모바일", "황", "황기", "볼트", "배터리", "마이너스", "파이"],
+                    //     datasets: [{ 
+                    //         data: [50,68,43,35,10,2,25,88,65,72],
+                    //         label: "제목",
+                    //         borderColor: "#3cba9f",
+                    //         fill: false
+                    //     },{ 
+                    //         data: [80,71,55,69,30,12,67,84,35,45],
+                    //         label: "키워드",
+                    //         borderColor: "#c45850",
+                    //         fill: false
+                    //     },{ 
+                    //         data: [20,11,34,65,85,72,32,9,1,24],
+                    //         label: "발표자",
+                    //         borderColor: "#e8c3b9",
+                    //         fill: false
+                    //     }]
+                    // },
+                    // options: {
+                    //     responsive: false,
+                    //     title: {
+                    //     display: true,
+                    //     text: '세부 검색 단어 빈도수'
+                    //     },
+                    //     legend: {display: false}    // label 안보이게
+                    // }
+                    // });
             }
             
             
@@ -171,7 +255,11 @@
 <br><br>
         <canvas id="line-chart" width="500" height="400"></canvas>
 
-        <canvas id="detailSearch-chart" width="500" height="400"></canvas>
+        <canvas id="search-chart" width="500" height="400"></canvas>
+        <canvas id="title-search-chart" width="500" height="400"></canvas>
+        <canvas id="presenter-search-chart" width="500" height="400"></canvas>
+        <canvas id="keyword-search-chart" width="500" height="400"></canvas>
+        
 
         {% endif %}
     </body>
