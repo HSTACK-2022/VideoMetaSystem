@@ -25,7 +25,11 @@ def extractCategory(fileURL, totalDic):
         time.sleep(0.5)
         for i in range(0,5):
             getTopicDict = getCategoryService(accessKey[i], totalDic['keyword'])
+
     print(getTopicDict)
+    if (len(getTopicDict) == 0):
+        getTopicDict['None'] = 0
+        
     totalDic['category'] = getTopicDict
 
 
