@@ -144,7 +144,7 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 
 ### 개발 도구
 
-- Visual Studio Code, Django, MySQL
+- Visual Studio Code, Flask, MySQL
 
 ### 개발 언어
 
@@ -156,7 +156,7 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 
 ### 특이 사항
 
-- MySQL로 메타데이터 관리가 가능한 Nginx, Gunicorn과 Flask로 이루어진 서버
+- MySQL로 메타데이터 관리가 가능한 Flask 서버
 - Tensorflow의 Keras와 OpenCV, FFmpeg 등 다양한 기술을 활용해 풍부한 메타데이터를 생성
 - HTML, CSS, Javascript를 이용한 웹 홈페이지 제작
 

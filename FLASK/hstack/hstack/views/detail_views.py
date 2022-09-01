@@ -1,8 +1,10 @@
+from django.shortcuts import redirect
 from flask import request
 from flask import Blueprint
 from flask import send_file
 from flask import render_template
 from flask import send_from_directory
+from flask import current_app as app # app.config 사용을 위함
 
 from hstack.config import DB
 from hstack.models import Videopath
@@ -14,6 +16,8 @@ from sqlalchemy import and_
 from hstack import makePPT
 
 import os
+import json
+import datetime
 
 bp = Blueprint('detail', __name__, url_prefix='/')
 
@@ -24,7 +28,7 @@ def data(filepath):
 
 @bp.route('/detail/download/<string:path>/<string:title>')
 def download(path, title):
-    filepath = os.path.join('..', 'media', 'Uploaded', path, title+".pptx")
+    filepath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), path, title+".pptx")
     print(filepath)
     return send_file(filepath)
 
@@ -68,3 +72,29 @@ def detailFile(pk):
         metadatas = DB.session.query(Metadatum).filter(Metadatum.id == pk).all(),
         timestamps =  DB.session.query(Timestamp).filter(Timestamp.id == pk).all(),
     )
+
+# pk logfile에 content 기록
+def writeLog(pk, type, content):
+    logPath = os.path.join(app.config.get('UPLOAD_LOG_DIR'), str(pk)+".txt")
+    logFile = open(logPath, 'a')
+
+    date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    if (type == "search"): data = date + " " + content
+    else:                  data = date + " *" + content  
+
+    print(logPath, data)
+    
+    logFile.write(data)
+    logFile.close()
+
+@bp.route('/detail/<int:pk>/<string:type>/<string:content>')
+def logDetailInfo(pk, type, content):
+    logPath = os.path.join(app.config.get('UPLOAD_LOG_DIR'), str(pk)+".txt")
+    logFile = open(logPath, 'a', encoding='utf-8-sig')
+
+    date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    if (type == "search"): data = date + " " + content
+    else:                  data = date + " *" + content
+    
+    logFile.write(data+'\n')
+    logFile.close()

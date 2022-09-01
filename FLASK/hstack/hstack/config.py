@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 OS = platform.system()
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_FILE_DIR = os.path.join('.', 'media', 'Uploaded')
+UPLOAD_LOG_DIR = os.path.join('.', 'logs')
 
 STT_API_KEY = {
     "2d40b072-37f1-4317-9899-33e0b3f5fb90",
