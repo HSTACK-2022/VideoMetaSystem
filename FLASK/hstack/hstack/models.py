@@ -127,7 +127,8 @@ class TotalSearch(db.Model):
     def __repr__(self):
         return f"<TotalKeyword('{self.tKeyword}', '{self.cnt}')>"
 
-class UpoladTime(db.Model):
+
+class UploadTime(db.Model):
     __tablename__='upload_time'
 
     id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)

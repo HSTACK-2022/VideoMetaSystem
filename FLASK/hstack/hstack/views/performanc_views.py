@@ -14,7 +14,7 @@ from ..models import TotalSearch
 from ..models import TitleSearch
 from ..models import KeywordSearch
 from ..models import PresenterSearch
-from ..models import UpoladTime
+from ..models import UploadTime
 
 
 # 상수 설정
@@ -77,7 +77,7 @@ def ratio():
     # 업로드 시간 그래프
     uploadTime = []
     uploadSize = []
-    for res in DB.session.query(UpoladTime).order_by(UpoladTime.size).limit(20):
+    for res in DB.session.query(UploadTime).order_by(UploadTime.size).limit(20):
         uploadTime.append(res.time)
         uploadSize.append(res.size)
 

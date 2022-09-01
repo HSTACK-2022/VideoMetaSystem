@@ -161,9 +161,8 @@ input::-webkit-input-placeholder {
 }
 
 
-#uploadBtn, #edit{
+.detailBtn{
     height: 60px;
     margin-bottom: 3px;
-  
 }
 
