@@ -26,10 +26,12 @@ def extractCategory(fileURL, totalDic):
         for i in range(0,5):
             getTopicDict = getCategoryService(accessKey[i], totalDic['keyword'])
 
+    print(".......................")
     print(getTopicDict)
     if (len(getTopicDict) == 0):
         getTopicDict['None'] = 0
         
+    print(getTopicDict)
     totalDic['category'] = getTopicDict
 
 
@@ -73,7 +75,10 @@ def getCategoryFromJson(responseData):
             returnTypes[categoryDetect] = round(percent, 2)
 
     #totalPerc 조정
-    weight = round(1.0 / totalPerc, 1)
+    if totalPerc == 0:
+        weight = 0
+    else:
+        weight = round(1.0 / totalPerc, 1)
     for key in returnTypes:
         returnTypes[key] = round(weight * returnTypes[key], 3)
         
