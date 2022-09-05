@@ -57,3 +57,25 @@ function visible(){
         document.getElementById("searchTextPresenter").value = '';
     }
 }
+
+// detail 페이지에서 search시 로그 기록
+function writeSearchLog(pk) {
+    var content = document.getElementById("searchContent").value;
+    console.log(content)
+    var request = new XMLHttpRequest();
+    request.open('GET', `http://localhost:5000/detail/${pk}/search/${content}`);
+    request.send();
+    request.onload = ()=>{
+        console.log(JSON.parse(request.response));
+    }
+}
+
+// detail 페이지에서 open시 로그 기록
+function writeOpenLog(pk, flag){
+    var request = new XMLHttpRequest();
+    request.open('GET', `http://localhost:5000/detail/${pk}/time/${flag}`);
+    request.send();
+    request.onload = ()=>{
+        console.log(JSON.parse(request.response));
+    }
+}
