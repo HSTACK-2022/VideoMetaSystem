@@ -73,14 +73,14 @@
                     }
                 });
 
-                new Chart(document.getElementById("method-chart"), {
+                new Chart(document.getElementById("presentation-chart"), {
                     type: 'pie',
                     data: {
-                        labels: {{method|safe}},
+                        labels: {{presentation|safe}},
                         datasets: [{
                             label: "Population (millions)",
                             backgroundColor: ["#c45850","#E4D192"],
-                            data: {{method_data|safe}}
+                            data: {{presentation_data|safe}}
                         }]
                     },
                     options: {
@@ -89,7 +89,7 @@
                         cutoutPercentage: 50,
                         title: {
                             display: true,
-                            text: 'METHOD RATIO'
+                            text: 'PRESENTATION RATIO'
                         },
                         legend: {
                             display: true,
@@ -251,7 +251,7 @@
 
         <canvas id="category-chart" width="500" height="500"></canvas>
         <canvas id="narrative-chart" width="400" height="400"></canvas>
-        <canvas id="method-chart" width="400" height="400"></canvas>
+        <canvas id="presentation-chart" width="400" height="400"></canvas>
 <br><br>
         <canvas id="line-chart" width="500" height="400"></canvas>
 

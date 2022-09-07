@@ -46,7 +46,7 @@ class Total:
         mdlistDict['presenter'] = mdlist.presenter
         mdlistDict['category'] = mdlist.category
         mdlistDict['narrative'] = mdlist.narrative
-        mdlistDict['method'] = mdlist.method
+        mdlistDict['presentation'] = mdlist.presentation
         mdlistDict['videoLength'] = mdlist.videoLength
         mdlistDict['videoFrame'] = mdlist.videoFrame
         mdlistDict['videoType'] = mdlist.videoType
@@ -228,12 +228,12 @@ def extractCategories(videoIdList):
 
     return categoryList
 
-# 각 videoId에서 method를 뽑아낸다.
+# 각 videoId에서 presentation(method)를 뽑아낸다.
 def extractData(videoIdList):
     dataList = set()
     for videoId in videoIdList:
-        if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().method):
-            datas = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().method
+        if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation):
+            datas = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation
             datas = datas.split(',')
             print(datas)
             for c in datas:
@@ -438,7 +438,7 @@ def search(All, T, K, P):
 
 
 # videoIdList를 받아와 filter search
-def detailSearch(All, T, K, P, category, narrative, method):
+def detailSearch(All, T, K, P, category, narrative, presentation):
     excpIdList = set()
     newVideoIdList = list()
     newVideoMetaList = list()
@@ -455,8 +455,8 @@ def detailSearch(All, T, K, P, category, narrative, method):
         if narrative != "":
             if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.narrative.contains(narrative))).first() == None:
                 excpIdList.add(id)
-        if method != "":
-            if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.method.contains(method))).first() == None:
+        if presentation != "":
+            if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.presentation.contains(presentation))).first() == None:
                 excpIdList.add(id)
 
     # id 제거

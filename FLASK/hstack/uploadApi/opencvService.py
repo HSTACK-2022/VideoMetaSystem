@@ -38,12 +38,12 @@ def doOpencvService(fileURL, finalDic) :
     type = sceneText.sceneText(imagePath, os.path.dirname(fileURL))
     
     # L, N, P, A
-    # method : PPT, lecture / others
+    # presentation : PPT, lecture / others
     # narrative : Application / others
     if type == "P" or type == "L":
-        finalDic['method'] = 'PPT'
+        finalDic['presentation'] = 'Static'
     else:
-        finalDic['method'] = '실습'
+        finalDic['presentation'] = 'Dynamic'
 
     if type == "A":
         finalDic['narrative'] = 'Application'
