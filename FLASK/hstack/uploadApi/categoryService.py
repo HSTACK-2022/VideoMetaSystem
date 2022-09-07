@@ -21,10 +21,15 @@ def extractCategory(fileURL, totalDic):
 
     # videoId를 통해 Keyword list를 받아온다.
     getTopicDict = {}
+    transferTo_list = []
+    for key in totalDic['keyword'].keys():
+        transferTo_list.append(key)
+    transferTo_list.append(totalDic['title'])
     for j in range(0,5):
         time.sleep(0.5)
         for i in range(0,5):
-            getTopicDict = getCategoryService(accessKey[i], totalDic['keyword'])
+            getTopicDict = getCategoryService(accessKey[i], transferTo_list)
+    
 
     print(".......................")
     print(getTopicDict)
