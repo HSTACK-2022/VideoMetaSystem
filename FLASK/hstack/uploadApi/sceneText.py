@@ -37,7 +37,8 @@ def sceneText(imagePath, textPath):
     #sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8') 
     #sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
     if OS == 'Windows':
-        pytesseract.pytesseract.tesseract_cmd = "C:/Program Files/Tesseract-OCR/tesseract.exe" #경로지정 필요
+        #pytesseract.pytesseract.tesseract_cmd = "C:/Program Files/Tesseract-OCR/tesseract.exe" #[Minhwa]경로지정
+        pytesseract.pytesseract.tesseract_cmd = "E:/tools/Tesseract/tesseract.exe" #[Dayeon]경로지정
     config = ('-l eng+kor --oem 3 --psm 4')
     video_info = dict()
 

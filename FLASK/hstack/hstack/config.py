@@ -18,7 +18,7 @@ STT_API_KEY = {
 
 db = {
     'user' : 'root',
-    'password' : 'hstackbadmin',
+    'password' : 'hstackdbadmin',
     'host' : 'localhost',
     'port' : 3306,
     'database' : 'hstackDB'

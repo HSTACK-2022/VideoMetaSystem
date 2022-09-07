@@ -67,7 +67,7 @@ class ExtractMetadata(Resource):
             category = category[0:-2],
             category_percent = categoryPerc[0:-2],
             narrative = totalDic["narrative"],
-            method = totalDic["method"],
+            presentation = totalDic["presentation"],
             videoLength = totalDic["videoLength"],
             videoFrame = totalDic["videoFrame"],
             videoSize = totalDic["videoSize"],
