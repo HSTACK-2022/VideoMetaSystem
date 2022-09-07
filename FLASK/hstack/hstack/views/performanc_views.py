@@ -53,18 +53,18 @@ def ratio():
         else:
             narrative_dict[item] = 1
 
-    method_dict = {}
-    method=[]
-    for res in Metadatum.query.with_entities(Metadatum.method).all():
+    presentation_dict = {}
+    presentation=[]
+    for res in Metadatum.query.with_entities(Metadatum.presentation).all():
         for n in res:
-            method.append(n)
-    for item in method:
+            presentation.append(n)
+    for item in presentation:
         if item is None:
             continue
-        if item in method_dict:
-            method_dict[item] += 1
+        if item in presentation_dict:
+            presentation_dict[item] += 1
         else:
-            method_dict[item] = 1
+            presentation_dict[item] = 1
             
     # for item in categories:
     #     words = re.split(r'[ ,:]',item)
@@ -122,8 +122,8 @@ def ratio():
         category_data = list(categories_dict.values()),
         narrative = list(narrative_dict.keys()),
         narrative_data = list(narrative_dict.values()),
-        method = list(method_dict.keys()),
-        method_data = list(method_dict.values()),
+        presentation = list(presentation_dict.keys()),
+        presentation_data = list(presentation_dict.values()),
         upload_time = uploadTime,
         upload_size = uploadSize,
         totalWord = list(totalWord.keys()),

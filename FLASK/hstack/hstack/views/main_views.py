@@ -127,7 +127,7 @@ def uploadList():
         # filter 요소 받기
         category = request.form.get('category')
         narrative = request.form.get('narrative')
-        method = request.form.get('method')
+        presentation = request.form.get('method')
 
         excpIdList = set()
         newVideoIdList = list()
@@ -141,8 +141,8 @@ def uploadList():
             if narrative != "":
                 if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.narrative.contains(narrative))).first() == None:
                     excpIdList.add(id)
-            if method != "":
-                if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.method.contains(method))).first() == None:
+            if presentation != "":
+                if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.presentation.contains(presentation))).first() == None:
                     excpIdList.add(id)
 
         # id 제거
@@ -165,5 +165,5 @@ def uploadList():
                 videoIdList = newVideoIdList,
                 category = category,
                 narrative = narrative,
-                method = method
+                method = presentation
             )

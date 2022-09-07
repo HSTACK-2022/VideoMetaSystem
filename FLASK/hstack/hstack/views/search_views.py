@@ -164,7 +164,7 @@ def searchFile():
                 K=searchKeywords,
                 category=category,
                 narrative=narrative,
-                method=method
+                presentation=method
             )
 
         # if not detailSearch    

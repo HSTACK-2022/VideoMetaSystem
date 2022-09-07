@@ -42,7 +42,7 @@ class Videopath(db.Model):
 class Metadatum(db.Model):
     __tablename__ = 'metadata'
     __table_args__ = (
-        db.CheckConstraint("(`method` in (_utf8mb3'PPT',_utf8mb3'실습'))"),
+        db.CheckConstraint("(`presentation` in (_utf8mb3'Dynamic',_utf8mb3'Static')"),
         db.CheckConstraint("(`narrative` in (_utf8mb3'description',_utf8mb3'application',_utf8mb3'description/application'))")
     )
 
@@ -52,7 +52,7 @@ class Metadatum(db.Model):
     category = db.Column(db.String(20))
     category_percent = db.Column(db.String(30))
     narrative = db.Column(db.String(30))
-    method = db.Column(db.String(10))
+    presentation = db.Column(db.String(10))
     videoLength = db.Column(db.String(10))
     videoFrame = db.Column(db.String(10))
     videoType = db.Column(db.String(5))
