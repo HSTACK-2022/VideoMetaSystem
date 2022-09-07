@@ -34,6 +34,7 @@ def ratio():
             continue
         words = re.split(r'[ ,:]',item)
         for word in words:
+            if word == '': continue
             if word in categories_dict:
                 categories_dict[word] += 1
             else:

@@ -100,7 +100,8 @@ def getCategoryPerc(videoid, searchText):
         for k in res:
             words = re.split(r'[ ,:]', k)
             for w in words:
-                k_v.append(float(w))
+                if w == '': k_v.append(0.0)
+                else:       k_v.append(float(w))
     for res in DB.session.query(Metadatum).filter(Metadatum.id == videoid).filter(Metadatum.category.contains(searchText)).with_entities(Metadatum.category).all():
         for k in res:
             words = re.split(r'[ ,:]', k)
@@ -387,17 +388,12 @@ def search(All, T, K, P):
 
     rankDict = {}
     for videoid in perc:
-        print("&&&&&&&&&&&&&&&")
-        #print(videoid)
-        #print(perc[videoid])
         cnt = 0
         sum = 0
         for p in perc[videoid]:
-            sum+=round(p*weight[cnt],3)
-            #print(round(p*weight[cnt]))
+            sum+=round(p*weight[cnt], 2)
             cnt+=1
-        #print("**!!")
-        #print(sum)
+        sum = round(sum, 2)     # 59.730000000000000000004 방지
         # if sum == 0:
         #     continue
         rankDict[videoid]=sum

@@ -93,7 +93,7 @@ def uploadFile():
 @bp.route('/uploadFile/lists', methods=['GET', 'POST'])
 def uploadList():
     if request.method == "GET":
-        videoPathList = Videopath.query.filter(Videopath.extracted == True).all()
+        videoPathList = Videopath.query.filter(Videopath.extracted != 0).all()
         videoIdList = list()
         for videopath in videoPathList:
             videoIdList.append(videopath.id)
@@ -119,7 +119,7 @@ def uploadList():
     else:
         # 이하 detailSearch
         # 수정을 요하는 videoIdList 받기
-        videoPathList = Videopath.query.filter(Videopath.extracted == True).all()
+        videoPathList = Videopath.query.filter(Videopath.extracted != 0).all()
         videoIdList = list()
         for videopath in videoPathList:
             videoIdList.append(videopath.id)
