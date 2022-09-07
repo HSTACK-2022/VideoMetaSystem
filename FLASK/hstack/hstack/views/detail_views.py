@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from flask import request
 from flask import Blueprint
 from flask import send_file

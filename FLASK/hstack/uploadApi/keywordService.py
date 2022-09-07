@@ -48,7 +48,7 @@ def doKeywordService(fileURL, totalDic):
     #else :
     #    keywords = mergeKeyword(audioScript, None, None)
 
-    totalDic['keyword'] = getKeyword(audioScript, min_count, max_length)
+    totalDic['keyword'] = getKeyword(fileURL, audioScript, min_count, max_length)
 
 
 from krwordrank.word import KRWordRank
@@ -59,12 +59,18 @@ import konlpy
 import nltk
 import sys
 from konlpy.tag import Okt 
-
+from .models import Metadatum
 # 환경변수가 제대로 안돼서 넣음
 #sys.path.append("C:\capstone\capstone\mhenv\Lib\site-packages")
 verbose = False # 프로그램 진행을 보이는 정도
+def byte_transform(bytes, to, bsize=1024):
+     a = {'k' : 1, 'm': 2, 'g' : 3, 't' : 4, 'p' : 5, 'e' : 6 }
+     r = float(bytes)
+     for i in range(a[to]):
+         r = r / bsize
+     return round(r,2)
 
-def getKeyword(filePath, min_count, max_length):
+def getKeyword(fileURL, filePath, min_count, max_length):
     if(filePath == None):
         return
     wordrank_extractor = KRWordRank(min_count, max_length , verbose)
@@ -78,9 +84,13 @@ def getKeyword(filePath, min_count, max_length):
     
     texts = [normalize(text,english=False , number=True) for text in texts ]
     stopwords ={'ERROR','할','단어'}
-    #keywords = summarize_with_keywords(texts, min_count=5, max_length=10,
-    #beta=0.85, max_iter=10, stopwords=stopwords, verbose=True)
-    keywords = summarize_with_keywords(texts) # with default arguments
+    
+    size = os.path.getsize(fileURL)
+    size = byte_transform(size,'m')
+    min_count = int(size / 3)
+    keywords = summarize_with_keywords(texts, min_count, max_length=10,
+    beta=0.85, max_iter=10, stopwords=stopwords, verbose=True)
+    #keywords = summarize_with_keywords(texts) # with default arguments
     print(keywords)
     #print(keywords.keys())
     print('\n')
