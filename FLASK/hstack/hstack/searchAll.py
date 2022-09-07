@@ -221,7 +221,7 @@ def extractCategories(videoIdList):
     for videoId in videoIdList:
         if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category):
             category = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category
-            category = category.split(',')
+            category = category.split(', ')
             print(category)
             for c in category:
                 categoryList.add(c)
@@ -234,7 +234,7 @@ def extractData(videoIdList):
     for videoId in videoIdList:
         if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation):
             datas = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation
-            datas = datas.split(',')
+            datas = datas.split(', ')
             print(datas)
             for c in datas:
                 dataList.add(c)
