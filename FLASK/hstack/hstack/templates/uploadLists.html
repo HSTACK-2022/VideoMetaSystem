@@ -8,6 +8,12 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/serach.js') }}"></script>
         <script>
+            function resetDetail(){
+                document.getElementById('category').value = '';
+                document.getElementById('method').value = '';
+                document.getElementById('narrative').value = '';
+                document.getElementById("form").submit();
+            }
             function searchDetail(search_type, search_detail_type){
                 document.getElementById(search_type).value = search_detail_type;
                 document.getElementById("form").submit();
@@ -82,7 +88,10 @@
                         <input type="hidden" name="method" id="method" value="{{method}}">
                         <input type="hidden" name="narrative" id="narrative" value="{{narrative}}">
                         <div class="category">
-                            <h2 class="todo-cmp__header">검색 내 세부검색</h2>
+
+                            <h2 class="todo-cmp__header">검색 내 세부검색
+                                <div onclick="resetDetail()" id="resetBtn">RESET</div>
+                            </h2>
                             
                             <ul class="todo-cmp__list">
                                 <li> CATEGORY</li>

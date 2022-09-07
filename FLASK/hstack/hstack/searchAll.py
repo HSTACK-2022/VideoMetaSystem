@@ -214,7 +214,7 @@ def extractType(videoIdList):
             for c in types:
                 typeList.add(c)
 
-    return typeList
+    return sorted(typeList)
 
 # 각 videoId에서 Categories를 뽑아낸다.
 def extractCategories(videoIdList):
@@ -227,7 +227,7 @@ def extractCategories(videoIdList):
             for c in category:
                 categoryList.add(c)
 
-    return categoryList
+    return sorted(categoryList)
 
 # 각 videoId에서 presentation(method)를 뽑아낸다.
 def extractData(videoIdList):
@@ -240,7 +240,7 @@ def extractData(videoIdList):
             for c in datas:
                 dataList.add(c)
 
-    return dataList    
+    return sorted(dataList)    
 
 
 # not DetailSearch
