@@ -100,9 +100,9 @@ def getCategoryPerc(videoid, searchText_list):
         for k in res:
             words = re.split(r'[ ,:]', k)
             for w in words:
-                if w == '': k_v.append(0.0)
-                else:       k_v.append(float(w))
-    for res in DB.session.query(Metadatum).filter(Metadatum.id == videoid).filter(Metadatum.category.contains(searchText)).with_entities(Metadatum.category).all():
+                if len(w) != 0:     # category_percent가 여러개일 경우(0.4, 0.5) -> words ['0.4', '', '0.5'] -> words의 ''를 빼기 위함
+                    k_v.append(float(w))
+    for res in DB.session.query(Metadatum).filter(Metadatum.id == videoid).with_entities(Metadatum.category).all():
         for k in res:
             words = re.split(r'[ ,:]', k)
             for w in words:
@@ -143,11 +143,12 @@ def getCategoryPerc(videoid, searchText_list):
 
     sum = 0
     for i in range(0,len(sum_list)):
-        sum += i
-    ##
+        sum += sum_list[i]
+    sum = 1 if sum > 1 else sum
 
     if max(k_v) == 0 or k_v2 == 0:
         return 0
+
     m = round(1/sum,3)
     print(m)
     print("결과 확률:")
@@ -182,7 +183,8 @@ def getKeywordPerc(videoid, searchText_list):
 
     sum = 0
     for i in range(0,len(sum_list)):
-        sum += i
+        sum += sum_list[i]
+    sum = 1 if sum > 1 else sum
     ##
 
     if max(keywordPercFull) == 0 or searchText_perc == 0:
