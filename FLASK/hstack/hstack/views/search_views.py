@@ -157,12 +157,23 @@ def searchFile():
             narrative = request.args.get('narrative')
             method = request.args.get('method')
 
+            categories = re.split(r'[ ,:]', category)
+            categorySet = set()
+            for c in categories:
+                if (c != ''):
+                    categorySet.add(c)
+            categorySet = sorted(categorySet)
+            
+            category = ""
+            for c in categorySet:
+                category += c + ", "
+
             videoIdList, videoMetaList, rankData = searchAll.detailSearch(
                 All=searchWords,
                 T=searchTitles,
                 P=searchPresenters,
                 K=searchKeywords,
-                category=category,
+                category=categorySet,
                 narrative=narrative,
                 presentation=method
             )

@@ -290,8 +290,6 @@ body{
 
     transition: all 550ms ease-in-out;
     color: rgb(59, 59, 59);
-    ;
-
 }
 
 .todo-cmp__list li label input:checked+span::after {
@@ -305,4 +303,23 @@ body{
 .todo-cmp__list li label input:checked+span::before {
     opacity: 1;
     transition: all 550ms ease-in-out;
+}
+
+#resetBtn {
+    float: right;
+    margin: 5px 0px;
+    font-size: 14px;
+    font-family: 'pre1';
+    padding: 3px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #ffffff;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+    visibility: hidden;
+}
+
+#resetBtn:hover {
+    cursor: pointer;
+    background-color:rgb(50, 46, 93);
 }

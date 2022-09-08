@@ -1,10 +1,11 @@
 
 # 영상의 풍부한 메타데이터 자동 구축 및 효과적인 검색, 재생 시스템 <br/> (VMeta, Video Meta System)
 
-Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 구축해 사용자에게 세밀하고 용이한 검색을 가능하게 하는 시스템이다. 
-<br/><br/>
+<br/>
 
----
+> Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 구축해 <br/>
+> 사용자에게 세밀하고 용이한 검색을 가능하게 하는 시스템이다. 
+
 <br/>
 
 ## ✔ NOTICE
@@ -12,7 +13,7 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 2022년 7월부터, 본 프로젝트는 <b>Flask Framework를 사용합니다.</b><br/>
 이전 Django Framework를 사용한 프로젝트는 [여기](https://github.com/yeondelight/VideoMetaSystem/tree/c8f0593a7dfdaf904dcb72204b0092fa8b1f5429)를 참고해주세요.
 
----
+<br/>
 <br/>
 
 ## 📷 소개 영상
@@ -22,14 +23,15 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 [<img src="https://user-images.githubusercontent.com/73868349/171586152-85d907ca-51e4-4186-998c-c3c808e651e2.jpg" alt="VMeta"
  width = "480" height="270" />](https://youtu.be/-k8TcLdf65s)
 
----
+<br/>
 <br/>
 
 ## 📌 작품 소개
 
-```
-💡 VMeta는 영상의 메타데이터를 자동으로 구축하고, 이를 통해 사용자에게 세밀하고 용이한 검색을 제공하는 웹 시스템입니다.
-```
+> 💡 VMeta는 영상의 메타데이터를 자동으로 구축하고<br/>
+> 이를 통해 사용자에게 세밀하고 용이한 검색을 제공하는 웹 시스템입니다.
+
+<br/>
 
 ### 1. 프로젝트 정의
 
@@ -64,8 +66,8 @@ Video Meta System (이하 VMeta)는 영상의 메타데이터를 자동으로 �
 <br/>
 <br/>
 
----
 
+<br/>
 <br/>
 
 ## ⚙️ 시스템 구조
@@ -87,7 +89,7 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 #### 1. Weight Decision
 - 각 검색 파라미터의 가중치(Wi)의 초기 값은 Title, Presenter, Keyword, Category가 각각 0.3, 0.3, 0.2, 0.2이다. 검색 파라미터가 생략된 경우 모든 검색 파라미터 값을 수정한다. 검색 파라미터가 생략된 경우, 검색 파라미터의 가중치를 나머지 검색 파라미터들의 가중치에 균등하게 나누어준다. n번째 검색 파라미터가 생략되었다면 다음과 같이 Wi를 재계산한다.
 
-	Wi  = Wi  + Wn/3, for all Wi (i≠n)
+	Wi  = Wi  + Wn/3, for all Wi (i≠n) <br/>
 	Wn  = 0
 	
 	검색 파라미터의 가중치 Wi는 비디오에 종속되지 않는 값이다.
@@ -132,27 +134,36 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 <br/>
 <br/>
 
----
 
+<br/>
 <br/>
 
 ## 🔧 적용 기술 및 특이 사항
 
-### 개발 환경
+### 개발 환경 
 
-- Windows10, Linux 20.04 LTS
+![Windows 10](https://img.shields.io/badge/Windows%2010-%234D4D4D.svg?style=for-the-badge&logo=windows-terminal&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 
 ### 개발 도구
 
-- Visual Studio Code, Flask, MySQL
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
 ### 개발 언어
 
-- Python, HTML, CSS, JavaScript, SQL
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![html](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Javascript](https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 
 ### 핵심 기술
 
-- Flask Framework, OpenCV, Tensorflow, FFmpeg
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)
 
 ### 특이 사항
 
@@ -164,8 +175,8 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 <br/>
 <br/>
 
----
 
+<br/>
 <br/>
 
 ## 🖼 프로젝트 결과
@@ -207,8 +218,8 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 <br/>
 <br/>
 
----
 
+<br/>
 <br/>
 
 ## 📖 참고자료

@@ -11,11 +11,12 @@ from hstack.models import Videopath
 from hstack.models import Metadatum
 
 import os
+import re
 import requests
 import background
 
 from werkzeug.utils import secure_filename
-from sqlalchemy import and_
+from sqlalchemy import and_, false
 
 # 상수 설정
 bp = Blueprint('main', __name__, url_prefix='/')
@@ -93,7 +94,7 @@ def uploadFile():
 @bp.route('/uploadFile/lists', methods=['GET', 'POST'])
 def uploadList():
     if request.method == "GET":
-        videoPathList = Videopath.query.filter(Videopath.extracted == True).all()
+        videoPathList = Videopath.query.filter(Videopath.extracted != 0).all()
         videoIdList = list()
         for videopath in videoPathList:
             videoIdList.append(videopath.id)
@@ -119,7 +120,7 @@ def uploadList():
     else:
         # 이하 detailSearch
         # 수정을 요하는 videoIdList 받기
-        videoPathList = Videopath.query.filter(Videopath.extracted == True).all()
+        videoPathList = Videopath.query.filter(Videopath.extracted != 0).all()
         videoIdList = list()
         for videopath in videoPathList:
             videoIdList.append(videopath.id)
@@ -129,15 +130,27 @@ def uploadList():
         narrative = request.form.get('narrative')
         presentation = request.form.get('method')
 
+        categories = re.split(r'[ ,:]', category)
+        categorySet = set()
+        for c in categories:
+            if (c != ''):
+                categorySet.add(c)
+        categorySet = sorted(categorySet)
+        
+        category = ""
+        for c in categorySet:
+            category += c + ", "
+
         excpIdList = set()
         newVideoIdList = list()
         newVideoMetaList = list()
         
         # filter를 통해 빼는 것들의 index 받기
         for id in videoIdList:
-            if category != "":
-                if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.category.contains(category))).first() == None:
-                    excpIdList.add(id)
+            if len(categorySet) != 0:
+                for c in categorySet:
+                    if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.category.contains(c))).first() == None:
+                        excpIdList.add(id)
             if narrative != "":
                 if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.narrative.contains(narrative))).first() == None:
                     excpIdList.add(id)

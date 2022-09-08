@@ -53,25 +53,45 @@ def editFile(pk):
     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
     print(sysKEList)
     print(sysKCList)
+    print(userKEList)
+    print(userKCList)
     print(newUserKEList)
     print(newUserKCList)
     print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-        
+
+    
+    # edit Keyword perc
+    if (len(newUserKCList) != 0):
+        sysKECount = len(DB.session.query(Keyword).filter(Keyword.id == pk).all())
+        keywordCount = sysKECount + len(newUserKCList)
+        percWeight = round(1/keywordCount, 3)           # for userdef Keywords
+        sysWeight = round(sysKECount * percWeight, 3)   # for sysdef Keywords
+        print(percWeight)
+
+        for i in range(len(sysKEList)):
+            oldPerc = DB.session.query(Keyword).filter(and_(Keyword.id == pk, Keyword.keyword.like(sysKCList[i]))).first().percent
+            newPerc = round(oldPerc * sysWeight, 3)
+            DB.session.query(Keyword).filter(and_(Keyword.id == pk, Keyword.keyword.like(sysKCList[i]))).update({"percent" : newPerc}, synchronize_session="fetch")
+            DB.session.flush()
+        for i in range(len(userKEList)):
+            DB.session.query(Keyword).filter(and_(Keyword.id == pk, Keyword.keyword.like(userKCList[i]))).update({"percent" : percWeight}, synchronize_session="fetch")
+            DB.session.flush()
+        for i in range(len(newUserKCList)):
+            k = Keyword(
+                id = DB.session.query(Videopath).filter(Videopath.id == pk).first().id,
+                keyword = newUserKCList[i],
+                percent = percWeight,
+                expose = newUserKEList[i],
+                sysdef = 0
+            )
+            DB.session.add(k)
+            DB.session.flush()
 
     for i in range(len(sysKEList)):
         DB.session.query(Keyword).filter(and_(Keyword.id == pk, Keyword.keyword.like(sysKCList[i]), Keyword.sysdef == 1)).update({"expose" : sysKEList[i]}, synchronize_session="fetch")
         DB.session.flush()
     for i in range(len(userKEList)):
         DB.session.query(Keyword).filter(and_(Keyword.id == pk, Keyword.keyword.like(userKCList[i]), Keyword.sysdef == 0)).update({"expose" : userKEList[i]}, synchronize_session="fetch")
-        DB.session.flush()
-    for i in range(len(newUserKCList)):
-        k = Keyword(
-            id = DB.session.query(Videopath).filter(Videopath.id == pk).first().id,
-            keyword = newUserKCList[i],
-            expose = newUserKEList[i],
-            sysdef = 0
-        )
-        DB.session.add(k)
         DB.session.flush()
 
     DB.session.commit()
