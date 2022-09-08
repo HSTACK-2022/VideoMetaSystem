@@ -11,6 +11,7 @@ import os
 import re
 import platform
 import datetime
+import collections
 
 from ..config import DB
 
@@ -107,22 +108,54 @@ def ratio():
     for res in DB.session.query(PresenterSearch).order_by(PresenterSearch.cnt.desc()).limit(10):
         presenterWord[res.pKeyword] = res.cnt
 
-    # detailWord = {}
-    # for t in titleWord:
-    #     if t in detailWord:
-    #         detailWord[t] = detailWord[t]+titleWord[t]
-    #     else:
-    #         detailWord[t] = titleWord[t]
-    # for k in keyWord:
-    #     if k in detailWord:
-    #         detailWord[k] = detailWord[k]+keyWord[k]
-    #     else:
-    #         detailWord[k] = keyWord[k]
-    # for p in presenterWord:
-    #     if p in detailWord:
-    #         detailWord[p] = detailWord[p]+presenterWord[p]
-    #     else:
-    #         detailWord[p] = presenterWord[p]
+    # 모든 객체의 id를 가져온다.
+    allVideo = DB.session.query(Videopath).all()
+    idViewDict = dict()
+    idTimeDict = dict()
+    
+    for video in allVideo:
+        idViewDict[video.id] = 0
+        idTimeDict[video.id] = 0
+
+
+    # 각 객체별 log파일 open : 조회수 count
+    datetime_format = "%H:%M:%S"
+
+    for key in idViewDict:
+        logPath = os.path.join(app.config.get('UPLOAD_LOG_DIR'), str(key)+".txt")
+        if os.path.isfile(logPath):
+            viewCnt = 0
+            timeCnt = 0
+            startTime = 0
+            endTime = 0
+            log = open(logPath, 'r', encoding='utf-8-sig')
+            scripts = log.readlines()
+            for line in scripts: 
+                cmd = line.split(' ')
+                if (cmd[2] == '*open\n'):
+                    startTime = datetime.datetime.strptime(cmd[1], datetime_format)
+                elif (cmd[2] == '*close\n'):
+                    viewCnt += 1
+                    endTime = datetime.datetime.strptime(cmd[1], datetime_format)
+                    timeCnt += datetime2sec(endTime - startTime)
+
+            idViewDict[key] = viewCnt
+            idTimeDict[key] = round(timeCnt / viewCnt, 2)
+
+    idViewList = sorted(idViewDict.items(), key = lambda item: item[1], reverse = True)
+    idViewMeta = list()
+    for key, value in idViewList:
+        videoObj = DB.session.query(Metadatum).filter(Metadatum.id == key).first()
+        valDict = dict()
+        valDict['id'] = key
+        valDict['views'] = value
+        valDict['title'] = videoObj.title
+        valDict['presenter'] = videoObj.presenter
+        valDict['uploadDate'] = videoObj.uploadDate
+        idViewMeta.append(valDict)
+
+    print(idViewMeta)
+    print(idTimeDict)
 
     return render_template('/performance.html',
                            code=200,
@@ -145,7 +178,10 @@ def ratio():
                            presenterWord_total=presenterWord.items(),
                            keyWord=list(keyWord.keys()),
                            keyWord_data=list(keyWord.values()),
-                           keyWord_total=keyWord.items()
+                           keyWord_total=keyWord.items(),
+                           idView = idViewMeta,
+                           idTime = list(idTimeDict.keys()),
+                           idTime_data = list(idTimeDict.values())
                            )
 
 
@@ -309,27 +345,107 @@ def performance_videoviews():
                            )
 
 
+@bp.route('/performance/category/')
+def performance_category():
+    # 모든 객체의 category를 가져온다.
+    allVideo = DB.session.query(Metadatum).all()
+    categoryDict = dict()
+    
+    for video in allVideo:
+        category = video.category.split(", ")
+        for c in category:
+            if c in categoryDict:
+                categoryDict[c] += 1
+            else:
+                categoryDict[c] = 1
 
-@bp.route('/performance/detail/')
-def performance_datail():
+    category = list()
+    categoryList = sorted(categoryDict.items())
+    print(categoryList)
+
+    for key, value in categoryList:
+        tempDict = dict()
+        tempDict['key'] = key
+        tempDict['value'] = value
+        category.append(tempDict)
+
+    return render_template('/performance_category.html',
+                           code = 200,
+                           category = category
+                           )
+
+@bp.route('/performance/category/<string:category>')
+def performance_datail(category):
     page = request.args.get('page', type=int, default=1)
-    pagination = DB.session.query(Metadatum).paginate(
-        page, per_page=10)  # 한 페이지에 5개 게시글 나열
+    pagination = DB.session.query(Metadatum).filter(Metadatum.category.contains(category)).paginate(page, per_page=10)  # 한 페이지에 5개 게시글 나열
 
     print("PAGEEEEEEEEEEEEEEEEEEEEEEE")
     print(pagination)
     print(pagination.items)
+
     return render_template('/performance_detail.html',
                            code=200,
+                           category=category,
                            metadatas=DB.session.query(Metadatum).all(),
                            paging=DB.session.query(Metadatum).count(),
                            pagination=pagination
                            )
 
+
 @bp.route('/performance/detail/<int:pk>', methods=['GET'])
 def performance_detailFile(pk):
+    metadataDict = dict()
+
+    metadata = DB.session.query(Metadatum).filter(Metadatum.id == pk).first()
+    metadataDict['title'] = metadata.title
+    metadataDict['presenter'] = metadata.presenter
+    metadataDict['category'] = metadata.category
+    metadataDict['narrative'] = metadata.narrative
+    metadataDict['presentation'] = metadata.presentation
+    metadataDict['videoSize'] = metadata.videoSize
+    metadataDict['videoLength'] = metadata.videoLength
+    metadataDict['videoFrame'] = metadata.videoFrame
+    metadataDict['uploadDate'] = metadata.uploadDate
+    
+    viewCnt = 0
+    timeCnt = 0
+    searchDict = dict()
+
+    datetime_format = "%H:%M:%S"
+    logPath = os.path.join(app.config.get('UPLOAD_LOG_DIR'), str(pk)+".txt")
+    if os.path.isfile(logPath):
+        startTime = 0
+        endTime = 0
+        log = open(logPath, 'r', encoding='utf-8-sig')
+        scripts = log.readlines()
+        for line in scripts: 
+            cmd = line.split(' ')
+            if (cmd[2] == '*open\n'):
+                startTime = datetime.datetime.strptime(cmd[1], datetime_format)
+            elif (cmd[2] == '*close\n'):
+                viewCnt += 1
+                endTime = datetime.datetime.strptime(cmd[1], datetime_format)
+                timeCnt += datetime2sec(endTime - startTime)
+            else:
+                key = cmd[2].split('\n')[0]
+                if key in searchDict:
+                    searchDict[key] += 1
+                else:
+                    searchDict[key] = 1
+
+        metadataDict['view'] = viewCnt
+        metadataDict['avgTime'] = round(timeCnt / viewCnt, 2)
+    
+    else:
+        metadataDict['view'] = 0
+        metadataDict['avgTime'] = 0
+    
+
+
     return render_template('/performance_charts.html',
         code = 200,
         pk = pk,
-        metadatas=DB.session.query(Metadatum).filter(Metadatum.id == pk).all()
+        scriptsWord = list(searchDict.keys()),
+        scriptsCnt = list(searchDict.values()),
+        metadatas = metadataDict
     )

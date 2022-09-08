@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>VMeta - SEARCH {{searchWord}}</title>
+        <title>VMeta - Monitoring Page</title>
         <meta charset="UTF-8">
-        
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/performance.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/videoList.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/progressBar.css') }}">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -11,8 +13,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
 
-        <link href="../static/css/styles.css" rel="stylesheet" />
-        <link href="../static/css/performance.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
         <meta charset="UTF-8">
         <script>
@@ -22,6 +22,38 @@
             }
 
             function first_load(){
+                new Chart(document.getElementById("video-time-chart"), {
+                    type: 'bar',
+                    data: {
+                        labels: {{idTime|safe}},
+                        datasets: [{ 
+                            data: {{idTime_data|safe}},
+                            label: "평균 재생 시간 (sec)",
+                            borderColor: "#c45850",
+                            backgroundColor: [
+                            '#24460B',
+                            '#315512',
+                            '#44691D',
+                            '#587E2B',
+                            '#6f933b',
+                            '#9EBE68',
+                            '#C4DE8E',
+                            '#E3F4B9',
+                            '#F2F9DB'
+                            ],
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '영상별 평균 재생 시간'
+                        },
+                        legend: {display: false},    // label 안보이게
+                    }
+                    });
+
                 new Chart(document.getElementById("category-chart"), {
                     type: 'pie',
                     data: {
@@ -137,9 +169,9 @@
                     }
                     });
 
-                    new Chart(document.getElementById("search-chart"), {
-                    type: 'line',
-                    data: {
+                new Chart(document.getElementById("search-chart"), {
+                type: 'line',
+                data: {
                         labels: {{totalWord|safe}},
                         datasets: [{ 
                             data: {{totalWord_data|safe}},
@@ -263,44 +295,9 @@
                         text: '키워드 검색 단어 빈도수'
                         },
                         legend: {display: false},    // label 안보이게
-                        
-                        
                     }
                     });
-
-                    // new Chart(document.getElementById("detailSearch-chart"), {
-                    // type: 'line',
-                    // data: {
-                    //     labels: ["운영", "계층", "라즈베리", "모바일", "황", "황기", "볼트", "배터리", "마이너스", "파이"],
-                    //     datasets: [{ 
-                    //         data: [50,68,43,35,10,2,25,88,65,72],
-                    //         label: "제목",
-                    //         borderColor: "#3cba9f",
-                    //         fill: false
-                    //     },{ 
-                    //         data: [80,71,55,69,30,12,67,84,35,45],
-                    //         label: "키워드",
-                    //         borderColor: "#c45850",
-                    //         fill: false
-                    //     },{ 
-                    //         data: [20,11,34,65,85,72,32,9,1,24],
-                    //         label: "발표자",
-                    //         borderColor: "#e8c3b9",
-                    //         fill: false
-                    //     }]
-                    // },
-                    // options: {
-                    //     responsive: false,
-                    //     title: {
-                    //     display: true,
-                    //     text: '세부 검색 단어 빈도수'
-                    //     },
-                    //     legend: {display: false}    // label 안보이게
-                    // }
-                    // });
             }
-            
-            
         </script>
     </head>
     <body class="bodyArea sb-nav-fixed" onload="first_load();">
@@ -308,15 +305,7 @@
         {% if code == 200 %}
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="/performance">Administration</a>
-           
-            <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-                </div>
-            </form>
+            <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
 
         </nav>
 
@@ -325,10 +314,9 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="./">
+                            <a class="nav-link" href="/performance">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Dashboard
+                                Data Overview
                             </a>
 
                             <ul class="menuLists">
@@ -337,30 +325,36 @@
                                 <li onclick="location.href='/performance/videoviews'"> Video views </li>
                             </ul>
 
-                            <a class="nav-link" onclick="location.href='./detail'">
+                            <a class="nav-link" onclick="location.href='/performance/category'">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Video Table
+                                Video Details
                             </a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        Manager
+                        <div class="small">© 2022. HSTACK</div>
+                        all rights reserved.
                     </div>
                 </nav>
             </div>
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                            <h1 class="px-4  pt-5">Dashboard</h1>
+                            <h1 class="px-4  pt-5">Data Overview</h1>
                             <ol class="breadcrumb px-4" >
-                                <li class="breadcrumb-item active">Data OverView</li>
-                                <li class="breadcrumb-item active">Summary</li>
+                                <li class="breadcrumb-item active">Search</li>
+                                <li class="breadcrumb-item active">Metadata</li>
+                                <li class="breadcrumb-item active">Video views</li>
                             </ol>
+
+                            <br>
+
                             <div class="px-4 pb-4">
-                                관리자 페이지 입니다.
+                                현재 DB에 저장된 모든 영상의 데이터를 확인합니다.
                             </div>
                             
+                            <br>
+
                         
                         <div class="row">
                             <div class="col-lg-9">
@@ -410,170 +404,7 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                        <div class="row mt-4">
-                            <div class="col-lg-8">
-                                <div class="card card-raised h-100">
-                                    <div class="card-header px-4 py-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="me-4">
-                                                <h2 class="card-title mb-0 mb-1">
-                                                    비디오 분류</h2>
-                                                <div class="card-subtitle">method / category / narrative</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body my-5 mx-2">
-                                        <div class="row">
-                                            <div class="col-lg-4"><canvas id="category-chart"></canvas></div>
-                                            <div class="col-lg-4"><canvas id="narrative-chart" ></canvas></div>
-                                            <div class="col-lg-4"><canvas id="method-chart" ></canvas></div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-
-                            <div class="col-lg-4">
-                                <div class="card card-raised h-100">
-                                    <div class="card-header px-4 py-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="me-4">
-                                                <h2 class="card-title mb-0 mb-1">
-                                                    영상 크기 당 업로드 시간</h2>
-                                                <div class="card-subtitle">Upload time per video size(MB)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-around">
-                                            <canvas id="line-chart" width="400" height="400"></canvas>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card card-raised h-100 mt-4">
-                            <div class="card-header px-4 py-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="me-4">
-                                        <h2 class="card-title mb-0 mb-1">
-                                            동영상별 재생시간</h2>
-                                        <div class="card-subtitle">Video playback time</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-body">
-                                <canvas class="my-3" id="myAreaChart" width="100%" height="30"></canvas>
-                            </div>
-                        </div>
-                    
-
-                    
-                        <div class="card card-raised mt-4">
-                            <div class="card-header py-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="me-4">
-                                        <h2 class="card-title mb-0 mb-1">
-                                            조회수 순 동영상</h2>
-                                        <div class="card-subtitle">Popular Video</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                
-                                    <table id="datatablesSimple">
-                                        <thead>
-                                            <tr>
-                                                <th style="width:5%;">Rank</th>
-                                                <th>Title</th>
-                                                <th>Presenter</th>
-                                                <th>Views</th>
-                                                <th>Uploaded Date</th>
-                                            </tr>
-                                        </thead>
-                                        
-                                        <tbody>
-                                            
-                                            <tr>
-                                                <td>1</td>
-                                                <td>운영체제</td>
-                                                <td>kitae</td>
-                                                <td>335</td>
-                                                <td>2009/01/12</td>
-                                                
-                                            </tr>
-                                            
-                                            <tr>
-                                                <td>2</td>
-                                                <td>웹 디자인 기초</td>
-                                                <td>오하늘</td>
-                                                <td>222</td>
-                                                <td>2012/03/29</td>
-                                                
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Django 시작하기</td>
-                                                <td>Robert</td>
-                                                <td>97</td>
-                                                <td>2008/11/28</td>
-                                                
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>Chief Financial Officer</td>
-                                                <td>Samulel</td>
-                                                <td>64</td>
-                                                <td>2010/06/09</td>
-                                            </tr>
-                                            <tr>
-                                                <td>5</td>
-                                                <td>Operating System</td>
-                                                <td>Hwang</td>
-                                                <td>43</td>
-                                                <td>2010/06/09</td>
-                                            </tr>
-                                            <tr>
-                                                <td>6</td>
-                                                <td>Chief Financial Officer</td>
-                                                <td>Samulel</td>
-                                                <td>64</td>
-                                                <td>2010/06/09</td>
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>Operating System</td>
-                                                <td>Hwang</td>
-                                                <td>43</td>
-                                                <td>2010/06/09</td>
-                                            </tr>
-                                            <tr>
-                                                <td>8</td>
-                                                <td>Chief Financial Officer</td>
-                                                <td>Samulel</td>
-                                                <td>64</td>
-                                                <td>2010/06/09</td>
-                                            </tr>
-                                            <tr>
-                                                <td>9</td>
-                                                <td>Chief Financial Officer</td>
-                                                <td>Samulel</td>
-                                                <td>64</td>
-                                                <td>2010/06/09</td>
-                                            </tr>
-                                            
-                                        </tbody>
-                                    </table>
-                            
-                            </div>
-                        </div>  
-                        
-
 
                         <div class="row mt-4">
                             <div class="col">
@@ -688,6 +519,110 @@
                             <div id="current_time" class="card-footer small text-muted">
                                 <script>date();</script>
                             </div>
+
+                        <div class="row mt-4">
+                            <div class="col-lg-8">
+                                <div class="card card-raised h-100">
+                                    <div class="card-header px-4 py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-4">
+                                                <h2 class="card-title mb-0 mb-1">
+                                                    비디오 분류</h2>
+                                                <div class="card-subtitle">method / category / narrative</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body my-5 mx-2">
+                                        <div class="row">
+                                            <div class="col-lg-4"><canvas id="category-chart"></canvas></div>
+                                            <div class="col-lg-4"><canvas id="narrative-chart" ></canvas></div>
+                                            <div class="col-lg-4"><canvas id="method-chart" ></canvas></div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card card-raised h-100">
+                                    <div class="card-header px-4 py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-4">
+                                                <h2 class="card-title mb-0 mb-1">
+                                                    영상 크기 당 업로드 시간</h2>
+                                                <div class="card-subtitle">Upload time per video size(MB)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-around">
+                                            <canvas id="line-chart" width="400" height="400"></canvas>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-raised h-100 mt-4">
+                                <div class="card-header px-4 py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="me-4">
+                                            <h2 class="card-title mb-0 mb-1">영상별 평균 재생 시간</h2>
+                                            <div class="card-subtitle">Average playback time (per video)</div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="card-body">
+                                    <canvas class="my-3" id="video-time-chart" width="1000" height="300"></canvas>
+                                </div>
+                            </div>
+                        
+    
+                        
+                            <div class="card card-raised mt-4">
+                                <div class="card-header py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="me-4">
+                                            <h2 class="card-title mb-0 mb-1">
+                                                영상 조회수</h2>
+                                            <div class="card-subtitle">Ranking of video views</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    
+                                        <table id="datatablesSimple">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:5%;">Rank</th>
+                                                    <th>ID</th>
+                                                    <th>Title</th>
+                                                    <th>Presenter</th>
+                                                    <th>Views</th>
+                                                    <th>Uploaded Date</th>
+                                                </tr>
+                                            </thead>
+                                            
+                                            <tbody>
+                                                {% for video in idView %}
+                                                <tr>
+                                                    <td>{{loop.index}}</td>
+                                                    <td>{{video.id}}</td>
+                                                    <td>{{video.title}}</td>
+                                                    <td>{{video.presenter}}</td>
+                                                    <td>{{video.views}}</td>
+                                                    <td>{{video.uploadDate}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                
+                                </div>
+                            </div> 
+                            
                         </div>
                     </div> <!--end of container-->
                 </main> <!--end of main-->

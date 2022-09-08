@@ -28,15 +28,6 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
-           
-            <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-                </div>
-            </form>
-
         </nav>
 
         <div id = "layoutSidenav">
@@ -55,9 +46,9 @@
                                 <li onclick="location.href='/performance/videoviews'"> Video views </li>
                             </ul>
                             
-                            <a class="nav-link" href='/performance/detail'>
+                            <a class="nav-link" href='/performance/category'>
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Video Table
+                                Video Details
                             </a>
                         </div>
                     </div>
@@ -70,106 +61,20 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="px-4  pt-5">Video Table</h1>
+                        <h1 class="px-4  pt-5">Video Details</h1>
                         <ol class="breadcrumb px-4" >
-                            <li class="breadcrumb-item active">Data Detail </li>
-                            <li class="breadcrumb-item active">Table</li>
+                            <li class="breadcrumb-item active">영상 세부 정보 조회</li>
                         </ol>
-                        <div class="px-4 pb-4">
-                            관리자 페이지 입니다.
-                        </div>
 
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <svg class="svg-inline--fa fa-table me-1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="table" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M448 32C483.3 32 512 60.65 512 96V416C512 451.3 483.3 480 448 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H448zM224 256V160H64V256H224zM64 320V416H224V320H64zM288 416H448V320H288V416zM448 256V160H288V256H448z"></path></svg><!-- <i class="fas fa-table me-1"></i> Font Awesome fontawesome.com -->
-                                동영상 관리 테이블
-                            </div>
-                            <div class="card-body">
-                                <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
-                                    
-                                    <div class="dataTable-container">
-                                        
-                                        <div class="input-group mb-4">
-                                            <input type="text" id="search_kw" class="form-control pull-right" value="{{ kw or '' }}">
-                                            <button class="btn btn-outline-primary pull-right" type="button" id="btn_search">Search</button>
-                                            
-                                        </div>
-                                            
-                                        <table id="datatablesSimple" class="dataTable-table">
-                                            <thead>
-                                                <tr>
-                                                    <th style="color:black; width:4%;">index</th>
-                                                    <th style="color:black;">title</th>
-                                                    <th style="color:black;">presenter</th>
-                                                    <th style="color:black;">category</th>
-                                                    <th style="color:black; width:8%;">views</th>
-                                                    <th style="color:black; width:8%;">UploadDate</th>
-                                                    
-                                                </tr>
-                                            </thead>
-                                            
-                                            <tbody>
-                                                {% for i in pagination.items %}
-                                                <tr onclick="location.href='/performance/detail/{{i.id}}'">
-                                                    <td>{{i.id}}</td>
-                                                    <td>{{i.title}}</td>
-                                                    <td>{{i.presenter}}</td>
-                                                    <td>{{i.category}}</td>
-                                                    <td>123</td>
-                                                    <td>{{i.uploadDate}}</td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="dataTable-bottom">
-                                        
-                                        <!-- 페이징처리 시작 -->
-                                        <ul class="pagination justify-content-center">
-                                            <!-- 이전페이지 -->
-                                            {% if pagination.has_prev %}
-                                            <li class="page-item">
-                                                <a class="page-link" href="?page={{ pagination.prev_num }}">이전</a>
-                                            </li>
-                                            {% else %}
-                                            <li class="page-item disabled">
-                                                <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">이전</a>
-                                            </li>
-                                            {% endif %}
-                                            <!-- 페이지번호 -->
-                                            {% for page_num in pagination.iter_pages() %}
-                                            {% if page_num %}
-                                            {% if page_num != pagination.page %}
-                                            <li class="page-item">
-                                                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-                                            </li>
-                                            {% else %}
-                                            <li class="page-item active" aria-current="page">
-                                                <a class="page-link" href="javascript:void(0)">{{ page_num }}</a>
-                                            </li>
-                                            {% endif %}
-                                            {% else %}
-                                            <li class="disabled">
-                                                <a class="page-link" href="javascript:void(0)">...</a>
-                                            </li>
-                                            {% endif %}
-                                            {% endfor %}
-                                            <!-- 다음페이지 -->
-                                            {% if pagination.has_next %}
-                                            <li class="page-item">
-                                                <a class="page-link" href="?page={{ pagination.next_num }}">다음</a>
-                                            </li>
-                                            {% else %}
-                                            <li class="page-item disabled">
-                                                <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">다음</a>
-                                            </li>
-                                            {% endif %}
-                                        </ul>
-                                        <!-- 페이징처리 끝 -->
+                        <br>
 
-                                    </div>
-                                </div>
+                        <div class="btnContainer">
+                            {% for c in category %}
+                            <div class="categoryBtn" onclick="location.href='/performance/category/{{c.key}}'">
+                                <div class="categoryBtnKey">{{c.key}}</div>
+                                <div class="categoryBtnValue"><b>{{c.value}}</b> 개의 동영상</div>
                             </div>
+                            {% endfor %}
                         </div>
                         
                     </div> <!--end of container-->
