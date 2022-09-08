@@ -445,9 +445,10 @@ def detailSearch(All, T, K, P, category, narrative, presentation):
 
     # filter를 통해 빼는 것들의 index 받기
     for id in videoIdList:
-        if category != "":
-            if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.category.contains(category))).first() == None:
-                excpIdList.add(id)
+        if len(category) != 0:
+            for c in category:
+                if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.category.contains(c))).first() == None:
+                    excpIdList.add(id)
         if narrative != "":
             if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.narrative.contains(narrative))).first() == None:
                 excpIdList.add(id)

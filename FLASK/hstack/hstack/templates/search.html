@@ -46,8 +46,19 @@
             <table class="bodyTable">
              
                 <tr>
-                    <td class="section">
-                        <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다</p>
+                    <td class="section">    
+
+                        <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다.</p>
+                        
+                        {% if category != '' or narrative != '' or method != '' %}
+                        <p style="text-align:left; margin-left:35px;">✔ FILTER &nbsp;
+                        {% if category != '' %} <span class="VT_category"> {{category}} </span> {% endif %}
+                        {% if narrative != '' %} <span class="VT_narrative">{{narrative}}</span> {% endif %}
+                        {% if method != '' %} <span class="VT_method">{{method}}</span> {% endif %}
+                        <span onclick="resetDetail()" id="resetBtn">RESET</span>
+                        </p>
+                        {% endif %}
+                        
                         {% for meta in videoMetaList %}
                             {% for ii in meta.metadata %}
                             <table
@@ -142,9 +153,7 @@
                                 <input type="hidden" name="searchWordPresenter" value="{{searchWordDetailPresenter}}">
                                 <div class="category">
 
-                                    <h2 class="todo-cmp__header">검색 내 세부검색
-                                        <div onclick="resetDetail()" id="resetBtn">RESET</div>
-                                    </h2>
+                                    <h2 class="todo-cmp__header">검색 내 세부검색</h2>
                                     
                                     <ul class="todo-cmp__list">
                                         <li> CATEGORY</li>
