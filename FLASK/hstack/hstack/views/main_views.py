@@ -135,6 +135,11 @@ def uploadList():
         for c in categories:
             if (c != ''):
                 categorySet.add(c)
+        categorySet = sorted(categorySet)
+        
+        category = ""
+        for c in categorySet:
+            category += c + ", "
 
         excpIdList = set()
         newVideoIdList = list()
