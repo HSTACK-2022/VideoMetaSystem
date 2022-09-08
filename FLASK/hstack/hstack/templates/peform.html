@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VMeta - SEARCH {{searchWord}}</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/videoList.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/progressBar.css') }}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        
+        <link href="../static/css/styles.css" rel="stylesheet" />
+        <link href="../static/css/performance.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <meta charset="UTF-8">
+        <script>
+            function date(){
+                let today = new Date();
+                document.write("Uploaded " + today);
+            }
+
+            function first_load(){
+                new Chart(document.getElementById("category-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{category|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#EC5B55", "#F08C34","#F9DD6C","#388174","#49c5b6","#A9D1D5","#7A55E7","#495DE6"],
+                            data: {{category_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,      // width, height 지정 위해서 필수
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'CATEGORY RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("narrative-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{narrative|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#246793", "#52B9DB"],
+                            data: {{narrative_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'NARRATIVE RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("method-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{method|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#D6653B","#FBAF7C"],
+                            data: {{method_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'METHOD RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("line-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: {{upload_size|safe}},
+                        datasets: [{ 
+                            data: {{upload_time|safe}},
+                            //label: "Europe",
+                            borderColor: "#8e5ea2",
+                            fill: false
+                        }
+                        ]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    new Chart(document.getElementById("search-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: {{totalWord|safe}},
+                        datasets: [{ 
+                            data: {{totalWord_data|safe}},
+                            label: "전체 검색 단어",
+                            
+                            lineTension: 0.3,
+                            backgroundColor: "rgba(2,117,216,0.2)",
+                            borderColor: "rgba(2,117,216,1)",
+                            pointRadius: 5,
+                            pointBackgroundColor: "rgba(2,117,216,1)",
+                            pointBorderColor: "rgba(255,255,255,0.8)",
+                            pointHoverRadius: 5,
+                            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+                            pointHitRadius: 50,
+                            pointBorderWidth: 2,
+                            
+                        }]
+                    },
+                    options: {
+                        
+                        responsive: false,
+                        title: {
+                        display: true,
+                        
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    new Chart(document.getElementById("title-search-chart"), {
+                    type: 'bar',
+                    data: {
+                        labels: {{titleWord|safe}},
+                        datasets: [{ 
+                            data: {{titleWord_data|safe}},
+                            label: "제목 검색 단어",
+                            backgroundColor: [
+                            '#661A69',
+                            '#7F2B7A',
+                            '#9E458F',
+                            '#BD64A5',
+                            '#dc89be',
+                            '#EAA7CB',
+                            '#F4BDD5',
+                            '#FBD5E2',
+                            '#FDEAEE'
+                            ],
+                            borderColor: "#3cba9f",
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '제목 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    new Chart(document.getElementById("presenter-search-chart"), {
+                    type: 'bar',
+                    data: {
+                        labels: {{presenterWord|safe}},
+                        datasets: [{ 
+                            data: {{presenterWord_data|safe}},
+                            label: "발표자 검색 단어",
+                            backgroundColor: [
+                            '#143468',
+                            '#224A7D',
+                            '#35699C',
+                            '#4E8BBA',
+                            '#6bb0d9',
+                            '#8FCCE8',
+                            '#A9E1F3',
+                            '#C8F1FB',
+                            '#E3F9FD'
+                            ],
+                            borderColor: "#e8c3b9",
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '발표자 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+
+                    new Chart(document.getElementById("keyword-search-chart"), {
+                    type: 'bar',
+                    data: {
+                        labels: {{keyWord|safe}},
+                        datasets: [{ 
+                            data: {{keyWord_data|safe}},
+                            label: "키워드 검색 단어",
+                            borderColor: "#c45850",
+                            backgroundColor: [
+                            '#24460B',
+                            '#315512',
+                            '#44691D',
+                            '#587E2B',
+                            '#6f933b',
+                            '#9EBE68',
+                            '#C4DE8E',
+                            '#E3F4B9',
+                            '#F2F9DB'
+                            ],
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+                        text: '키워드 검색 단어 빈도수'
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+            }
+            
+            
+        </script>
+    </head>
+    <body class="bodyArea sb-nav-fixed" onload="first_load();">
+        
+        {% if code == 200 %}
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="./">VMeta - manage page</a>
+           
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+            
+        </nav>
+
+        <div>
+            <main>
+                <div class="container-fluid px-4 pt-5">
+                    <h1 class="mt-4">MANAGE</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Charts</li>
+                    </ol>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            관리자 페이지 입니다.
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-1"></i>
+                            전체 검색 단어 빈도수
+                        </div>
+                        <canvas class="p-3" id="search-chart" height="400px"></canvas>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <div class="card card-raised h-100">
+                                <div class="card-header px-4 py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="me-4">
+                                            <h2 class="card-title mb-0 mb-1">
+                                                비디오 분류</h2>
+                                            <div class="card-subtitle">method / category / narrative</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body my-5 mx-3">
+                                    <div class="row">
+                                        <div class="col"><canvas id="category-chart" ></canvas></div>
+                                        <div class="col"><canvas id="narrative-chart" ></canvas></div>
+                                        <div class="col"><canvas id="method-chart" ></canvas></div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card card-raised h-100">
+                                <div class="card-header px-4 py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="me-4">
+                                            <h2 class="card-title mb-0 mb-1">
+                                                동영상 크기 당 업로드 시간</h2>
+                                            <div class="card-subtitle">Upload time per video size(MB)</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-around">
+                                        <canvas id="line-chart" width="500" height="400"></canvas>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mt-4">
+                        <div class="col-lg-7">
+                            <div class="card card-raised h-100">
+                                <div class="card-header px-4 py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="me-4">
+                                            <h2 class="card-title mb-0 mb-1">
+                                                동영상별 재생시간</h2>
+                                            <div class="card-subtitle">Video playback time</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <canvas class="my-5" id="myAreaChart" width="100%" height="30"></canvas>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <div class="card card-raised">
+                                <div class="card-header py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="me-4">
+                                            <h2 class="card-title mb-0 mb-1">
+                                                조회수 순 동영상</h2>
+                                            <div class="card-subtitle">Popular Video</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                        
+                                        <table id="datatablesSimple">
+                                            <thead>
+                                                <tr>
+                                                    <th>Rank</th>
+                                                    <th>Total</th>
+                                                    <th>Title</th>
+                                                    <th>Keyword</th>
+                                                    <th>Presenter</th>
+                                                </tr>
+                                            </thead>
+                                            
+                                            {% for totalWod in totalWord %}
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>{{totalWod}}</td>
+                                                    <td>{{presenterWod}}</td>
+                                                    <td>{{totalWod.value}}</td>
+                                                    <td>2009/01/12</td>
+                                                    
+                                                </tr>
+                                            </tbody>
+                                            {% endfor %}
+                                        </table>
+                                   
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row mt-4">
+                        <div class="col">
+                            <div class="card card-raised h-100">
+                                <div class="card-header px-4 py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="me-4">
+                                            <h2 class="card-title mb-0 mb-1">
+                                                세부 검색 단어 빈도수</h2>
+                                            <div class="card-subtitle">
+                                                Advanced Search</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="card-body my-6 mx-3">
+                                        <div class="row">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <canvas id="title-search-chart" width="500" height="400"></canvas>
+                                                <canvas id="presenter-search-chart" width="500" height="400"></canvas>
+                                                <canvas id="keyword-search-chart" width="500" height="400"></canvas> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="current_time" class="card-footer small text-muted">
+                                    <script>date();</script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+                
+        </div>
+        
+
+<br><br>
+        <canvas id="line-chart" width="500" height="400"></canvas>
+        <canvas id="search-chart" width="500" height="400"></canvas>
+       
+        
+
+        {% endif %}
+
+        <script src="../static/assets/demo/chart-area-demo.js"></script>
+    </body>
+
+    
+</html>

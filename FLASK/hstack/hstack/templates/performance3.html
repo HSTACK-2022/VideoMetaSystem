@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VMeta - SEARCH {{searchWord}}</title>
+    <meta charset="UTF-8">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    <!--탭-->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
+
+    <!--관리자-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/manage.css') }}">
+    <!--표
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">-->
+    <meta charset="UTF-8">
+    <script>
+        function first_load() {
+            new Chart(document.getElementById("category-chart"), {
+                type: 'pie',
+                data: {
+                    labels: {{ category| safe}},
+        datasets: [{
+            label: "Population (millions)",
+            backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850", "#E4D192", "#FBA1A1", "#4CACBC"],
+            data: {{ category_data| safe}}
+                        }]
+                    },
+        options: {
+            responsive: false,      // width, height 지정 위해서 필수
+                maintainAspectRatio: false,
+                    cutoutPercentage: 50,
+                        title: {
+                display: true,
+                    text: 'CATEGORY RATIO'
+            },
+            legend: {
+                display: true,
+                    //position: 'left',
+                    labels: {
+                    //fontSize: 12,
+                    //fontFamily: 'sans-serif',
+                    //fontColor: '#000000',
+                    //fontStyle: 'bold'
+                }
+            }
+        }
+                });
+
+        new Chart(document.getElementById("narrative-chart"), {
+            type: 'pie',
+            data: {
+                labels: {{ narrative| safe}},
+            datasets: [{
+                label: "Population (millions)",
+                backgroundColor: ["#3e95cd", "#8e5ea2"],
+                data: {{ narrative_data| safe}}
+                        }]
+                    },
+            options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            cutoutPercentage: 50,
+            title: {
+                display: true,
+                text: 'NARRATIVE RATIO'
+            },
+            legend: {
+                display: true,
+                //position: 'left',
+                labels: {
+                    //fontSize: 12,
+                    //fontFamily: 'sans-serif',
+                    //fontColor: '#000000',
+                    //fontStyle: 'bold'
+                }
+            }
+        }
+                });
+
+        new Chart(document.getElementById("method-chart"), {
+            type: 'pie',
+            data: {
+                labels: {{ method| safe}},
+            datasets: [{
+                label: "Population (millions)",
+                backgroundColor: ["#c45850", "#E4D192"],
+                data: {{ method_data| safe}}
+                        }]
+                    },
+            options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            cutoutPercentage: 50,
+            title: {
+                display: true,
+                text: 'METHOD RATIO'
+            },
+            legend: {
+                display: true,
+                //position: 'left',
+                labels: {
+                    //fontSize: 12,
+                    //fontFamily: 'sans-serif',
+                    //fontColor: '#000000',
+                    //fontStyle: 'bold'
+                }
+            }
+        }
+                });
+
+        new Chart(document.getElementById("line-chart"), {
+            type: 'line',
+            data: {
+                labels: {{ upload_size| safe}},
+            datasets: [{
+                data: {{ upload_time| safe}},
+            //label: "Europe",
+            borderColor: "#8e5ea2",
+            fill: false
+                        }
+        ]
+                    },
+            options: {
+            responsive: false,
+            title: {
+                display: true,
+                text: '동영상 크기(MB) 당 업로드 시간(s)'
+            },
+            legend: { display: false }    // label 안보이게
+        }
+                    });
+
+        new Chart(document.getElementById("search-chart"), {
+            type: 'line',
+            data: {
+                labels: {{ totalWord| safe}},
+            datasets: [{
+                data: {{ totalWord_data| safe}},
+            label: "전체 검색 단어",
+
+            // 라인추가
+            lineTension: 0.3,
+            backgroundColor: "rgba(2,117,216,0.2)",
+            borderColor: "rgba(2,117,216,1)",
+            pointRadius: 5,
+            pointBackgroundColor: "rgba(2,117,216,1)",
+            pointBorderColor: "rgba(255,255,255,0.8)",
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(2,117,216,1)",
+            pointHitRadius: 50,
+            pointBorderWidth: 2,
+                            
+                        }]
+                    },
+            options: {
+
+            responsive: false,
+            title: {
+                display: true,
+
+            },
+            legend: { display: false }    // label 안보이게
+        }
+                    });
+
+        new Chart(document.getElementById("title-search-chart"), {
+            type: 'line',
+            data: {
+                labels: {{ titleWord| safe}},
+            datasets: [{
+                data: {{ titleWord_data| safe}},
+            label: "제목 검색 단어",
+            borderColor: "#3cba9f",
+            fill: false
+                        }]
+                    },
+            options: {
+            responsive: false,
+            title: {
+                display: true,
+                text: '제목 검색 단어 빈도수'
+            },
+            legend: { display: false }    // label 안보이게
+        }
+                    });
+
+        new Chart(document.getElementById("presenter-search-chart"), {
+            type: 'line',
+            data: {
+                labels: {{ presenterWord| safe}},
+            datasets: [{
+                data: {{ presenterWord_data| safe}},
+            label: "발표자 검색 단어",
+            borderColor: "#e8c3b9",
+            fill: false
+                        }]
+                    },
+            options: {
+            responsive: false,
+            title: {
+                display: true,
+                text: '발표자 검색 단어 빈도수'
+            },
+            legend: { display: false }    // label 안보이게
+        }
+                    });
+
+        new Chart(document.getElementById("keyword-search-chart"), {
+            type: 'line',
+            data: {
+                labels: {{ keyWord| safe}},
+            datasets: [{
+                data: {{ keyWord_data| safe}},
+            label: "키워드 검색 단어",
+            borderColor: "#c45850",
+            fill: false
+                        }]
+                    },
+            options: {
+            responsive: false,
+            title: {
+                display: true,
+                text: '키워드 검색 단어 빈도수'
+            },
+            legend: { display: false }    // label 안보이게
+        }
+                    });
+            }
+
+
+    </script>
+</head>
+
+<body class="bodyArea" onload="first_load();">
+    {% include 'header.html' %}
+    {% if code == 200 %}
+
+    <table class="bodyTable">
+        <tr>
+            <td class="section">
+                <p style="text-align:left; margin-left:50px;">✔ 검색어 빈도 수 </p>
+                <div class="tabmenu">
+                    <!-- tab -->
+                    <ul>
+                        <!-- @@@@@@@@@@첫번째 탭 키워드/목차 -->
+                        <li id="tab1" class="btnCon">
+                            <a class="btn first" href="#tab1">전체 검색</a>
+                            <div class="tabCon">
+                                <table class="videoListTable">
+                                    <tr>
+                                        <td style="width: 900px;">
+                                            <div>
+                                                <canvas id="search-chart"
+                                                    style="box-sizing: border-box; width: 800px; height: 400px; margin-left:35px;"></canvas>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="limiter">
+                                                <div class="container-table100">
+                                                    <div class="wrap-table100">
+                                                        <div class="table100">
+                                                            <table>
+                                                                <thead>
+                                                                    <tr class="table100-head">
+                                                                        <th>전체검색</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {% if rank.id == meta.id %}
+                                                                    <tr>
+                                                                        <td class="column1">TOP 1</td>
+                                                                        <td class="column2">모바일</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="column1">TOP 2</td>
+                                                                        <td class="column2">러시아</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="column1">TOP 3</td>
+                                                                        <td class="column2">피아노</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="column1">TOP 4</td>
+                                                                        <td class="column2">컴퓨터</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="column1">TOP 5</td>
+                                                                        <td class="column2">장기하</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </li>
+
+                        <!-- @@@@@@@@@두번째 탭 스크립트 -->
+                        <li id="tab2" class="btnCon">
+                            <a class="btn second" href="#tab2">제목</a>
+                            <div class="tabCon">
+
+                                <!-- 두번째 -->
+                                <table class="videoListTable">
+                                    <tr>
+                                        <td style="width: 700px;">
+                                            <div>
+                                                <!-- <p style="text-align:left; margin-left:35px;">✔ 검색어 빈도 수 </p> -->
+                                                <canvas id="title-search-chart"
+                                                    style="box-sizing: border-box; width: 800px; height: 400px; margin-left:35px;"></canvas>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </li>
+
+                        <!-- 세 번 ㅉ ㅐ -->
+                        <!-- @@@@@@@@@세번째 탭 목차 -->
+                        <li id="tab3" class="btnCon">
+                            <a class="btn third" href="#tab3">키워드</a>
+                            <div class="tabCon">
+                                <table class="videoListTable">
+                                    <tr>
+                                        <td style="width: 700px;">
+                                            <div>
+                                                <!-- 차트 -->
+                                                <canvas id="keyword-search-chart" width="500" height="400"></canvas>
+                                                <canvas id="category-chart" width="500" height="500"></canvas>
+                                                <canvas id="narrative-chart" width="400" height="400"></canvas>
+                                                <canvas id="method-chart" width="400" height="400"></canvas>
+                                            </div>
+                                            <br><br>
+                                            <canvas id="line-chart" width="500" height="400"></canvas>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </li>
+
+                        <!-- 네번째 -->
+                        <li id="tab4" class="btnCon">
+                            <a class="btn fourth" href="#tab4">발표자</a>
+                            <div class="tabCon">
+                                <table class="videoListTable">
+                                    <tr>
+                                        <td style="width: 700px;">
+                                            <div>
+                                                <!-- 차트 -->
+                                                <canvas id="presenter-search-chart"
+                                                    style="box-sizing: border-box; width: 800px; height: 400px; margin-left:35px;"></canvas>
+                                            </div>
+                                            <!-- <canvas id="title-search-chart" width="500" height="400"></canvas>
+                            <canvas id="presenter-search-chart" width="500" height="400"></canvas>
+                             -->
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+            </td>
+        </tr>
+    </table>
+
+    
+
+    {% endif %}
+    <script>
+        //location.href = "#tab1";
+    </script>
+</body>
+
+</html>
