@@ -93,9 +93,9 @@ class Total:
         return self.finalDict #해도 되고 밖에서 Total.finalDict 해도 되고 
 
 
-def getCategoryPerc(videoid, searchText):
-    k_v=[]
-    k_v2=[]
+def getCategoryPerc(videoid, searchText_list):
+    k_v=[]  # category 확률 전체 리스트
+    k_v2=[] # category 종류 전체 리스트
     for res in DB.session.query(Metadatum).filter(Metadatum.id == videoid).with_entities(Metadatum.category_percent).all():
         for k in res:
             words = re.split(r'[ ,:]', k)
@@ -106,55 +106,93 @@ def getCategoryPerc(videoid, searchText):
         for k in res:
             words = re.split(r'[ ,:]', k)
             for w in words:
-                k_v2.append(w)
-    # print(k_v)
+                if len(w) != 0: 
+                    k_v2.append(w)
+    print(k_v)
     # print(k_v2)
     # print(max(k_v))
-    cnt=0
+
+    searchCategory_percent = 0
     for k in k_v2:
-        if k == searchText:
+        for searchText in searchText_list:
+            if k.lower() == searchText.lower():
+                # db upload 실수로 category의 category percent가 들어가지지 않은 경우 
+                # (예: 동물의 확률이 들어가 있지 않은 경우{IT,동물 - 0.3})
+                if k_v2.index(k) >= len(k_v):
+                    searchCategory_percent += 0
+                else:
+                    print(">>>")
+                    print(k_v2.index(k))
+                    searchCategory_percent += k_v[k_v2.index(k)]
+                if searchCategory_percent > 1:  # 예: 0.408, 0.595 확률일 경우 (숫자상 근소한 차이)
+                    searchCategory_percent = 1
+    print("중간계산:")
+    print(searchCategory_percent)
+
+    ## 가장 큰 수끼리의 합 = sum (예: 2단어를 검색할 시 제일 큰 두 수의 합이 가장 높은 확률=1로 치환하기 위함)
+    n = len(searchText_list)
+    k_v_bak = k_v[:]
+    sum_list = []
+    while n != 0:
+        if len(k_v_bak) == 0:
             break
-        cnt += 1
-    # print(")))))__")
-    # print(cnt)
+        max_percent = max(k_v_bak)
+        sum_list.append(max_percent)
+        k_v_bak.remove(max_percent)
+        n -= 1
+
+    sum = 0
+    for i in range(0,len(sum_list)):
+        sum += i
+    ##
 
     if max(k_v) == 0 or k_v2 == 0:
         return 0
-    m = round(1/max(k_v),3)
-    # print(m)
-    # print(round(k_v[cnt]*m,3))
-    return round(k_v[cnt]*m,3)
+    m = round(1/sum,3)
+    print(m)
+    print("결과 확률:")
+    print(round(searchCategory_percent*m,3))
+    return round(searchCategory_percent*m,3)
 
-def getKeywordPerc(videoid, searchText):
-    # keyword의 값 구해보기 예시: 77번
-    # keyword는 포함이 아니라 정확히 같은 경우, 즉 1개만 나올때만 해야함
-    # 이게 맞나싶지만 확률을 구하기 위해선 그래야 함
-    # 누가 나 좀 살려줘
-    
-    # k_v --> keyword의 전체 확률 리스트
-    # k_v2 --> searchText의 확률
-    k_v=[]
-    k_v2=0
+def getKeywordPerc(videoid, searchText_list):
+    searchText_perc=0   # searchText_perc --> searchText의 확률
+    keywordPercFull=[]  # keywordPercFull --> keyword의 전체 확률 리스트
     for res in DB.session.query(Keyword).filter(Keyword.id == videoid).with_entities(Keyword.percent).all():
         for k in res:
-            k_v.append(k)
-    for res in DB.session.query(Keyword).filter(Keyword.id == videoid).filter(Keyword.keyword.contains(searchText)).with_entities(Keyword.percent).all():
-        for k in res:
-            k_v2 = k
-    # max 값 구하고 싶다면 아래처럼 - Django에서
-    # obj = models.Keywords.objects.filter(id = 77).aggregate(percent=Max('percent'))
-    # print(obj)
-    # print(obj['percent'])
-    
-    #print(k_v)
-    #print(k_v2)
-    #print(max(k_v))
+            keywordPercFull.append(k)
 
-    if max(k_v) == 0 or k_v2 == 0:
+    for searchText in searchText_list:
+        for res in DB.session.query(Keyword).filter(Keyword.id == videoid).filter(Keyword.keyword.contains(searchText)).with_entities(Keyword.percent).all():
+            for k in res:
+                 searchText_perc += k
+    # print("합친 확률:")
+    # print(searchText_perc)
+
+    ## 가장 큰 수끼리의 합 = sum (예: 2단어를 검색할 시 제일 큰 두 수의 합이 가장 높은 확률=1로 치환하기 위함)
+    n = len(searchText_list)
+    keywordPercFull_bak = keywordPercFull[:]
+    sum_list = []
+    while n != 0:
+        if len(keywordPercFull_bak) == 0:
+            break
+        max_percent = max(keywordPercFull_bak)
+        sum_list.append(max_percent)
+        keywordPercFull_bak.remove(max_percent)
+        n -= 1
+
+    sum = 0
+    for i in range(0,len(sum_list)):
+        sum += i
+    ##
+
+    if max(keywordPercFull) == 0 or searchText_perc == 0:
         return 0
-    m = round(1/max(k_v),3)
-    print(round(k_v2*m,3))
-    return round(k_v2*m,3)
+    num = round(1 / len(searchText_list),1)     # 찾는 단어가 1개인 경우 가장 큰 확률을 1로, n개인 경우 가장 큰 확률을 1/n으로
+    m = round(1/sum,3)
+    # print("결과 확률:")
+    # print(round(searchText_perc*m,3))
+    return round(searchText_perc*m,3)
+
 
 def organize_weight(weight, whatzero):
     n = 4 - len(whatzero)
@@ -229,7 +267,7 @@ def extractCategories(videoIdList):
 
     return sorted(categoryList)
 
-# 각 videoId에서 presentation(method)를 뽑아낸다.
+# 각 videoId에서 presentation 뽑아낸다.
 def extractData(videoIdList):
     dataList = set()
     for videoId in videoIdList:
@@ -358,11 +396,8 @@ def search(All, T, K, P):
                     s_Texts = searchTexts[3]
                 else:
                     s_Texts = searchTexts[0]
-                for searchText in s_Texts:
-                    print(searchText)
-                    p += getKeywordPerc(vi,searchText)
-                    print(p)
-                in_perc.append(p*100)
+                p = getKeywordPerc(vi,s_Texts)
+                in_perc.append(round(p*100,2))
             else:
                 in_perc.append(0)
         else:
@@ -370,9 +405,9 @@ def search(All, T, K, P):
         if weight[3] != 0: # C의 확률 구하기
             if vi in categorySet:
                 p = 0
-                for searchText in searchTexts[0]:
-                    p += getCategoryPerc(vi,searchText)
-                in_perc.append(p*100)
+                #s_Texts = searchTexts[0]
+                p = getCategoryPerc(vi,searchTexts[0])
+                in_perc.append(round(p*100,2))
             else:
                 in_perc.append(0)
         else:
