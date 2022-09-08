@@ -19,12 +19,14 @@ def create_app():
     from .views import search_views
     from .views import detail_views
     from .views import edit_views
-    from .views import manage_views
+    from .views import performanc_views
+
     app.register_blueprint(main_views.bp)
     app.register_blueprint(edit_views.bp)
     app.register_blueprint(search_views.bp)
     app.register_blueprint(detail_views.bp)
-    app.register_blueprint(manage_views.bp)
+
+    app.register_blueprint(performanc_views.bp)
 
     return app
 

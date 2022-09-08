@@ -1,16 +1,20 @@
 # coding: utf-8
 from .config import DB as db
 
+
 class Keyword(db.Model):
     __tablename__ = 'keywords'
 
-    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
+    id = db.Column(db.ForeignKey('videopath.id'),
+                   primary_key=True, nullable=False)
     keyword = db.Column(db.String(10), primary_key=True, nullable=False)
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
     percent = db.Column(db.Float, nullable=False, default=0)
 
-    videopath = db.relationship('Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
+    videopath = db.relationship(
+        'Videopath', primaryjoin='Keyword.id == Videopath.id', backref='keywords')
+
 
 class Timestamp(db.Model):
     __tablename__ = 'timestamp'
@@ -20,6 +24,7 @@ class Timestamp(db.Model):
     subtitle = db.Column(db.String(100))
     expose = db.Column(db.Integer, nullable=False)
     sysdef = db.Column(db.Integer, server_default=db.FetchedValue())
+
 
 class Videopath(db.Model):
     __tablename__ = 'videopath'
@@ -33,14 +38,17 @@ class Videopath(db.Model):
     extracted = db.Column(db.Integer)
     password = db.Column(db.String(10), nullable=True, default=None)
 
+
 class Metadatum(db.Model):
     __tablename__ = 'metadata'
     __table_args__ = (
         db.CheckConstraint("(`method` in (_utf8mb3'PPT',_utf8mb3'실습'))"),
-        db.CheckConstraint("(`narrative` in (_utf8mb3'description',_utf8mb3'application',_utf8mb3'description/application'))")
+        db.CheckConstraint(
+            "(`narrative` in (_utf8mb3'description',_utf8mb3'application',_utf8mb3'description/application'))")
     )
 
-    id = db.Column(db.ForeignKey('videopath.id'), primary_key=True, nullable=False)
+    id = db.Column(db.ForeignKey('videopath.id'),
+                   primary_key=True, nullable=False)
     title = db.Column(db.String(50), nullable=False)
     presenter = db.Column(db.String(50))
     category = db.Column(db.String(20))
@@ -55,4 +63,5 @@ class Metadatum(db.Model):
     voiceManRate = db.Column(db.Float)
     voiceWomanRate = db.Column(db.Float)
 
-    videopath = db.relationship('Videopath', primaryjoin='Metadatum.id == Videopath.id', backref='metadata')
+    videopath = db.relationship(
+        'Videopath', primaryjoin='Metadatum.id == Videopath.id', backref='metadata')

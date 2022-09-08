@@ -21,7 +21,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.views.generic import ListView , DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.db.models import Q
 
 from urllib import response
@@ -36,10 +36,14 @@ OS = platform.system()
 renderAppName = "Core" if OS == 'Windows' else 'core'
 
 # for backend.
+
+
 def home(request):
-    return render(request, renderAppName + '/home.html') 
+    return render(request, renderAppName + '/home.html')
 
 # video(file) upload
+
+
 def uploadFile(request):
     if request.method == "POST":
         existError = {}
@@ -57,43 +61,47 @@ def uploadFile(request):
             uploadedFile = request.FILES["videoFile"]
 
         if existError:
-            return render(request, renderAppName + '/upload.html', context={"error" : existError}) 
+            return render(request, renderAppName + '/upload.html', context={"error": existError})
 
         # Fetching the form data
         # Saving the information in the database
-        else :
+        else:
             document = models.Document(
-                title = fileTitle,
-                uploadedFile = uploadedFile
+                title=fileTitle,
+                uploadedFile=uploadedFile
             )
             document.save()
 
-            if OS == "Windows" : 
-                dir_name = os.path.dirname(os.path.abspath(__file__)).split("\\core")[0]
-                file_name = urlparse(document.uploadedFile.url).path.replace("/", "\\")
+            if OS == "Windows":
+                dir_name = os.path.dirname(
+                    os.path.abspath(__file__)).split("\\core")[0]
+                file_name = urlparse(
+                    document.uploadedFile.url).path.replace("/", "\\")
                 videopath = dir_name + file_name
 
-            else : 
-                dir_name = os.path.dirname(os.path.abspath(__file__)).split("/core")[0]
+            else:
+                dir_name = os.path.dirname(
+                    os.path.abspath(__file__)).split("/core")[0]
                 file_name = urlparse(document.uploadedFile.url).path
                 videopath = dir_name + file_name
-            
+
             # DB에 Video 저장
             models.Videopath.objects.create(
-                title = fileTitle,
-                videoaddr = videopath
+                title=fileTitle,
+                videoaddr=videopath
             )
             videoId = models.Videopath.objects.get(videoaddr=videopath).id
 
             models.Metadata.objects.create(
-                id = models.Videopath.objects.get(id=videoId),
-                title = fileTitle,
-                presenter = filePresenter,
-                uploaddate = document.dateTimeOfUpload
+                id=models.Videopath.objects.get(id=videoId),
+                title=fileTitle,
+                presenter=filePresenter,
+                uploaddate=document.dateTimeOfUpload
             )
 
             if OS == 'Windows':
-                videoPath4Play = "..\\..\\..\\media" + videopath.split("media")[1]
+                videoPath4Play = "..\\..\\..\\media" + \
+                    videopath.split("media")[1]
             else:
                 videoPath4Play = "../../../media" + videopath.split("media")[2]
             print(videoPath4Play)
@@ -101,43 +109,48 @@ def uploadFile(request):
             extractMetadata.extractMetadata(videoId)
 
             return redirect('Core:home')
-                        
-    return render(request, renderAppName + '/upload.html') 
+
+    return render(request, renderAppName + '/upload.html')
 
 # 업로드 후 ~ User 확인 전의 영상 목록들
+
+
 def uploadLists(request):
     if request.method == "GET":
-        videoIdList = models.Videopath.objects.filter(extracted = True).values_list('id', flat=True).distinct()
+        videoIdList = models.Videopath.objects.filter(
+            extracted=True).values_list('id', flat=True).distinct()
         categoryList = searchAll.extractCategories(videoIdList)
         typeList = searchAll.extractType(videoIdList)
-        dataList = searchAll.extractData(videoIdList) 
+        dataList = searchAll.extractData(videoIdList)
         videoMetaList = list()
-        for i in videoIdList: # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
+        for i in videoIdList:  # (resultVideoIDList)에 저장되어 있는 id로 메타데이터 가져옴
             videoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
 
         print("********************")
         print(videoIdList)
         print(categoryList)
         print(videoMetaList)
-        
-        if not videoIdList :
-            return render(request, renderAppName + '/uploadLists.html', context={'code' : 404})
-        else :
+
+        if not videoIdList:
+            return render(request, renderAppName + '/uploadLists.html', context={'code': 404})
+        else:
             return render(request, renderAppName + '/uploadLists.html',
-                context={
-                    'code' : 200,
-                    'categoryList' : categoryList,
-                    "typeList" : typeList,
-                    "dataList" : dataList,
-                    'videoMetaList' : videoMetaList,
-                    'videoIdList' : videoIdList,
-                })
+                          context={
+                              'code': 200,
+                              'categoryList': categoryList,
+                              "typeList": typeList,
+                              "dataList": dataList,
+                              'videoMetaList': videoMetaList,
+                              'videoIdList': videoIdList,
+                          })
     else:
         # POST인 경우에는 Category, Type, Method 등 필터가 있다.
         # 현재 videoIdList를 받아 필터링 후 return
         stringvideoIdList = request.POST['videoIdList']
-        search_type = request.POST['search_type']   # category, method, narrative
-        search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
+        # category, method, narrative
+        search_type = request.POST['search_type']
+        # IT, 지리, 식물, ...
+        search_detail_type = request.POST['search_detail_type']
 
         # 첫 filtering은 Queryset으로 온다. <Queryset ~~~ > 에서 ~~~만 나오도록. 흡사 list 출력 형태.
         if stringvideoIdList.startswith("<QuerySet"):
@@ -151,42 +164,49 @@ def uploadLists(request):
         for videoId in videoIdList:
             if videoId != "":
                 filterQ = Q()
-                filterQ &= Q(id = videoId)
-                if search_type == "category" :  filterQ &= Q(category__contains = search_detail_type)
-                if search_type == "narrative" : filterQ &= Q(narrative = search_detail_type)
-                if search_type == "method" :    filterQ &= Q(method = search_detail_type)
-                if (not not models.Metadata.objects.filter(filterQ)) :
+                filterQ &= Q(id=videoId)
+                if search_type == "category":
+                    filterQ &= Q(category__contains=search_detail_type)
+                if search_type == "narrative":
+                    filterQ &= Q(narrative=search_detail_type)
+                if search_type == "method":
+                    filterQ &= Q(method=search_detail_type)
+                if (not not models.Metadata.objects.filter(filterQ)):
                     newVideoIdList.append(videoId)
 
         categoryList = searchAll.extractCategories(newVideoIdList)
         typeList = searchAll.extractType(newVideoIdList)
-        dataList = searchAll.extractData(newVideoIdList) 
+        dataList = searchAll.extractData(newVideoIdList)
         newVideoMetaList = list()
-        for i in newVideoIdList:         # (newVideoIdList)에 저장되어 있는 id로 메타데이터 가져옴
-            newVideoMetaList.append(searchAll.Total().getVideoMetadataFromID(i))
+        # (newVideoIdList)에 저장되어 있는 id로 메타데이터 가져옴
+        for i in newVideoIdList:
+            newVideoMetaList.append(
+                searchAll.Total().getVideoMetadataFromID(i))
 
-        if not newVideoIdList :
-            return render(request, renderAppName + '/uploadLists.html', context={'code' : 404})
-        else :
+        if not newVideoIdList:
+            return render(request, renderAppName + '/uploadLists.html', context={'code': 404})
+        else:
             return render(request, renderAppName + '/uploadLists.html',
-                context={
-                    'code' : 200,
-                    'categoryList' : categoryList,
-                    "typeList" : typeList,
-                    "dataList" : dataList,
-                    'videoMetaList' : newVideoMetaList,
-                    'videoIdList' : newVideoIdList,
-                })
+                          context={
+                              'code': 200,
+                              'categoryList': categoryList,
+                              "typeList": typeList,
+                              "dataList": dataList,
+                              'videoMetaList': newVideoMetaList,
+                              'videoIdList': newVideoIdList,
+                          })
 
 # 각 영상의 상세페이지 (/detail/pk)
+
+
 def detailFile(request, pk):
-    videoPath = models.Videopath.objects.get(id = pk).videoaddr
+    videoPath = models.Videopath.objects.get(id=pk).videoaddr
     if OS == 'Windows':
         videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
     else:
         videoPath4Play = "../../../media" + videoPath.split("media")[2]
-    
-    textPath = models.Videopath.objects.get(id = pk).textaddr
+
+    textPath = models.Videopath.objects.get(id=pk).textaddr
     try:
         with open(textPath, 'r', encoding='UTF-8-sig') as f:
             scripts = f.readlines()
@@ -195,7 +215,7 @@ def detailFile(request, pk):
         scripts = []
 
     keywordQ = Q()
-    keywordQ &= Q(id = pk)
+    keywordQ &= Q(id=pk)
     keywordQ &= Q(expose=True)
 
     # 이미지 받아오기
@@ -208,17 +228,19 @@ def detailFile(request, pk):
         request,
         renderAppName + '/detail.html',
         {
-            'videoaddr' : videoPath4Play,
-            'scripts' : scripts,
-            'images' : pptImage,
-            'pptFile' : pptFile,
-            'keywords' : models.Keywords.objects.filter(keywordQ).all().values(),
-            'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
-            'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+            'videoaddr': videoPath4Play,
+            'scripts': scripts,
+            'images': pptImage,
+            'pptFile': pptFile,
+            'keywords': models.Keywords.objects.filter(keywordQ).all().values(),
+            'metadatas': models.Metadata.objects.filter(id=pk).all().values(),
+            'timestamps': models.Timestamp.objects.filter(id=pk).all().values(),
         }
     )
 
 # 업로드 완료 된 영상의 상세페이지 (/success/pk)
+
+
 def success(request, pk):
     if request.method == "POST":
         sysKEList = request.POST.getlist("sysKEList")
@@ -229,31 +251,32 @@ def success(request, pk):
         userKEList = request.POST.getlist("userKEList")
         userKCList = request.POST.getlist("userKCList")
 
-        
         print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         print(sysKEList)
         print(sysKCList)
         print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 
         for i in range(len(sysKEList)):
-            models.Keywords.objects.filter(id = pk).filter(keyword = sysKCList[i], sysdef=1).update(expose=sysKEList[i])
+            models.Keywords.objects.filter(id=pk).filter(
+                keyword=sysKCList[i], sysdef=1).update(expose=sysKEList[i])
         for i in range(len(userKEList)):
-            models.Keywords.objects.filter(id = pk).filter(keyword = userKCList[i], sysdef=0).update(expose=userKEList[i])
+            models.Keywords.objects.filter(id=pk).filter(
+                keyword=userKCList[i], sysdef=0).update(expose=userKEList[i])
         for i in range(len(newUserKCList)):
             models.Keywords.objects.create(
-                id = models.Videopath.objects.get(id=pk),
-                keyword = newUserKCList[i],
-                expose = newUserKEList[i],
-                sysdef = 0
+                id=models.Videopath.objects.get(id=pk),
+                keyword=newUserKCList[i],
+                expose=newUserKEList[i],
+                sysdef=0
             )
 
-    videoPath = models.Videopath.objects.get(id = pk).videoaddr
+    videoPath = models.Videopath.objects.get(id=pk).videoaddr
     if OS == 'Windows':
         videoPath4Play = "..\\..\\..\\media" + videoPath.split("media")[1]
     else:
         videoPath4Play = "../../../media" + videoPath.split("media")[2]
-    
-    textPath = models.Videopath.objects.get(id = pk).textaddr
+
+    textPath = models.Videopath.objects.get(id=pk).textaddr
     try:
         with open(textPath, 'r', encoding='UTF-8-sig') as f:
             scripts = f.readlines()
@@ -261,7 +284,6 @@ def success(request, pk):
         print(err)
         scripts = []
 
-        
     # 이미지 받아오기
     pptImage = getPPTImage(pk)
 
@@ -269,18 +291,20 @@ def success(request, pk):
         request,
         renderAppName + '/success.html',
         {
-            'pk' : pk,
-            'videoaddr' : videoPath4Play,
-            'scripts' : scripts,
-            'images' : pptImage,
-            'keywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 1).all().values(),
-            'userkeywords' : models.Keywords.objects.filter(id = pk).filter(sysdef = 0).all().values(),
-            'metadatas' : models.Metadata.objects.filter(id = pk).all().values(),
-            'timestamps' : models.Timestamp.objects.filter(id = pk).all().values(),
+            'pk': pk,
+            'videoaddr': videoPath4Play,
+            'scripts': scripts,
+            'images': pptImage,
+            'keywords': models.Keywords.objects.filter(id=pk).filter(sysdef=1).all().values(),
+            'userkeywords': models.Keywords.objects.filter(id=pk).filter(sysdef=0).all().values(),
+            'metadatas': models.Metadata.objects.filter(id=pk).all().values(),
+            'timestamps': models.Timestamp.objects.filter(id=pk).all().values(),
         }
     )
 
 # search
+
+
 def searchFile(request):
     if request.method == "GET":
         word = request.GET["searchText"]
@@ -290,16 +314,17 @@ def searchFile(request):
 
         if word == "" and title == "" and keyword == "" and presenter == "":
             return render(request, renderAppName + '/search.html',
-                context={
-                    'code': 404,
-                    'searchWord' : ""
-                })
+                          context={
+                              'code': 404,
+                              'searchWord': ""
+                          })
 
-        else :
+        else:
             searchWords = []
             words = re.split(r'[ ,:]', word)
             for item in words:
-                if item != "": searchWords.append(item)
+                if item != "":
+                    searchWords.append(item)
             if len(searchWords) == 0:
                 searchWords = None
 
@@ -307,7 +332,8 @@ def searchFile(request):
             word += (title + " ")
             words = re.split(r'[ ,:]', title)
             for item in words:
-                if item != "": searchTitles.append(item)
+                if item != "":
+                    searchTitles.append(item)
             if len(searchTitles) == 0:
                 searchTitles = None
 
@@ -315,7 +341,8 @@ def searchFile(request):
             word += (keyword + " ")
             words = re.split(r'[ ,:]', keyword)
             for item in words:
-                if item != "": searchKeywords.append(item)
+                if item != "":
+                    searchKeywords.append(item)
             if len(searchKeywords) == 0:
                 searchKeywords = None
 
@@ -323,7 +350,8 @@ def searchFile(request):
             word += (presenter + " ")
             words = re.split(r'[ ,:]', presenter)
             for item in words:
-                if item != "": searchPresenters.append(item)
+                if item != "":
+                    searchPresenters.append(item)
             if len(searchPresenters) == 0:
                 searchPresenters = None
 
@@ -334,8 +362,9 @@ def searchFile(request):
 
             # before
             categoryList = {}
-            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
-
+            #videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.search(All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
+            videoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.searchTest(
+                All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
             for j in videoIdList:
                 rankDict = {}
                 rankDict['id'] = j
@@ -344,32 +373,34 @@ def searchFile(request):
                 rankDict['keyword'] = rankData[j][2]
                 rankDict['total'] = rankData[j][3]
                 rankList.append(rankDict)
-            
+
             print(rankList)
 
-            if not videoIdList :
+            if not videoIdList:
                 return render(request, renderAppName + '/search.html',
-                    context={
-                        'code' : 404,
-                        'searchWord' : word
-                    })
-            else :
+                              context={
+                                  'code': 404,
+                                  'searchWord': word
+                              })
+            else:
                 return render(request, renderAppName + '/search.html',
-                    context={
-                        'code' : 200,
-                        'categoryList' : categoryList,
-                        "typeList" : typeList,
-                        "dataList" : dataList,
-                        'videoMetaList' : videoMetaList,
-                        'videoIdList' : videoIdList,
-                        'searchWord' : word,
-                        'searchWordDetailTitle': title,
-                        'searchWordDetailKeyword': keyword,
-                        'searchWordDetailPresenter': presenter,
-                        'rankData': rankList,
-                    })
+                              context={
+                                  'code': 200,
+                                  'categoryList': categoryList,
+                                  "typeList": typeList,
+                                  "dataList": dataList,
+                                  'videoMetaList': videoMetaList,
+                                  'videoIdList': videoIdList,
+                                  'searchWord': word,
+                                  'searchWordDetailTitle': title,
+                                  'searchWordDetailKeyword': keyword,
+                                  'searchWordDetailPresenter': presenter,
+                                  'rankData': rankList,
+                              })
 
 # category detail search
+
+
 def detailSearch(request):
     word = request.POST['searchWord']
     title = request.POST['searchWordTitle']
@@ -378,15 +409,50 @@ def detailSearch(request):
 
     stringvideoIdList = request.POST['videoIdList']
     search_type = request.POST['search_type']   # category , method, narrative
-    search_detail_type = request.POST['search_detail_type'] # IT, 지리, 식물, ...
+    search_detail_type = request.POST['search_detail_type']  # IT, 지리, 식물, ...
     videoIdList = stringvideoIdList[1:-1]
-    videoIdList = videoIdList.replace(" ", "") # 공백 제거
-    videoIdList = videoIdList.replace("'", "") # 작은 따옴표 제거
+    videoIdList = videoIdList.replace(" ", "")  # 공백 제거
+    videoIdList = videoIdList.replace("'", "")  # 작은 따옴표 제거
     videoIdList = videoIdList.split(',')
     newVideoIdList = list()
 
-    #word = word.replace(" ", "") # 공백 제거
-    #word = word.replace("'", "") # 작은 따옴표 제거
+    searchWords = []
+    words = re.split(r'[ ,:]', word)
+    for item in words:
+        if item != "":
+            searchWords.append(item)
+    if len(searchWords) == 0:
+        searchWords = None
+
+    searchTitles = []
+    word += (title + " ")
+    words = re.split(r'[ ,:]', title)
+    for item in words:
+        if item != "":
+            searchTitles.append(item)
+    if len(searchTitles) == 0:
+        searchTitles = None
+
+    searchKeywords = []
+    word += (keyword + " ")
+    words = re.split(r'[ ,:]', keyword)
+    for item in words:
+        if item != "":
+            searchKeywords.append(item)
+    if len(searchKeywords) == 0:
+        searchKeywords = None
+
+    searchPresenters = []
+    word += (presenter + " ")
+    words = re.split(r'[ ,:]', presenter)
+    for item in words:
+        if item != "":
+            searchPresenters.append(item)
+    if len(searchPresenters) == 0:
+        searchPresenters = None
+
+    # word = word.replace(" ", "") # 공백 제거
+    # word = word.replace("'", "") # 작은 따옴표 제거
     #word = word.split(',')
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     print(word)
@@ -397,40 +463,44 @@ def detailSearch(request):
     searchWords = []
     words = re.split(r'[ ,:]', word)
     for item in words:
-        if item != "": searchWords.append(item)
+        if item != "":
+            searchWords.append(item)
     searchTitles = None
     searchKeywords = None
     searchPresenters = None
 
-    if title!="" or keyword!="" or presenter!="":
+    if title != "" or keyword != "" or presenter != "":
         searchWords = None
 
         searchTitles = []
         words = re.split(r'[ ,:]', title)
         for item in words:
-            if item != "": searchTitles.append(item)
+            if item != "":
+                searchTitles.append(item)
         if len(searchTitles) == 0:
             searchTitles = None
 
         searchKeywords = []
         words = re.split(r'[ ,:]', keyword)
         for item in words:
-            if item != "": searchKeywords.append(item)
+            if item != "":
+                searchKeywords.append(item)
         if len(searchKeywords) == 0:
             searchKeywords = None
 
         searchPresenters = []
         words = re.split(r'[ ,:]', presenter)
         for item in words:
-            if item != "": searchPresenters.append(item)
+            if item != "":
+                searchPresenters.append(item)
         if len(searchPresenters) == 0:
             searchPresenters = None
 
     videoMetaList = []
     rankData = {}
     rankList = []
-    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(videoIdList, search_type, search_detail_type, All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
-
+    newVideoIdList, videoMetaList, categoryList, typeList, dataList, rankData = searchAll.detailSearch(
+        videoIdList, search_type, search_detail_type, All=searchWords, T=searchTitles, P=searchPresenters, K=searchKeywords)
 
     print(">>>>>>>>>>>>>>>>>>>")
     print(rankData)
@@ -450,92 +520,81 @@ def detailSearch(request):
 
     print(rankList)
 
-    if not videoIdList :
+    if not videoIdList:
         return render(request, renderAppName + '/search.html',
-            context={
-                'code' : 404,
-                'searchWord' : word
-            })
-    else :
+                      context={
+                          'code': 404,
+                          'searchWord': word
+                      })
+    else:
         return render(request, renderAppName + '/search.html',
-            context={
-                'code' : 200,
-                'categoryList' : categoryList,
-                "typeList" : typeList,
-                "dataList" : dataList,
-                'videoMetaList' : videoMetaList,
-                'videoIdList' : newVideoIdList,
-                'searchWord' : word,
-                'searchWordDetailTitle': title,
-                'searchWordDetailKeyword': keyword,
-                'searchWordDetailPresenter': presenter,
-                'rankData': rankList,
-            })
-        
-        
-def allMetaData(request):
-    imageFilePath = models.Videopath.objects.all().values_list('imageaddr', flat=True).distinct()
-    L = 0
-    P = 0
-    N = 0
-    A = 0
-    
-    for imagePath in imageFilePath:
-        # if OS == "Windows" : 
-        #     imagePaths = imagePath.split('Image\\')[1]
-        # else : 
-        #     imagePaths = imagePath.split('Image/')[1]
-        
-        imageList = os.listdir(imagePath)
-        for image in imageList:
-            if image.startswith("L"): L=L+1
-            elif image.startswith("P"): P=P+1
-            elif image.startswith("N"): N=N+1
-            elif image.startswith("A"): A=A+1
-            else : pass
-    
-            
-    
-    if request.method == "GET":
-        return render(request, renderAppName + '/manage.html',
-                    context={
-                        'code' : 404,
-                        'metadatas' : models.Metadata.objects.all().values(),
-                        'keywords' : models.Keywords.objects.all().values(),
-                        'imagepaths' : imageFilePath,
-                        'len' : len(imageFilePath),
-                        'A': A,
-                        "L": L,
-                        "P": P,
-                        "N": N,     
-                    })
+                      context={
+                          'code': 200,
+                          'categoryList': categoryList,
+                          "typeList": typeList,
+                          "dataList": dataList,
+                          'videoMetaList': videoMetaList,
+                          'videoIdList': newVideoIdList,
+                          'searchWord': word,
+                          'searchWordDetailTitle': title,
+                          'searchWordDetailKeyword': keyword,
+                          'searchWordDetailPresenter': presenter,
+                          'rankData': rankList,
+                      })
 
 
-def detailMetaData(request,pk):
-    imageFilePath = models.Videopath.objects.filter(id=pk).values_list('imageaddr', flat=True).distinct()
-    L = 0
-    P = 0
-    N = 0
-    A = 0
-    
-    for imagePath in imageFilePath:
-        imageList = os.listdir(imagePath)
-        for image in imageList:
-            if image.startswith("L"): L=L+1
-            elif image.startswith("P"): P=P+1
-            elif image.startswith("N"): N=N+1
-            elif image.startswith("A"): A=A+1
-            else : pass
-    
-    if request.method == "GET":
-        return render(request, renderAppName + '/detailmanage.html',
-                    context={
-                        'code' : 404,
-                        'pk': pk,
-                        'metadata' : models.Metadata.objects.get(id = pk),
-                        'keywords' : list(models.Keywords.objects.filter(id = pk).filter(sysdef = 1).values_list('keyword', flat=True).distinct()),
-                        'A': A,
-                        "L": L,
-                        "P": P,
-                        "N": N,  
-                    })
+def performance(request):
+
+    categories_dict = {}
+    categories = models.Metadata.objects.all().values_list(
+        'category', flat=True).distinct()
+    print(categories)
+    for item in categories:
+        if item is None:
+            continue
+        words = re.split(r'[ ,:]', item)
+        for word in words:
+            if word in categories_dict:
+                categories_dict[word] += 1
+            else:
+                categories_dict[word] = 1
+    print(categories_dict)
+
+    narrative_dict = {}
+    narrative = models.Metadata.objects.all().values_list('narrative', flat=True)
+    print(narrative)
+    for item in narrative:
+        if item is None:
+            continue
+        if item in narrative_dict:
+            narrative_dict[item] += 1
+        else:
+            narrative_dict[item] = 1
+
+    method_dict = {}
+    method = models.Metadata.objects.all().values_list('method', flat=True)
+    print(method)
+    for item in method:
+        if item is None:
+            continue
+        if item in method_dict:
+            method_dict[item] += 1
+        else:
+            method_dict[item] = 1
+
+    # for item in categories:
+    #     words = re.split(r'[ ,:]',item)
+    #     if words != "": categories2.append(words)
+    #     if len(categories2) == 0:
+    #         categories2 = None
+    # print(categories2)
+
+    return render(request, renderAppName + '/performance.html',
+                  context={
+                      'category': list(categories_dict.keys()),
+                      'category_data': list(categories_dict.values()),
+                      'narrative': list(narrative_dict.keys()),
+                      'narrative_data': list(narrative_dict.values()),
+                      'method': list(method_dict.keys()),
+                      'method_data': list(method_dict.values()),
+                  })

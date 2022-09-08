@@ -1,54 +1,39 @@
-<!-- 미완.. 삭제해주세요 -->
 <!DOCTYPE html>
-{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
 <html>
     <head>
-        <link rel="stylesheet" href="{% static 'css/videoDetail.css' %}">
-        <link rel="stylesheet" href="{% static 'css/tab3.css' %}">
-        <script type="text/javascript" src="{% static 'js/search.js' %}"></script>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-        <title>VMeta - Performance
-        </title>
+        <title>VMeta</title>
         <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/videoDetail.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/tab3.css') }}">   
+        <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script>
-            function first_load(){
-                new Chart(document.getElementById("pie-chart"), {
-                    type: 'pie',
-                    data: {
-                    labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
-                    datasets: [{
-                        label: "Population (millions)",
-                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                        data: [2478,5267,734,784,433]
-                    }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        cutoutPercentage: 50,
-                        title: {
-                            display: true,
-                            text: 'Predicted world population (millions) in 2050'
-                        },
-                        legend: {
-                            display: true,
-                            //position: 'left',
-                            labels: {
-                                    //fontSize: 12,
-                                    //fontFamily: 'sans-serif',
-                                    //fontColor: '#000000',
-                                    //fontStyle: 'bold'
-                                    }
-                        }
-                    }
-                });
-            }
+
         </script>
     </head>
-    {% include 'core/header.html' %}
-    <body class="bodyArea" onload="first_load();">
-        
-        <canvas id="pie-chart" width="250" height="200"></canvas>       
+    <body>
+        <input type="file" name="inputFile" id="inputFile">
+        <br>
+        <pre id="output"></pre>
+      
+        <script type="text/javascript">
+          document.getElementById('inputFile').addEventListener('change', function() {
+            var file = new FileReader();
+            file.onload = () => {
+              document.getElementById('output').textContent = file.result;
+            }
+            file.readAsText(this.files[0]);
+          });
+        </script>
     </body>
-
+    <!-- <body class="bodyArea" onload="first_load();">
+        
+    </body> -->
 </html>

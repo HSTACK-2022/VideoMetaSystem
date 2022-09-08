@@ -26,6 +26,7 @@ function searchPost(scripts) {
 
             const button = document.createElement("button");
             button.className = "indexTime";
+
             button.type = "button";
             button.addEventListener("click", function(event){
                 inputMove(timeStr);

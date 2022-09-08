@@ -24,6 +24,7 @@ hr {
 }
 
 .detailHeader {
+    
     width: 55%;
     min-width: 500px;
     padding-top: 20px;
@@ -156,7 +157,10 @@ div.right {
 .videoPlayer {
     width: 100%;
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 287da85c64946cc34394d7e2977b258edaa3aa21
 }
 
 .keyTag {
