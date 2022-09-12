@@ -143,9 +143,11 @@ def getCategoryPerc(videoid, searchText_list):
 
     sum = 0
     for i in range(0,len(sum_list)):
-        sum += i
+        sum += sum_list[i]
+    if sum > 1:  # 예: 0.408, 0.595 확률일 경우 (숫자상 근소한 차이)
+        sum = 1
     ##
-
+    print(searchCategory_percent)
     if max(k_v) == 0 or k_v2 == 0:
         return 0
     m = round(1/sum,3)
@@ -179,12 +181,13 @@ def getKeywordPerc(videoid, searchText_list):
         sum_list.append(max_percent)
         keywordPercFull_bak.remove(max_percent)
         n -= 1
-
+   
     sum = 0
     for i in range(0,len(sum_list)):
-        sum += i
+        sum += sum_list[i]
     ##
 
+    print(searchText_perc)
     if max(keywordPercFull) == 0 or searchText_perc == 0:
         return 0
     num = round(1 / len(searchText_list),1)     # 찾는 단어가 1개인 경우 가장 큰 확률을 1로, n개인 경우 가장 큰 확률을 1/n으로
