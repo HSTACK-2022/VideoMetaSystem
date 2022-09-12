@@ -1,11 +1,12 @@
 import os
 import platform
+
 from flask_sqlalchemy import SQLAlchemy
 
 OS = platform.system()
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_FILE_DIR = os.path.join('.', 'media', 'Uploaded')
-
+UPLOAD_LOG_DIR = os.path.join('.', 'logs')
 JSON_AS_ASCII = False
 
 STT_API_KEY = {
@@ -18,7 +19,7 @@ STT_API_KEY = {
 
 db = {
     'user' : 'root',
-    'password' : 'hstackdbadmin',
+    'password' : 'csedbadmin',
     'host' : 'localhost',
     'port' : 3306,
     'database' : 'hstackdb'
