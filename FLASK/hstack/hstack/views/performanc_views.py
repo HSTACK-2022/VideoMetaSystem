@@ -48,7 +48,8 @@ def ratio():
             if word in categories_dict:
                 categories_dict[word] += 1
             else:
-                categories_dict[word] = 1
+                if (len(word) != 0):
+                    categories_dict[word] = 1
     print(categories_dict)
 
     narrative_dict = {}
@@ -237,7 +238,8 @@ def performance_metadata():
             if word in categories_dict:
                 categories_dict[word] += 1
             else:
-                categories_dict[word] = 1
+                if (len(word) != 0):
+                    categories_dict[word] = 1
     print(categories_dict)
 
     narrative_dict = {}
@@ -427,7 +429,7 @@ def performance_detailFile(pk):
                 endTime = datetime.datetime.strptime(cmd[1], datetime_format)
                 timeCnt += datetime2sec(endTime - startTime)
             else:
-                key = cmd[2].split('\n')[0]
+                key = line[20:].strip() #띄어쓰기도 감지하기 위해서 strip으로 수정
                 if key in searchDict:
                     searchDict[key] += 1
                 else:
@@ -435,17 +437,21 @@ def performance_detailFile(pk):
 
         metadataDict['view'] = viewCnt
         metadataDict['avgTime'] = round(timeCnt / viewCnt, 2)
-    
+
     else:
         metadataDict['view'] = 0
         metadataDict['avgTime'] = 0
-    
 
+    #searchDict 내림차순으로 정렬
+    counts = collections.Counter(searchDict)
+    sorted_dict = dict(sorted(counts.items(), key = lambda item: item[1], reverse = True))
+    
+    print(list(sorted_dict.values())[0:10])
 
     return render_template('/performance_charts.html',
         code = 200,
         pk = pk,
-        scriptsWord = list(searchDict.keys()),
-        scriptsCnt = list(searchDict.values()),
+        scriptsWord = list(sorted_dict.keys())[0:10], # 10개만 제공
+        scriptsCnt = list(sorted_dict.values())[0:10],
         metadatas = metadataDict
     )
