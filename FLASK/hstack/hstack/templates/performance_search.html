@@ -28,7 +28,7 @@
                         labels: {{totalWord|safe}},
                         datasets: [{ 
                             data: {{totalWord_data|safe}},
-                            label: "전체 검색 단어",
+                            label: "전체 검색어",
                             lineTension: 0.3,
                             backgroundColor: "rgba(2,117,216,0.2)",
                             borderColor: "rgba(2,117,216,1)",
@@ -58,7 +58,7 @@
                         labels: {{titleWord|safe}},
                         datasets: [{ 
                             data: {{titleWord_data|safe}},
-                            label: "제목 검색 단어",
+                            label: "제목 검색어",
                             backgroundColor: [
                             '#661A69',
                             '#7F2B7A',
@@ -78,7 +78,7 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '제목 검색 단어 빈도수'
+                        text: '제목 검색어 빈도수'
                         },
                         
                         legend: {display: false},    // label 안보이게
@@ -92,7 +92,7 @@
                         labels: {{presenterWord|safe}},
                         datasets: [{ 
                             data: {{presenterWord_data|safe}},
-                            label: "발표자 검색 단어",
+                            label: "발표자 검색어",
                             backgroundColor: [
                             '#143468',
                             '#224A7D',
@@ -112,7 +112,7 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '발표자 검색 단어 빈도수'
+                        text: '발표자 검색어 빈도수'
                         },
                         legend: {display: false},    // label 안보이게
                        
@@ -125,7 +125,7 @@
                         labels: {{keyWord|safe}},
                         datasets: [{ 
                             data: {{keyWord_data|safe}},
-                            label: "키워드 검색 단어",
+                            label: "키워드 검색어",
                             borderColor: "#c45850",
                             backgroundColor: [
                             '#24460B',
@@ -145,7 +145,7 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '키워드 검색 단어 빈도수'
+                        text: '키워드 검색어 빈도수'
                         },
                         legend: {display: false},    // label 안보이게
                     }
@@ -206,7 +206,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
                                             <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/>
                                         </svg>
-                                        통합 검색 단어 빈도수
+                                        통합 검색어 빈도수
                                     </div>
                 
                                     <div class="mx-3"><canvas id="search-chart" style="width:1020px; height:350px"></canvas></div>
@@ -218,7 +218,7 @@
                                 <div class="card card-raised h-100">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                        통합 검색 단어 Top7
+                                        통합 검색어 Top7
                                     </div>
 
                                     <div class="card-body mt-2">
@@ -255,7 +255,7 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="me-4">
                                                     <h2 class="card-title mb-1">
-                                                        세부 검색 단어 빈도수</h2>
+                                                        세부 검색어 빈도수</h2>
                                                     <div class="card-subtitle">
                                                         Advanced Search</div>
                                                 </div>
@@ -294,7 +294,7 @@
                                                         <tr>
                                                             <th style="background-color:#661A69;">순위</th>
                                                             <th style="background-color:#661A69;">제목</th>
-                                                            <th style="background-color:#661A69;">검색량</th>
+                                                            <th style="background-color:#661A69;">검색횟수</th>
                                                         </tr>
                                                     </thead>
                                                     
@@ -318,7 +318,7 @@
                                                         <tr>
                                                             <th style="background-color:#143468;">순위</th>
                                                             <th style="background-color:#143468;">발표자</th>
-                                                            <th style="background-color:#143468;">검색량</th>
+                                                            <th style="background-color:#143468;">검색횟수</th>
                                                         </tr>
                                                     </thead>
                                                     

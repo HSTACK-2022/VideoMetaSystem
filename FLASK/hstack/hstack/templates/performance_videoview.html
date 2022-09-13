@@ -135,7 +135,6 @@
                                         <thead>
                                             <tr>
                                                 <th style="width:5%;">Rank</th>
-                                                <th>ID</th>
                                                 <th>Title</th>
                                                 <th>Presenter</th>
                                                 <th>Views</th>
@@ -146,9 +145,8 @@
                                         <tbody>
                                             {% for video in idView %}
                                             <tr>
-                                                <td>{{loop.index}}</td>
-                                                <td>{{video.id}}</td>
-                                                <td>{{video.title}}</td>
+                                                <td style="text-align:center;">{{loop.index}}</td>
+                                                <td>{{video.title}}<span style="color:gray;"> (ID:{{video.id}})</span></td>
                                                 <td>{{video.presenter}}</td>
                                                 <td>{{video.views}}</td>
                                                 <td>{{video.uploadDate}}</td>

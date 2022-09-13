@@ -21,7 +21,7 @@
 하단 이미지를 클릭하시면 영상을 시청하실 수 있습니다.
 
 [<img src="https://user-images.githubusercontent.com/73868349/171586152-85d907ca-51e4-4186-998c-c3c808e651e2.jpg" alt="VMeta"
- width = "480" height="270" />](https://youtu.be/-k8TcLdf65s)
+ width = "480" height="270" />](https://youtu.be/gZIA-RyuYbU)
 
 <br/>
 <br/>
@@ -201,7 +201,17 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 <br/><br/>
 
  - 영상 메타데이터 수정 화면
- <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot4" width = "600" />
+ <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot4" height = "300" />
+ 
+<br/><br/>
+
+ - 전체 모니터링 페이지 : Data Overview
+ <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot5" width = "1000" />
+ 
+<br/><br/>
+
+ - 상세 모니터링 페이지 : Video Details
+ <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot6" width = "1000" />
  
 <br/><br/>
 </b>
