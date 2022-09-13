@@ -132,7 +132,7 @@
                         cutoutPercentage: 50,
                         title: {
                             display: true,
-                            text: 'METHOD RATIO'
+                            text: 'PRESENTATION RATIO'
                         },
                         legend: {
                             display: true,
@@ -150,10 +150,10 @@
                 new Chart(document.getElementById("line-chart"), {
                     type: 'line',
                     data: {
-                        labels: {{upload_size|safe}},
+                        labels: {{upload_time|safe}},
                         datasets: [{ 
-                            data: {{upload_time|safe}},
-                            //label: "Europe",
+                            data: {{upload_size|safe}},
+                            label: "평균 재생 시간 (sec)",
                             borderColor: "#8e5ea2",
                             fill: false
                         }
@@ -306,7 +306,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
-
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">
@@ -365,9 +365,9 @@
                                         </svg>
                                         전체 검색 단어 빈도수
                                     </div>
-                
-                                    <canvas id="search-chart" style="width:1000px; height:350px"></canvas>
-                                
+                                    <div class="mx-3">
+                                        <canvas id="search-chart" style="width:1020px; height:350px"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -516,9 +516,7 @@
                                 </div>
                                 
                             </div>
-                            <div id="current_time" class="card-footer small text-muted">
-                                <script>date();</script>
-                            </div>
+                        </div>
 
                         <div class="row mt-4">
                             <div class="col-lg-8">
@@ -576,13 +574,13 @@
                                 </div>
     
                                 <div class="card-body">
-                                    <canvas class="my-3" id="video-time-chart" width="1000" height="300"></canvas>
+                                    <canvas class="my-3" id="video-time-chart" width="1370" height="300"></canvas>
                                 </div>
                             </div>
                         
     
                         
-                            <div class="card card-raised mt-4">
+                            <div class="card card-raised mt-4 mb-4">
                                 <div class="card-header py-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-4">
@@ -598,8 +596,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%;">Rank</th>
-                                                    <th>ID</th>
-                                                    <th>Title</th>
+                                                    <th>Title (ID)</th>
                                                     <th>Presenter</th>
                                                     <th>Views</th>
                                                     <th>Uploaded Date</th>
@@ -609,9 +606,9 @@
                                             <tbody>
                                                 {% for video in idView %}
                                                 <tr>
-                                                    <td>{{loop.index}}</td>
-                                                    <td>{{video.id}}</td>
-                                                    <td>{{video.title}}</td>
+                                                    <td style="text-align:center;">{{loop.index}}</td>
+                                                    
+                                                    <td>{{video.title}} <span style="color:gray;">(ID:{{video.id}})</span></td>
                                                     <td>{{video.presenter}}</td>
                                                     <td>{{video.views}}</td>
                                                     <td>{{video.uploadDate}}</td>
