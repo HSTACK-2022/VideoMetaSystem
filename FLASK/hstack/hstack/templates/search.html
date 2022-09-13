@@ -8,6 +8,12 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
         <script>
+            function resetDetail() {
+                document.getElementById('category').value = '';
+                document.getElementById('method').value = '';
+                document.getElementById('narrative').value = '';
+                document.getElementById("form").submit();
+            }
             function searchDetail(search_type, search_detail_type) {
                 document.getElementById(search_type).value = search_detail_type;
                 document.getElementById("form").submit();
@@ -40,8 +46,19 @@
             <table class="bodyTable">
              
                 <tr>
-                    <td class="section">
-                        <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다</p>
+                    <td class="section">    
+
+                        <p style="text-align:left; margin-left:35px;">✔ 검색결과는 {{videoIdList|length}}개 입니다.</p>
+                        
+                        {% if category != '' or narrative != '' or method != '' %}
+                        <p style="text-align:left; margin-left:35px;">✔ FILTER &nbsp;
+                        {% if category != '' %} <span class="VT_category"> {{category}} </span> {% endif %}
+                        {% if narrative != '' %} <span class="VT_narrative">{{narrative}}</span> {% endif %}
+                        {% if method != '' %} <span class="VT_method">{{method}}</span> {% endif %}
+                        <span onclick="resetDetail()" id="resetBtn">RESET</span>
+                        </p>
+                        {% endif %}
+                        
                         {% for meta in videoMetaList %}
                             {% for ii in meta.metadata %}
                             <table
@@ -57,7 +74,7 @@
                                             <td>
                                                 <div class="VT_category">{{ii.category}}</div>
                                                 <div class="VT_narrative">{{ii.narrative}}</div>
-                                                <div class="VT_method">{{ii.method}}</div>
+                                                <div class="VT_method">{{ii.presentation}}</div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -171,7 +188,7 @@
                                     </ul>
 
                                     <ul class="todo-cmp__list">
-                                        <li>DATA</li>
+                                        <li>PRESENTATION</li>
                                         <ul class="todo-cmp__list">
                                             {% for data in dataList %}
                                                 <li>

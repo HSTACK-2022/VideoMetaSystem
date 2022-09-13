@@ -8,38 +8,12 @@
             <title>VMeta - {{metadata.title}}
             </title>
             <meta charset="UTF-8">
-
-            <script type="text/javascript">
-            
-                function writeLog(script) {
-                    var script = '{{scripts}};'
-                    var os = navigator.userAgent;
-                    var videoPath = '{{videoaddr}};';
-                    var videoID = {{metadata.id}};
-                    console.log(videoPath);
-
-                    var logPath = videoPath.split('Video');
-                    var logPath2 = logPath[0] + "\Log";
-                    var filename = logPath[1].split('.');
-                    var logfilename = filename[0]+ ".txt";
-                    var logAddr = logPath2 + logfilename;
-                    console.log(logPath2);
-                    console.log(logAddr);
-
-                    var searchContent = document.getElementById("searchContent").value;
-                    var data = new Object();
-                    data.searchContent = searchContent;
-                
-                    const request = new XMLHttpRequest();
-                    request.open('Post', `/detail/${videoID}/ProcessUserinfo/${JSON.stringify(searchContent)}`);
-                    request.send();
-
-                }
-                
-            </script>
         </head>
         {% include 'header.html' %}
-        <body class="bodyArea" onload="loadImg('{{ metadata.title }}'); onloads();">
+        <body class="bodyArea"
+            onload="writeOpenLog({{pk}}, 'open'); loadImg('{{ metadata.title }}'); onloads();"
+            onunload="writeOpenLog({{pk}}, 'close');"
+        >
             <div class="divParent">
                 <!-- Post content-->
                 <div class="detailHeader">
@@ -114,8 +88,8 @@
                                         <tr>
                                             <td colspan="2">
                                                 <div class="metadataTR">
-                                                    <div class="metadataTitle2">METHOD</div>
-                                                    <div class="metadataContent">{{metadata.method}}</div>
+                                                    <div class="metadataTitle2">PRESENTATION</div>
+                                                    <div class="metadataContent">{{metadata.presentation}}</div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -160,7 +134,7 @@
                                             type="submit"
                                             class="searchBtn"
                                             value=""
-                                            onclick="searchPost({{scripts}}); writeLog();"
+                                            onclick="searchPost({{scripts}}); writeSearchLog({{pk}});"
                                             ></input>
                                     </div>
                                     <div class="searchScroll">

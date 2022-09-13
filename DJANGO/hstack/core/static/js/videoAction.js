@@ -41,15 +41,6 @@ function searchPost(scripts) {
             // 여기
             const title = document.createElement("div");
             title.className = "indexTitle";
-<<<<<<< HEAD
-            title.id = "indexTitle";
-
-            var regex = new RegExp(str, "g");
-            line = line.replace(regex, "<span style='background-color:#ffe400;'>" + str + "</span>");
-            title.innerHTML = line;
-            
-
-=======
 
             var regex = new RegExp(str, "g");
             line = line.replace(regex, "<span style='background-color:#FFE400;'>" + str + "</span>");
@@ -58,7 +49,6 @@ function searchPost(scripts) {
 
             title.innerHTML = line;
             
->>>>>>> 9521fdf1d1b3ea939940c429a43d800d684c0792
             titleTd.appendChild(title);
         }
     });

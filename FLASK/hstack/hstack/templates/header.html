@@ -79,8 +79,9 @@
 
 
             <td id="a">
-                <button id="upload" onclick="location.href='/uploadFile/'"><img id="uploadBtn" src="{{ url_for('static', filename='img/uploadBtn.png') }}"><br>Upload</button>
-                <button id="upload" onclick="location.href='/uploadFile/lists'"><img id="edit" src="{{ url_for('static', filename='img/edit.png') }}"><br>Edit</button>
+                <button id="upload" onclick="location.href='/uploadFile/'"><img class="detailBtn" src="{{ url_for('static', filename='img/uploadBtn.png') }}"><br>Upload</button>
+                <button id="upload" onclick="location.href='/uploadFile/lists'"><img class="detailBtn" src="{{ url_for('static', filename='img/edit.png') }}"><br>Edit</button>
+                <button id="upload" onclick="location.href='/performance'"><img class="detailBtn" src="{{ url_for('static', filename='img/manage.png') }}"><br>Monitor</button>
             </td>
         </tr>
     </table>

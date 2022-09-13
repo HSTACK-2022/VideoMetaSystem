@@ -2,7 +2,7 @@
     font-family: 'S-Core3';
 }
 
-body{
+body {
     margin: 0;
     padding: 0;
 }
@@ -24,7 +24,7 @@ hr {
 }
 
 .detailHeader {
-    
+
     width: 55%;
     min-width: 500px;
     padding-top: 20px;
@@ -157,10 +157,6 @@ div.right {
 .videoPlayer {
     width: 100%;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 287da85c64946cc34394d7e2977b258edaa3aa21
 }
 
 .keyTag {
@@ -378,6 +374,7 @@ div.right {
     color: #5856d6;
     cursor: pointer;
 }
+
 .indexTime2 {
     width: 70px;
     height: 100%;
@@ -393,7 +390,8 @@ div.right {
 
 }
 
-.indexTime:hover, .indexTime2:hover {
+.indexTime:hover,
+.indexTime2:hover {
     color: #5856d6;
     cursor: pointer;
 }
@@ -615,6 +613,6 @@ div.right {
     width: 100%;
     height: 35px;
     margin: 1px 0px;
-   
+
     border-radius: 30px;
 }

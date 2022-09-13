@@ -14,42 +14,9 @@
 
     <script>
         function first_load() {
-        //     new Chart(document.getElementById("scripts-search-chart"), {
-        //         type: 'bar',
-        //         data: {
-        //             labels: {{ scriptsWord| safe}},
-        // datasets: [{
-        //     data: {{ scriptsCnt| safe}},
-        //     label: "스크립트 검색 단어",
-        //     backgroundColor: [
-        //     '#661A69',
-        //     '#7F2B7A',
-        //     '#9E458F',
-        //     '#BD64A5',
-        //     '#dc89be',
-        //     '#EAA7CB',
-        //     '#F4BDD5',
-        //     '#FBD5E2',
-        //     '#FDEAEE'
-        // ],
-        //     borderColor: "#3cba9f",
-        //     fill: false
-        //                 }]
-        //             },
-        // options: {
-        //     responsive: false,
-        //         title: {
-        //         display: true,
-        //             text: '스크립트 검색 단어 빈도수'
-        //     },
-
-        //     legend: { display: false },    // label 안보이게
-
-        // }
-        //             });
 
         new Chart(document.getElementById("bar-chart"), {
-            type: 'bar',
+            type: 'horizontalBar',
             data: {
                 labels: {{ scriptsWord| safe}},
                 datasets: [
@@ -79,54 +46,45 @@
 <body class="sb-nav-fixed" onload="first_load();">
 
     {% if code == 200 %}
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="../../performance">Administration</a>
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
+        </nav>
 
-        <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-            <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
-                    aria-describedby="btnNavbarSearch" />
-                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i
-                        class="fas fa-search"></i></button>
-            </div>
-        </form>
-
-    </nav>
-
-    <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="../">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
-
-                        <a class="nav-link" onclick="location.href='./'">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Tables
-                        </a>
+        <div id = "layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <a class="nav-link" href="/performance">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Data Overview
+                            </a>
+                            
+                            <ul class="menuLists">
+                                <li onclick="location.href='/performance/search'"> Search </li>
+                                <li onclick="location.href='/performance/metadata'"> Metadata </li>
+                                <li onclick="location.href='/performance/videoviews'"> Video views </li>
+                            </ul>
+                            
+                            <a class="nav-link" href='/performance/category'>
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Video Details
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Manager
-                </div>
-            </nav>
-        </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">© 2022. HSTACK</div>
+                        all rights reserved.
+                    </div>
+                </nav>
+            </div>
         <div id="layoutSidenav_content">
-            {% for i in metadatas %}
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">{{i.title}}</h1>
+                    <h1 class="mt-4">{{metadatas.title}}</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item">{{i.presenter}}</li>
-                        <li class="breadcrumb-item active">{{i.category}}</li>
-                        <li class="breadcrumb-item active">{{i.narrative}}</li>
+                        <li class="breadcrumb-item">by {{metadatas.presenter}}</li>
                     </ol>
                     <div class="card mb-4">
                         <div class="card-body">
@@ -137,50 +95,73 @@
                                         <th style="color:black;">presenter</th>
                                         <th style="color:black;">category</th>
                                         <th style="color:black;">narrative</th>
-                                        <th style="color:black;">method</th>
-                                        <th style="color:black;">views</th>
+                                        <th style="color:black;">presentation</th>
+                                        <th style="color:black;">videoSize(byte)</th>
                                         <th style="color:black;">videoLength</th>
                                         <th style="color:black;">videoFrame</th>
-                                        <th style="color:black; width:8%;">UploadDate</th>
+                                        <th style="color:black;">UploadDate</th>
+                                        <th style="color:black;">views</th>
+                                        <th style="color:black;">avgViewTime(sec)</th>
 
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    {% for i in metadatas %}
-                                    <tr onclick="location.href='/performance/detail/{{i.id}}'">
-                                        <td>{{i.title}}</td>
-                                        <td>{{i.presenter}}</td>
-                                        <td>{{i.category}}</td>
-                                        <td>{{i.narrative}}</td>
-                                        <td>{{i.method}}</td>
-                                        <td>123</td>
-                                        <td>{{i.videoLength}}</td>
-                                        <td>{{i.videoFrame}}</td>
-                                        <td>{{i.uploadDate}}</td>
+                                    <tr>
+                                        <td>{{metadatas.title}}</td>
+                                        <td>{{metadatas.presenter}}</td>
+                                        <td>{{metadatas.category}}</td>
+                                        <td>{{metadatas.narrative}}</td>
+                                        <td>{{metadatas.presentation}}</td>
+                                        <td>{{metadatas.videoSize}}</td>
+                                        <td>{{metadatas.videoLength}}</td>
+                                        <td>{{metadatas.videoFrame}}</td>
+                                        <td>{{metadatas.uploadDate}}</td>
+                                        <td>{{metadatas.view}}</td>
+                                        <td>{{metadatas.avgTime}}</td>
                                     </tr>
-                                    {% endfor %}
                                 </tbody>
                             </table>
                             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
                             <canvas id="bar-chart" width="300" height="230"></canvas>
                         </div>
                     </div>
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2022</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-area me-1"></i>
+                            Area Chart Example
+                        </div>
+                        <!-- <div class="card-body">
+                            <div class="col-lg-4"><canvas id="bar-chart" width="100%" height="100"></canvas></div>
+                            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                        Bar Chart Example
+                                    </div>
+                                    <div class="card-body"><canvas id="scripts-search-chart" width="400"
+                                            height="320"></canvas></canvas>
+                                    </div>
+                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-pie me-1"></i>
+                                        Pie Chart Example
+                                    </div>
+                                    <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas>
+                                    </div>
+                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </footer>
-            {% endfor %}
+            </main>
         </div>
     </div>
     {% endif %}
@@ -188,9 +169,6 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/demo/chart-area-demo.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='assets/demo/chart-bar-demo.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='assets/demo/chart-pie-demo.js') }}"></script> -->
 </body>
 
 </html>

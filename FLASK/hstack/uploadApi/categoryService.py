@@ -21,10 +21,21 @@ def extractCategory(fileURL, totalDic):
 
     # videoId를 통해 Keyword list를 받아온다.
     getTopicDict = {}
+    transferTo_list = []
+    for key in totalDic['keyword'].keys():
+        transferTo_list.append(key)
+    transferTo_list.append(totalDic['title'])
     for j in range(0,5):
         time.sleep(0.5)
         for i in range(0,5):
-            getTopicDict = getCategoryService(accessKey[i], totalDic['keyword'])
+            getTopicDict = getCategoryService(accessKey[i], transferTo_list)
+    
+
+    print(".......................")
+    print(getTopicDict)
+    if (len(getTopicDict) == 0):
+        getTopicDict['None'] = 0
+        
     print(getTopicDict)
     totalDic['category'] = getTopicDict
 
@@ -69,7 +80,10 @@ def getCategoryFromJson(responseData):
             returnTypes[categoryDetect] = round(percent, 2)
 
     #totalPerc 조정
-    weight = round(1.0 / totalPerc, 1)
+    if totalPerc == 0:
+        weight = 0
+    else:
+        weight = round(1.0 / totalPerc, 1)
     for key in returnTypes:
         returnTypes[key] = round(weight * returnTypes[key], 3)
         

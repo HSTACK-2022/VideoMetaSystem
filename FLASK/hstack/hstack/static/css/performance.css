@@ -97,3 +97,60 @@ tr:last-child td:first-child {
 tr:last-child td:last-child {
     border-bottom-right-radius: 6px;
 }
+
+.menuLists {
+    margin-left: 20px;
+    font-size: 15px;
+}
+
+.menuLists :hover {
+    color: white;
+    cursor: pointer;
+}
+
+.btnContainer {
+    display: grid;
+    margin: 30px 20px;
+    width: 90%;
+    row-gap: 20px;
+    column-gap: 20px;
+    grid-auto-rows: minmax(150px, auto);
+    grid-template-columns: repeat(4, minmax(200px, auto));
+}
+
+.categoryBtn {
+    padding: 5px;
+    border-radius: 30px;
+    background-image: linear-gradient(to right, #29323c, #485563, #2b5876);
+    box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+    background-size: 300% 100%;
+    border-radius: 50px;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    color: #ffffff;
+    font-family: "pre1";
+}
+
+.categoryBtn:hover {
+    background-position: 100% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    cursor: pointer;
+}
+
+.categoryBtnKey {
+    margin: 30px 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.categoryBtnValue {
+    float: right;
+    margin-right: 20px;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
