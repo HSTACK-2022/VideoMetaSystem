@@ -21,7 +21,7 @@
 하단 이미지를 클릭하시면 영상을 시청하실 수 있습니다.
 
 [<img src="https://user-images.githubusercontent.com/73868349/171586152-85d907ca-51e4-4186-998c-c3c808e651e2.jpg" alt="VMeta"
- width = "480" height="270" />](https://youtu.be/-k8TcLdf65s)
+ width = "480" height="270" />](https://youtu.be/gZIA-RyuYbU)
 
 <br/>
 <br/>
