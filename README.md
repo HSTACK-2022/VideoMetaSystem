@@ -201,7 +201,17 @@ Video Ranking 알고리즘은 3단계의 연산으로 이루어진다.
 <br/><br/>
 
  - 영상 메타데이터 수정 화면
- <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot4" width = "600" />
+ <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot4" height = "300" />
+ 
+<br/><br/>
+
+ - 전체 모니터링 페이지 : Data Overview
+ <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot5" width = "1000" />
+ 
+<br/><br/>
+
+ - 상세 모니터링 페이지 : Video Details
+ <img src=./report/img/executeScreenshot4.jpg alt="executeScreenshot6" width = "1000" />
  
 <br/><br/>
 </b>
