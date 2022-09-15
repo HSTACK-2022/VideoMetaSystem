@@ -1,16 +1,22 @@
 # sceneText.py
 #
 # 추출된 이미지에서 글자를 추출합니다.
+# 영상의 narrative와 presentation을 결정합니다.
+# tensorflow를 이용하여 이미지를 N, L, P, A 4가지로 구분합니다.
+# opencvService.py에 의해 호출됩니다.
 # 
 # uses
-# - sceneText(videoId)
+# - sceneText(imagePath, textPath) : 이미지에서 글자를 추출해 textPath에 저장
+# - sceneSeperate(imagePath) : 추출된 장면들을 N, L, P, A로 구분 및 narrative, presentation 결정
+#
 #
 # parameters
-# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# - imagePath : 이미지 파일(장면)들이 저장된 경로
 # 
 # return
 # - None.
-# - 추후 DB의 videopath.imageaddr/keyword.txt, keyword_line.txt를 이용, 키워드를 추출해 낼 수 있습니다.
+# - 여기에서 추출된 keyword.txt와 keyword_line.txt를 바탕으로 키워드를 추출할 수도 있습니다.
+# - 이 값을 opencvService.py에 전달해 narrative, presentation 값을 저장합니다. 
 
 
 from . import calTime

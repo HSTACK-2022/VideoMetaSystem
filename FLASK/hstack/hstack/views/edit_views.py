@@ -1,3 +1,21 @@
+# edit_views.py
+#
+# 영상의 메타데이터(특히 키워드) 수정에 대한 router
+#
+#
+# [routes]
+# - editFile(pk)
+#   : '/detail/<int:pk>/edit', methods=['GET', 'POST']
+#   : checkPW() 함수를 통해 업로더를 확인한 뒤, 편집 화면을 전달합니다.
+#   : 메타데이터 편집 뒤 SAVE 버튼을 누르면 DB의 내용을 변경합니다.
+#   : FINISH 버튼을 누르면 edit 화면에서 detail 화면으로 이동합니다.
+#
+# 
+# [etc]
+# - checkPW(pk, inputPW)
+#   : 사용자로부터 비밀번호를 입력받아 올바른 비밀번호인지 확인합니다.
+
+
 from flask import url_for
 from flask import request
 from flask import redirect

@@ -1,9 +1,22 @@
 # extractMetadata.py
 #
-# video를 통해 metadata를 추출합니다.
+# 영상에서 메타데이터를 추출합니다.
+# main.py에 의해 호출됩니다.
 # 
+# uses
+# - extract(fileURL, finalDic) : 비디오 파일에서 메타데이터 추출
+# - extBasicInfo(fileURL, finalDic) : 비디오 파일에서 FPS, 크기, 길이 등 기본 정보 추출
+# 
+# * extract() 호출시 나머지 함수 역시 호출됩니다.
+#
+# parameters
+# - fileURL : 비디오 파일이 저장된 경로
+# - finalDic : 메타데이터가 저장될 딕셔너리
+#
+# return
+# - finalDic : 영상의 메타데이터를 넣어 반환합니다.
 
-# Todo Works
+
 import os
 import cv2
 import threading

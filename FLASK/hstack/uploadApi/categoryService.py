@@ -1,5 +1,32 @@
+# categoryService.py
+#
+# 영상의 키워드와 제목을 기반으로 카테고리를 추출합니다.
+# extractMetadata.py에 의해 호출됩니다.
+# 
+# uses
+# - extractCategory(fileURL, totalDic) : 비디오 파일에서 카테고리 추출
+# - getCategoryService(accessKey, keywordList) : ETRI API를 호출하여 단어 정보 추출
+# - getCategoryFromJson(responseData) : 추출된 단어 정보중 형태소 분리
+# - categoryClassification(each_tag) : 10진 분류법을 바탕으로 카테고리 추출
+# 
+# * extractCategory() 호출시 나머지 함수 역시 호출됩니다.
+#
+# parameters
+# - fileURL : 비디오 파일이 저장된 경로
+# - totalDic : 카테고리 값과 확률을 저장할 딕셔너리
+# - accessKey : ETRI API에 접근하기 위한 키 (config.py에 명시)
+# - keywordList : 영상에서 추출한 키워드의 리스트
+# - responseData : getCategoryService()에서, ETRI API를 호출하여 얻은 결과값
+# - each_tag : getCategoryFromJson()에서, 결과값을 후처리하여 얻은 태그값
+# 
+# return
+# - totalDic : 카테고리의 종류와 확률을 넣어 반환합니다.
+#
+# reference
 # https://aiopen.etri.re.kr/guide_wiseNLU.php#group03
-# -*- coding: utf-8 -*-
+
+
+
 from tkinter import E
 from xmlrpc.client import boolean
 from http.client import HTTPConnection, ImproperConnectionState

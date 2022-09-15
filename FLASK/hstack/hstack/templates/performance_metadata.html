@@ -1,3 +1,15 @@
+<!--
+
+performance_metadata.html 
+- 모니터링 페이지 중 Data Overview의 metadata를 나타냅니다.
+- 시스템 DB에 저장된 영상들의 Category, narrative, presentation 비율과,
+- 영상 크기당 업로드 시간 그래프를 나타냅니다.
+
+- redirect with : '/performance/metadata'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -215,7 +227,7 @@
                                                 <div class="me-4">
                                                     <h2 class="card-title mb-0 mb-1">
                                                         영상 크기 당 업로드 시간</h2>
-                                                    <div class="card-subtitle">Upload time per video size(MB)</div>
+                                                    <div class="card-subtitle">Upload time(sec) per video size(MB)</div>
                                                 </div>
                                             </div>
                                         </div>
