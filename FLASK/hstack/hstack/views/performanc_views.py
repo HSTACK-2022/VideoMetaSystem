@@ -94,7 +94,7 @@ def ratio():
 
     # 검색 단어 그래프
     totalWord = {}
-    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(10):
+    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
         totalWord[res.tKeyword] = res.cnt
     print("Total Search에서 나온 단어>>")
     print(totalWord)
@@ -191,7 +191,7 @@ def ratio():
 def performance_search():
     # 검색 단어 그래프
     totalWord = {}
-    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(10):
+    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
         totalWord[res.tKeyword] = res.cnt
     print("Total Search에서 나온 단어>>")
     print(totalWord)
