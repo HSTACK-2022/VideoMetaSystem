@@ -1,3 +1,20 @@
+# search_views.py
+#
+# 영상 검색 목록 router
+#
+#
+# [routes]
+# - data(filepath)
+#   : '/search/data/<path:filepath>'
+#   : 이미지 파일 전송.
+#   : filepath 경로에 있는 파일을 파일 시스템에서 찾아 전달.
+#
+# - searchFile()
+#   : '/search/', method=['GET']
+#   : searchAll()을 호출하여 검색 결과를 제공합니다.
+#   : Category, Narrative, Presentation에 대해 필터가 주어진 경우 필터 결과를 전달합니다.
+
+
 from flask import request
 from flask import Blueprint
 from flask import render_template

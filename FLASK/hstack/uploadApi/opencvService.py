@@ -1,23 +1,21 @@
 # opencvService.py
 #
-# opencv를 이용해 video에서 기본적인 metadata들을 추출합니다.
-# 비디오에서 장면추출을 할 수 있습니다.
-# - type
-# - frame
-# - size (bytes)
-# - length (HH:MM:SS)
+# opencv를 이용해 영상에서 장면을 추출합니다.
+# tensorflow를 이용하여 이미지를 N, L, P, A 4가지로 구분합니다.
+# extractMetadata.py에 의해 호출됩니다.
 # 
 # uses
-# - extBasicInfo(videoId) : 기본 metadata 추출
-# - getImage(videoId) : 장면 추출
-# - getPPTImage(videoId) : 각 장면에서 ppt / lecture인 경우만 추출
+# - doOpencvService(fileURL, finalDic) : 영상에서 장면 추출 및 구분
+# - getImage(fileURL, imagePath) : 영상에서 장면을 추출하여 imagePath에 저장
+# - saveImage(dirpath, res, sec) : res값을 해당 장면이 등장한 시간(sec)와 함께 dirpath에 저장 (ex: 0.jpg -> 0초에 나온 장면)
+# - getPSNP(I1, I2) : 두 이미지 I1, I2의 차이 값 (PSNR)을 구함
 #
 # parameters
-# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# - fileURL : 비디오 파일이 저장된 경로
+# - finalDic : 이미지의 경로와 Narrative, Presentation을 저장할 딕셔너리
 # 
 # return
-# - True : 작업이 정상적으로 완료된 경우
-# - False : 중간에 오류가 발생한 경우
+# - totalDic : 카테고리의 종류와 확률을 넣어 반환합니다.
 
 import os
 import cv2

@@ -1,3 +1,8 @@
+# models.py
+#
+# 시스템 DB와 연결되는 코드입니다.
+# uploadApi의 models.py와 동일합니다.
+# 
 # coding: utf-8
 from .config import DB as db
 

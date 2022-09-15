@@ -1,5 +1,30 @@
-# 2022.04.28
-# search(searchTexts)로 실행 -> list로 메타데이터 가져옴
+# searchAll.py
+#
+# 검색 결과를 제공합니다.
+# Deep Rank 알고리즘을 이용해 정확도를 계산합니다.
+# 
+# uses
+# - search(All, T, K, P) : 검색어에 맞는 영상들을 찾아 메타데이터와 Deep Rank 결과를 반환합니다.
+# - detailSearch(All, T, K, P, category, narrative, presentation) : search()에서 필터링이 걸린 경우 필터 결과를 반환합니다.
+#
+# - findAt(searchTexts, index) : searchTexts를 포함하는 영상들의 목록을 반환합니다.
+# - organize_weight(weight, whatzero) : 검색의 가중치를 동적으로 조절합니다.
+# - getVideoMetadataFromID(self, videoId) : videoId를 통해 해당 영상의 메타데이터 정보를 가져옵니다.
+#
+# - extractType(videoIdList) : videoIdList에 존재하는 Narrative Type을 뽑아냅니다.
+# - extractData(videoIdList) : videoIdList에 존재하는 Prsentation을 뽑아냅니다.
+# - extractCategories(videoIdList) : videoIdList에 존재하는 Category를 뽑아냅니다.
+#
+# - getCategoryPerc(videoid, searchText_list) : category의 확률을 계산합니다.
+# - getKeywordPerc(videoid, searchText_list) : category의 확률을 계산합니다.
+#
+#
+# * search(), detailSearch() 호출시 extract*()함수를 제외한 함수들이 호출됩니다.
+#
+# return
+# - (new)videoIdList : 검색에 걸린 영상들의 id들의 리스트
+# - (new)videoMetaList : 검색에 걸린 영상들의 메타데이터 리스트
+# - (new)rankData : 검색에 걸린 영상들의 정확도(Deep Rank) 값
 
 import re
 import os
@@ -10,7 +35,6 @@ from .config import DB
 from .models import Keyword
 from .models import Videopath
 from .models import Metadatum
-from .models import Timestamp
 
 from sqlalchemy import and_
 

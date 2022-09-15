@@ -1,7 +1,45 @@
-from ast import keyword
-from email.policy import default
-from tkinter.messagebox import QUESTION
-from winreg import QueryInfoKey
+# performanc_views.py
+#
+# 모니터링 페이지에 대한 router
+#
+#
+# [routes]
+# - ratio()
+#   : '/performance/'
+#   : 모니터링 페이지의 초기 화면으로,
+#     performance_search(), performance_metadata(), performance_videoviews()의 정보를 출력합니다.
+#
+# - performance_search()
+#   : '/performance/search'
+#   : 통합 검색, 상세 검색에 대한 모니터링 정보를 출력합니다.
+#   : 각 검색 방법에 따른 검색어와 검색 횟수를 출력합니다.
+#
+# - performance_metadata()
+#   : '/performance/metadata'
+#   : 시스템 DB에 저장된 영상들의 메타데이터 정보를 출력합니다.
+#   : 영상의 Category, Narrative, Presentation 비율과
+#     영상 업로드에 걸린 시간을 출력합니다.
+#
+# - performance_videoviews()
+#   : '/performance/videoviews'
+#   : 영상 상세 페이지에서의 모니터링 정보를 출력합니다.
+#   : 영상의 조회수 순위 Top10과 각 영상별 평균 재생 시간을 출력합니다.
+#
+# - performance_category()
+#   : '/performance/category'
+#   : 모니터링 페이지 중 Video Details의 초기 화면입니다.
+#     각 카테고리별 영상의 개수를 출력합니다.
+#
+# - performance_datail(category)
+#   : '/performance/category/<string:category>'
+#   : category에 해당하는 영상들의 목록을 출력합니다.
+#
+# - performance_detailFile(pk)
+#   : '/performance/detail/<int:pk>', methods=['GET']
+#   : id = pk인 영상의 메타데이터 정보를 출력합니다.
+#     id = pk인 영상의 detail 페이지에서, Script 검색에 쓰인 검색어들을 출력합니다.
+
+
 from flask import request
 from flask import Blueprint
 from flask import render_template
@@ -77,13 +115,6 @@ def ratio():
             method_dict[item] += 1
         else:
             method_dict[item] = 1
-
-    # for item in categories:
-    #     words = re.split(r'[ ,:]',item)
-    #     if words != "": categories2.append(words)
-    #     if len(categories2) == 0:
-    #         categories2 = None
-    # print(categories2)
 
     # 업로드 시간 그래프
     uploadTime = []

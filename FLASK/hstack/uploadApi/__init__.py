@@ -1,3 +1,8 @@
+# __init__.py
+#
+# uploadApi 실행하기 위한 파일입니다.
+
+
 from flask import Flask
 from flask_restx import Api
 
