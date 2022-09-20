@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VMeta - Monitoring Page</title>
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/performance.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/videoList.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/progressBar.css') }}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <meta charset="UTF-8">
+        <script>
+            function date(){
+                let today = new Date();
+                document.write("Uploaded " + today);
+            }
+
+            function first_load(){
+                new Chart(document.getElementById("category-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{category|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#EC5B55", "#F08C34","#F9DD6C","#388174","#49c5b6","#A9D1D5","#7A55E7","#495DE6"],
+                            data: {{category_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,      // width, height 지정 위해서 필수
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'CATEGORY RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("narrative-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{narrative|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#246793", "#52B9DB"],
+                            data: {{narrative_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'NARRATIVE RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("method-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: {{method|safe}},
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#D6653B","#FBAF7C"],
+                            data: {{method_data|safe}}
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 50,
+                        title: {
+                            display: true,
+                            text: 'METHOD RATIO'
+                        },
+                        legend: {
+                            display: true,
+                            //position: 'left',
+                            labels: {
+                                //fontSize: 12,
+                                //fontFamily: 'sans-serif',
+                                //fontColor: '#000000',
+                                //fontStyle: 'bold'
+                            }
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("line-chart"), {
+                    type: 'line',
+                    data: {
+                        labels: {{upload_size|safe}},
+                        datasets: [{ 
+                            data: {{upload_time|safe}},
+                            //label: "Europe",
+                            borderColor: "#8e5ea2",
+                            fill: false
+                        }
+                        ]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                        display: true,
+        
+                        },
+                        legend: {display: false}    // label 안보이게
+                    }
+                    });
+            }
+        </script>
+    </head>
+    <body class="bodyArea sb-nav-fixed" onload="first_load();">
+        
+        {% if code == 200 %}
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href='/performance'>Monitoring Page</a>
+
+        </nav>
+
+        <div id = "layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <a class="nav-link" href="/performance">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Data Overview
+                            </a>
+                            
+                            <ul class="menuLists">
+                                <li onclick="location.href='/performance/search'"> Search </li>
+                                <li onclick="location.href='/performance/metadata'"> Metadata </li>
+                                <li onclick="location.href='/performance/videoviews'"> Video views </li>
+                            </ul>
+                            
+                            <a class="nav-link" href='/performance/category'>
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Video Details
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">© 2022. HSTACK</div>
+                        all rights reserved.
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                            <h1 class="px-4  pt-5">Metadata</h1>
+                            <ol class="breadcrumb px-4" >
+                                <li class="breadcrumb-item active">비디오 분류</li>
+                                <li class="breadcrumb-item active">업로드 시간</li>
+                            </ol>
+
+                            <br>
+
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="card card-raised h-100">
+                                        <div class="card-header px-4 py-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="me-4">
+                                                    <h2 class="card-title mb-0 mb-1">
+                                                        비디오 분류</h2>
+                                                    <div class="card-subtitle">method / category / narrative</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body my-5 mx-2">
+                                            <div class="row">
+                                                <div class="col-lg-4"><canvas id="category-chart"></canvas></div>
+                                                <div class="col-lg-4"><canvas id="narrative-chart" ></canvas></div>
+                                                <div class="col-lg-4"><canvas id="method-chart" ></canvas></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <div class="card card-raised h-100">
+                                    
+                                        <div class="card-header px-4 py-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="me-4">
+                                                    <h2 class="card-title mb-0 mb-1">
+                                                        영상 크기 당 업로드 시간</h2>
+                                                    <div class="card-subtitle">Upload time per video size(MB)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-around">
+                                                <canvas id="line-chart" width="500px" height="500px"></canvas>
+                                            </div>
+                                        </div>
+                                
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div> <!--end of container-->
+                </main> <!--end of main-->
+            </div>
+        </div>
+        
+
+<br><br>
+        {% endif %}
+        <link rel="javascript" href="{{ url_for('static', filename='assets/demo/chart-area-demo.js') }}">
+    </body>
+
+    
+</html>

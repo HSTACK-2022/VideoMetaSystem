@@ -23,7 +23,6 @@ def create_app():
     app.register_blueprint(edit_views.bp)
     app.register_blueprint(search_views.bp)
     app.register_blueprint(detail_views.bp)
-
     app.register_blueprint(performanc_views.bp)
 
     return app

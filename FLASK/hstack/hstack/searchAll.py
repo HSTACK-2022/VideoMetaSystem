@@ -144,12 +144,11 @@ def getCategoryPerc(videoid, searchText_list):
     sum = 0
     for i in range(0,len(sum_list)):
         sum += sum_list[i]
-    if sum > 1:  # 예: 0.408, 0.595 확률일 경우 (숫자상 근소한 차이)
-        sum = 1
-    ##
-    print(searchCategory_percent)
+    sum = 1 if sum > 1 else sum
+
     if max(k_v) == 0 or k_v2 == 0:
         return 0
+
     m = round(1/sum,3)
     print(m)
     print("결과 확률:")
@@ -185,6 +184,7 @@ def getKeywordPerc(videoid, searchText_list):
     sum = 0
     for i in range(0,len(sum_list)):
         sum += sum_list[i]
+    sum = 1 if sum > 1 else sum
     ##
 
     print(searchText_perc)
@@ -255,7 +255,7 @@ def extractType(videoIdList):
             for c in types:
                 typeList.add(c)
 
-    return typeList
+    return sorted(typeList)
 
 # 각 videoId에서 Categories를 뽑아낸다.
 def extractCategories(videoIdList):
@@ -263,12 +263,12 @@ def extractCategories(videoIdList):
     for videoId in videoIdList:
         if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category):
             category = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category
-            category = category.split(',')
+            category = category.split(', ')
             print(category)
             for c in category:
                 categoryList.add(c)
 
-    return categoryList
+    return sorted(categoryList)
 
 # 각 videoId에서 presentation 뽑아낸다.
 def extractData(videoIdList):
@@ -276,12 +276,12 @@ def extractData(videoIdList):
     for videoId in videoIdList:
         if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation):
             datas = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation
-            datas = datas.split(',')
+            datas = datas.split(', ')
             print(datas)
             for c in datas:
                 dataList.add(c)
 
-    return dataList    
+    return sorted(dataList)    
 
 
 # not DetailSearch
@@ -426,17 +426,12 @@ def search(All, T, K, P):
 
     rankDict = {}
     for videoid in perc:
-        print("&&&&&&&&&&&&&&&")
-        #print(videoid)
-        #print(perc[videoid])
         cnt = 0
         sum = 0
         for p in perc[videoid]:
-            sum+=round(p*weight[cnt],3)
-            #print(round(p*weight[cnt]))
+            sum+=round(p*weight[cnt], 2)
             cnt+=1
-        #print("**!!")
-        #print(sum)
+        sum = round(sum, 2)     # 59.730000000000000000004 방지
         # if sum == 0:
         #     continue
         rankDict[videoid]=sum
@@ -488,9 +483,10 @@ def detailSearch(All, T, K, P, category, narrative, presentation):
 
     # filter를 통해 빼는 것들의 index 받기
     for id in videoIdList:
-        if category != "":
-            if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.category.contains(category))).first() == None:
-                excpIdList.add(id)
+        if len(category) != 0:
+            for c in category:
+                if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.category.contains(c))).first() == None:
+                    excpIdList.add(id)
         if narrative != "":
             if DB.session.query(Metadatum).filter(and_(Metadatum.id == id, Metadatum.narrative.contains(narrative))).first() == None:
                 excpIdList.add(id)

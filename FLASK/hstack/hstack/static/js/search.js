@@ -6,6 +6,16 @@ function search(){
 var isPressed = false;
 function onloads(){
     console.log("onloads");
+
+    var valCategory = document.getElementById('category').value;
+    var valMethod = document.getElementById('method').value;
+    var valNarrative = document.getElementById('narrative').value;
+
+    var resetBtn = document.getElementById("resetBtn");
+    if (valCategory != '' || valMethod != '' || valNarrative != ''){
+        resetBtn.style.visibility = 'visible';
+    }
+
     var hidden = document.getElementsByClassName("searchHidden");
     for (var i=0; i<hidden.length; i++) {
         hidden[i].style.display = 'none';

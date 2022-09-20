@@ -8,8 +8,18 @@
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/serach.js') }}"></script>
         <script>
+            function resetDetail(){
+                document.getElementById('category').value = '';
+                document.getElementById('method').value = '';
+                document.getElementById('narrative').value = '';
+                document.getElementById("form").submit();
+            }
             function searchDetail(search_type, search_detail_type){
-                document.getElementById(search_type).value = search_detail_type;
+                if (search_type == 'category') {
+                    document.getElementById(search_type).value += `${search_detail_type}, `;
+                } else {
+                    document.getElementById(search_type).value = search_detail_type;
+                }
                 document.getElementById("form").submit();
             }
         </script>
@@ -23,6 +33,16 @@
             <div class= list>
             <td class="section">
                 <p style="text-align:left; margin-left:35px;">✔ {{videoIdList|length}}개의 동영상을 수정할 수 있습니다.</p>
+               
+                {% if category != '' or narrative != '' or method != '' %}
+                <p style="text-align:left; margin-left:35px;">✔ FILTER &nbsp;
+                {% if category != '' %} <span class="VT_category"> {{category}} </span> {% endif %}
+                {% if narrative != '' %} <span class="VT_narrative">{{narrative}}</span> {% endif %}
+                {% if method != '' %} <span class="VT_method">{{method}}</span> {% endif %}
+                <span onclick="resetDetail()" id="resetBtn">RESET</span>
+                </p>
+                {% endif %}
+               
                 {% for meta in videoMetaList %}
                     {% for ii in meta.metadata %}
                         <table
@@ -82,6 +102,7 @@
                         <input type="hidden" name="method" id="method" value="{{method}}">
                         <input type="hidden" name="narrative" id="narrative" value="{{narrative}}">
                         <div class="category">
+
                             <h2 class="todo-cmp__header">검색 내 세부검색</h2>
                             
                             <ul class="todo-cmp__list">

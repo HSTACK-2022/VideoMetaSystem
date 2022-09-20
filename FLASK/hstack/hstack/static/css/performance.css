@@ -1,0 +1,156 @@
+@font-face {
+    font-family: 'ko';
+    src: url("../font/KOTRA_GOTHIC.ttf");
+    font-style: bold;
+
+}
+
+
+
+@font-face {
+    font-family: 'pre1';
+    src: url("../font/Pretendard-Light.otf");
+
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'S-CoreDream-3Light';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'S-CoreDream-3Light';
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+h1,
+h2 {
+    font-weight: 900;
+}
+
+.parent {
+
+    position: relative;
+
+}
+
+.canvas {
+
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+}
+
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 6px 15px;
+}
+
+th {
+    background: #42444e;
+    color: #fff;
+    text-align: left;
+}
+
+tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+}
+
+tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+}
+
+td {
+    border-right: 1px solid #c6c9cc;
+    border-bottom: 1px solid #c6c9cc;
+}
+
+td:first-child {
+    border-left: 1px solid #c6c9cc;
+}
+
+tr:nth-child(even) td {
+    background: #eaeaed;
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
+}
+
+.menuLists {
+    margin-left: 20px;
+    font-size: 15px;
+}
+
+.menuLists :hover {
+    color: white;
+    cursor: pointer;
+}
+
+.btnContainer {
+    display: grid;
+    margin: 30px 20px;
+    width: 90%;
+    row-gap: 20px;
+    column-gap: 20px;
+    grid-auto-rows: minmax(150px, auto);
+    grid-template-columns: repeat(4, minmax(200px, auto));
+}
+
+.categoryBtn {
+    padding: 5px;
+    border-radius: 30px;
+    background-image: linear-gradient(to right, #29323c, #485563, #2b5876);
+    box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+    background-size: 300% 100%;
+    border-radius: 50px;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    color: #ffffff;
+    font-family: "pre1";
+}
+
+.categoryBtn:hover {
+    background-position: 100% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    cursor: pointer;
+}
+
+.categoryBtnKey {
+    margin: 30px 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.categoryBtnValue {
+    float: right;
+    margin-right: 20px;
+    margin-bottom: 30px;
+    font-size: 14px;
+}

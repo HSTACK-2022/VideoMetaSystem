@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>VMeta - Monitoring Page</title>
+        <meta charset="UTF-8">
+        
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/videoList.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/progressBar.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/performance.css') }}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
+
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <meta charset="UTF-8">
+        <script>
+            function date(){
+                let today = new Date();
+                document.write("Uploaded " + today);
+            }
+        </script>
+    </head>
+    <body class="bodyArea sb-nav-fixed" onload="first_load();">
+        
+        {% if code == 200 %}
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
+        </nav>
+
+        <div id = "layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <a class="nav-link" href="/performance">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Data Overview
+                            </a>
+                            
+                            <ul class="menuLists">
+                                <li onclick="location.href='/performance/search'"> Search </li>
+                                <li onclick="location.href='/performance/metadata'"> Metadata </li>
+                                <li onclick="location.href='/performance/videoviews'"> Video views </li>
+                            </ul>
+                            
+                            <a class="nav-link" href='/performance/category'>
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Video Details
+                            </a>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">© 2022. HSTACK</div>
+                        all rights reserved.
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="px-4  pt-5">Video Detail : {{category}}</h1>
+                        <ol class="breadcrumb px-4" >
+                            <li class="breadcrumb-item active">{{category}}에 해당하는 영상의 목록입니다.</li>
+                        </ol>
+
+                        <br>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <svg class="svg-inline--fa fa-table me-1"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                    data-prefix="fas"
+                                    data-icon="table"
+                                    role="img"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512"
+                                    data-fa-i2svg="">
+                                        <path fill="currentColor"
+                                            d="M448 32C483.3 32 512 60.65 512 96V416C512 451.3 483.3 480 448 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H448zM224 256V160H64V256H224zM64 320V416H224V320H64zM288 416H448V320H288V416zM448 256V160H288V256H448z">
+                                        </path>
+                                </svg><!-- <i class="fas fa-table me-1"></i> Font Awesome fontawesome.com -->
+                                영상 목록
+                            </div>
+                            <div class="card-body">
+                                <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                                    
+                                    <div class="dataTable-container">
+                                            
+                                        <table id="datatablesSimple" class="dataTable-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="color:black; width:4%;">index</th>
+                                                    <th style="color:black;">title</th>
+                                                    <th style="color:black;">presenter</th>
+                                                    <th style="color:black;">category</th>
+                                                    <th style="color:black; width:8%;">UploadDate</th>
+                                                    
+                                                </tr>
+                                            </thead>
+                                            
+                                            <tbody>
+                                                {% for i in pagination.items %}
+                                                <tr onclick="location.href='/performance/detail/{{i.id}}'">
+                                                    <td>{{i.id}}</td>
+                                                    <td>{{i.title}}</td>
+                                                    <td>{{i.presenter}}</td>
+                                                    <td>{{i.category}}</td>
+                                                    <td>{{i.uploadDate}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="dataTable-bottom">
+                                        
+                                        <!-- 페이징처리 시작 -->
+                                        <ul class="pagination justify-content-center">
+                                            <!-- 이전페이지 -->
+                                            {% if pagination.has_prev %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ pagination.prev_num }}">이전</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">이전</a>
+                                            </li>
+                                            {% endif %}
+                                            <!-- 페이지번호 -->
+                                            {% for page_num in pagination.iter_pages() %}
+                                            {% if page_num %}
+                                            {% if page_num != pagination.page %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item active" aria-current="page">
+                                                <a class="page-link" href="javascript:void(0)">{{ page_num }}</a>
+                                            </li>
+                                            {% endif %}
+                                            {% else %}
+                                            <li class="disabled">
+                                                <a class="page-link" href="javascript:void(0)">...</a>
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+                                            <!-- 다음페이지 -->
+                                            {% if pagination.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ pagination.next_num }}">다음</a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <a class="page-link" tabindex="-1" aria-disabled="true" href="javascript:void(0)">다음</a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                        <!-- 페이징처리 끝 -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div> <!--end of container-->
+                </main> <!--end of main-->
+            </div>
+        </div>
+        
+
+<br><br>
+            
+
+        {% endif %}
+
+        <script src="../static/assets/demo/chart-area-demo.js"></script>
+    </body>
+
+    
+</html>
