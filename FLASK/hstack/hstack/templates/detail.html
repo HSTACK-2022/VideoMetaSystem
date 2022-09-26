@@ -21,15 +21,23 @@ detail.html
             <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.min.js') }}"></script>
             <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.min.js') }}"></script>
             <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
-            <title>VMeta - {{metadata.title}}
-            </title>
+            <script>
+                window.addEventListener('load', function() {
+                    console.log("open");
+                    writeOpenLog({{pk}}, 'open');
+                    loadImg('{{ metadata.title }}');
+                    onloads();
+                });
+                window.addEventListener('beforeunload', function() {
+                    console.log("close");
+                    writeOpenLog({{pk}}, 'close');
+                });
+            </script>
+            <title>VMeta - {{metadata.title}}</title>
             <meta charset="UTF-8">
         </head>
         {% include 'header.html' %}
-        <body class="bodyArea"
-            onload="writeOpenLog({{pk}}, 'open'); loadImg('{{ metadata.title }}'); onloads();"
-            onunload="writeOpenLog({{pk}}, 'close');"
-        >
+        <body class="bodyArea">
             <div class="divParent">
                 <!-- Post content-->
                 <div class="detailHeader">

@@ -30,7 +30,7 @@ db = {
     'password' : 'hstackdbadmin',
     'host' : 'localhost',
     'port' : 3306,
-    'database' : 'hstackdb'
+    'database' : 'hstackDB'
 }
 
 DB = SQLAlchemy()

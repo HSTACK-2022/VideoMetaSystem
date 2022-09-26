@@ -12,6 +12,8 @@
 
 
 import os
+
+from hstack.config import OS
 from pptx import Presentation
 
 
@@ -49,5 +51,8 @@ def getPPTFile(fileURL, title):
             slide.shapes.add_picture(path, 0, 0, pptFile.slide_width, pptFile.slide_height)
     
 
+    if OS != "Windows":
+        title = "extractedPPT"
+        
     pptPathRel = os.path.join(os.path.dirname(fileURL), title + '.pptx')
     pptFile.save(pptPathRel)

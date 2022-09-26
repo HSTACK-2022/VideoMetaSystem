@@ -42,15 +42,9 @@ performance_videoview.html
                             label: "평균 재생 시간 (sec)",
                             borderColor: "#c45850",
                             backgroundColor: [
-                            '#24460B',
-                            '#315512',
-                            '#44691D',
-                            '#587E2B',
-                            '#6f933b',
-                            '#9EBE68',
-                            '#C4DE8E',
-                            '#E3F4B9',
-                            '#F2F9DB'
+                            '#F1F8EE', '#E7F3E1', '#DAECD0', '#CCE4BE', '#C5E0B4', '#B8D9A3', '#B7D8A0', '#A9D18E', '#95C674', '#8EC26A',
+                            '#85BD5F', '#70AD47', '#649B3F', '#548235', '#538133', '#4F7B31', '#4D7830', '#43682A', '#385723', '#355321',
+                            '#2C451B', '#233616',
                             ],
                             fill: false
                         }]
@@ -58,10 +52,25 @@ performance_videoview.html
                     options: {
                         responsive: false,
                         title: {
-                        display: true,
+                        display: false,
                         text: '영상별 평균 재생 시간'
                         },
                         legend: {display: false},    // label 안보이게
+                        scales: {
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: '시간(sec)'
+                                }
+                            }],
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    alien : screenLeft,
+                                    labelString: 'video Id'
+                                }
+                            }]
+                        }
                     }
                     });
             }
@@ -136,7 +145,7 @@ performance_videoview.html
                                     <div class="me-4">
                                         <h2 class="card-title mb-0 mb-1">
                                             영상 조회수</h2>
-                                        <div class="card-subtitle">Ranking of video views (Top 10)</div>
+                                        <div class="card-subtitle">Ranking of video views</div>
                                     </div>
                                 </div>
                             </div>

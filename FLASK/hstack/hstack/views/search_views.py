@@ -23,7 +23,7 @@ from flask import send_from_directory
 from hstack import searchAll
 
 # from sqlalchemy import SQLAlchemy
-from hstack.config import DB
+from hstack.config import DB, OS
 from hstack.models import TotalSearch
 from hstack.models import TitleSearch
 from hstack.models import PresenterSearch
@@ -38,7 +38,11 @@ bp = Blueprint('search', __name__, url_prefix='/')
 
 @bp.route('/data/<path:filepath>')
 def data(filepath):
-    return send_from_directory('../media', filepath.replace("\\", '/')[1:])
+    print(filepath)
+    if OS == "Windows":
+        return send_from_directory('../media', filepath.replace("\\", '/')[1:])
+    else :
+        return send_from_directory('../media', filepath)
 
 
 @bp.route('/search/', methods=['GET'])
