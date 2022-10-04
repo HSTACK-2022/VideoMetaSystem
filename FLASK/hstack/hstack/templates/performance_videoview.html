@@ -1,3 +1,14 @@
+<!--
+
+performance_videoview.html 
+- 모니터링 페이지 중 Data Overview의 Video views를 나타냅니다.
+- 시스템 DB에 저장된 영상들의 평균 재생 시간과 조회수 순위를 나타냅니다.
+
+- redirect with : '/performance/videoviews'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -62,7 +73,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href='/performance'>Monitoring Page</a>
-
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">
@@ -96,71 +107,67 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                            <h1 class="px-4  pt-5">Video View</h1>
-                            <ol class="breadcrumb px-4" >
-                                <li class="breadcrumb-item active">평균 재생 시간</li>
-                                <li class="breadcrumb-item active">조회수</li>
-                            </ol>
+                        <h1 class="px-4  pt-5">Video View</h1>
+                        <ol class="breadcrumb px-4 pb-2" >
+                            <li class="breadcrumb-item active">평균 재생 시간</li>
+                            <li class="breadcrumb-item active">조회수</li>
+                        </ol>
 
-                            <br>
-
-                            <div class="card card-raised h-100 mt-4">
-                                <div class="card-header px-4 py-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="me-4">
-                                            <h2 class="card-title mb-0 mb-1">영상별 평균 재생 시간</h2>
-                                            <div class="card-subtitle">Average playback time (per video)</div>
-                                        </div>
+                        <div class="card card-raised h-100 my-4">
+                            <div class="card-header px-4 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-4">
+                                        <h2 class="card-title mb-0 mb-1">영상별 평균 재생 시간</h2>
+                                        <div class="card-subtitle">Average playback time (per video)</div>
                                     </div>
-                                </div>
-    
-                                <div class="card-body">
-                                    <canvas class="my-3" id="video-time-chart" width="1000" height="300"></canvas>
                                 </div>
                             </div>
-                        
-    
-                        
-                            <div class="card card-raised mt-4">
-                                <div class="card-header py-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="me-4">
-                                            <h2 class="card-title mb-0 mb-1">
-                                                영상 조회수</h2>
-                                            <div class="card-subtitle">Ranking of video views</div>
-                                        </div>
+
+                            <div class="card-body">
+                                <canvas class="my-3" id="video-time-chart" width="1360" height="300"></canvas>
+                            </div>
+                        </div>
+                    
+
+                    
+                        <div class="card card-raised my-4">
+                            <div class="card-header py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-4">
+                                        <h2 class="card-title mb-0 mb-1">
+                                            영상 조회수</h2>
+                                        <div class="card-subtitle">Ranking of video views (Top 10)</div>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    
-                                        <table id="datatablesSimple">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width:5%;">Rank</th>
-                                                    <th>ID</th>
-                                                    <th>Title</th>
-                                                    <th>Presenter</th>
-                                                    <th>Views</th>
-                                                    <th>Uploaded Date</th>
-                                                </tr>
-                                            </thead>
-                                            
-                                            <tbody>
-                                                {% for video in idView %}
-                                                <tr>
-                                                    <td>{{loop.index}}</td>
-                                                    <td>{{video.id}}</td>
-                                                    <td>{{video.title}}</td>
-                                                    <td>{{video.presenter}}</td>
-                                                    <td>{{video.views}}</td>
-                                                    <td>{{video.uploadDate}}</td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                            </div>
+                            <div class="card-body">
                                 
-                                </div>
-                            </div> 
+                                    <table id="datatablesSimple">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:5%;">Rank</th>
+                                                <th>Title</th>
+                                                <th>Presenter</th>
+                                                <th>Views</th>
+                                                <th>Uploaded Date</th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                            {% for video in idView %}
+                                            <tr>
+                                                <td style="text-align:center;">{{loop.index}}</td>
+                                                <td>{{video.title}}<span style="color:gray;"> (ID:{{video.id}})</span></td>
+                                                <td>{{video.presenter}}</td>
+                                                <td>{{video.views}}</td>
+                                                <td>{{video.uploadDate}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                            
+                            </div>
+                        </div> 
 
                     </div> <!--end of container-->
                 </main> <!--end of main-->

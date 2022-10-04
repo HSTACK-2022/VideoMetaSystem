@@ -1,32 +1,51 @@
 # keywordService.py
 #
 # keyword를 추출하고, 그 keyword를 통해 category을 얻어냅니다.
+# extractMetadata.py에 의해 호출됩니다.
 #
 # uses
 # - doKeywordService(fileURL)
 # - mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
 # - extractCategory(fileURL)
-
+#
 # parameters
 # - fileURL : video 파일의 경로
+# - totalDic : 키워드와 확률을 저장할 딕셔너리
 # - audioScriptPath : audio에서 추출한 text 파일의 경로
 # - videoScriptPath : video에서 추출한 keyword의 경로
 # - videoIndexScriptPath : video에서 추출한 index의 경로
-
+#
+# return
+# - totalDic : 키워드와 그 확률을 넣어 반환합니다.
+#
+#
 # 필요 모듈 -> knolpy{JPype(파일 필요), numpy}, nltk, sklearn, scipy
 # 환경변수 경로체크! 가상환경 경로가 환경변수에 잘 있다면 없애도 됩니다.
-
-# 03.30 수정 1차 내용 
+#
+#
+#
+# <<03.30 수정 1차 내용>>
 # -> getKeyword return 값을 리스트로 줌
 # -> getKeyword 함수의 매개변수 이름 videoPath를 filePath 로 변경
 # -> mergeKeyword 함수 구현 (return KEYWORD LIST)
-
-# 04.01 수정 2차 내용 
-# -> mergeKeyword에서 1.음성스크립트에서 키워드를 뽑는 경우랑 
-# 2.영상+음성인 경우로 나눔
-# 아래와 같이 쓰면 됨
+#
+# <<04.01 수정 2차 내용>> 
+# -> mergeKeyword에서 1.음성스크립트에서 키워드를 뽑는 경우랑  2.영상+음성인 경우로 나눔
 # 1. mergeKeyword(audioScriptPath, videoScriptPath, videoIndexScriptPath)
 # 2. mergeKeyword(audioScriptPath, NULL, NULL)
+#
+# <<09.15 수정 3차 내용>>
+# -> 기존 videoScriptPath(OCR)과 videoIndexScriptPath(Index) 사용 중지 (04.01 수정 폐지)
+# 영상으로부터 추출된 두 파일에 저장된 값이 안정적이지 않고
+# audioScript 파일만으로 충분히 키워드 추출이 가능하다는 판단에 따라
+# audioScript 파일을 이용하여 키워드를 추출합니다.
+# -> 키워드 확률 추가
+# konlpy를 이용한 키워드 추출시 나오는 확률 값을 바탕으로,
+# 전체 키워드의 확률 값을 조정합니다.
+# 추출된 키워드의 모든 확률을 더한 값이 1이 되도록 조정합니다.
+
+
+
 
 # 테스트 위한 변수
 min_count = 2   # 단어의 최소 출현 빈도수 (그래프 생성 시)

@@ -1,9 +1,18 @@
-import os
-import platform
+# makePPT.py
+#
+# image 탭에 띄울 사진과 PPT 파일을 생성 및 반환하는 코드입니다.
+# 
+# uses
+# - getPPTImage(fileURL) : 이미지 형식이 L(Lecture), P(PPT)인 파일들을 불러옵니다.
+# - getPPTFile(fileURL, title) : PPT 파일을 저장합니다.
+#
+# parameters
+# - fileURL : 영상이 저장된 경로
+# - title : PPT 파일의 이름
 
+
+import os
 from pptx import Presentation
-from pptx.util import Inches
-from .config import OS
 
 
 # 화면에 띄우기 위한 PPT 이미지 얻기

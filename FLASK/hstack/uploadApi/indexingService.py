@@ -1,6 +1,7 @@
 # indexingService.py
 #
 # audioScriptFile과 PPT의 OCR 결과값으로부터 index를 추출합니다.
+# extractMetadata.py에 의해 호출됩니다.
 # 
 # uses
 # - doIndexingService(videoId)
@@ -13,6 +14,7 @@
 # - False : 중간에 오류가 발생한 경우
 #
 #################################################################################
+#
 # from
 # https://bab2min.tistory.com/552
 # https://bab2min.tistory.com/570

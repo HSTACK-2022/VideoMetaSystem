@@ -1,3 +1,12 @@
+# config.py
+#
+# uploadApi를 실행하기 위한 정보들을 저장합니다.
+# 
+# - DB 접근 정보
+# - STT API 접근 키
+# - 영상을 업로드한 경로
+# - 운영체제의 종류 (Windows / Linux 구분을 위함)
+
 import os
 import platform
 

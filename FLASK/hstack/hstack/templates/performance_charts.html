@@ -1,3 +1,14 @@
+<!--
+
+performance_charts.html 
+- 특정 id(pk)값을 갖는 영상의 모니터링 페이지입니다.
+- 몇몇 메타데이터 정보와 Script 검색어들을 나타냅니다.
+
+- redirect with : '/performance/detail/<int:pk>'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,6 +60,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">
@@ -87,6 +99,10 @@
                         <li class="breadcrumb-item">by {{metadatas.presenter}}</li>
                     </ol>
                     <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-area me-1"></i>
+                            Metadata
+                        </div>
                         <div class="card-body">
                             <table id="datatablesSimple" class="dataTable-table">
                                 <thead>
@@ -122,43 +138,17 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-                            <canvas id="bar-chart" width="300" height="230"></canvas>
                         </div>
                     </div>
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-chart-area me-1"></i>
-                            Area Chart Example
+                            Script Search
                         </div>
-                        <!-- <div class="card-body">
-                            <div class="col-lg-4"><canvas id="bar-chart" width="100%" height="100"></canvas></div>
-                            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-                        </div> -->
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        Bar Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="scripts-search-chart" width="400"
-                                            height="320"></canvas></canvas>
-                                    </div>
-                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-pie me-1"></i>
-                                        Pie Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas>
-                                    </div>
-                                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-                                </div>
-                            </div>
+                        <div class="card-body">
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+                            <canvas id="bar-chart" width="100%" height="30"></canvas>
+                            
                         </div>
                     </div>
             </main>

@@ -1,11 +1,30 @@
 # sttService.py
-# 음원 파일을 sec단위로 분할, STT API로 전송합니다.
+#
+# 오디오 파일을 ETRI의 STT API로 전송합니다.
+# 오디오 파일을 텍스트 파일로 변환합니다.
+# extractMetadata.py에 의해 호출됩니다.
 # 
-# call : doSttService(videoId)
-# return : textFilePath
-# videoId : VideoPath, Metadata에 공통으로 사용되는 key (id)
+# uses
+# - doSttService(fileURL, finalDic) : 비디오 파일을 오디오로 바꾼 뒤 텍스트 파일로 변환
+# - audio2text(audioFilePath, i) : 10초단위 오디오 파일을 ETRI STT API로 전송
+# - content2file(contents, filePath, isFirst) : content 내용을 filePath에 저장
+# - pcm2text(audioFilePath, textPath) : 통 오디오 파일을 텍스트 파일로 변환
+# - sttAsync(audioPath, endNum) : multi thread를 위한 함수.
+# - threadWork(num) : multi thread를 위한 함수. 스레드 실행.
+# - resultFileWrite(textPath, endNum) : multi thread의 결과를 취합하여 텍스트 파일에 저장.
 # 
-# STT KEY는 secrets.json에 저장되어 있습니다.
+# * doSttService() 호출시 나머지 함수 역시 호출됩니다.
+#
+# parameters
+# - fileURL : 비디오 파일이 저장된 경로
+# - finalDic : 카테고리 값과 확률을 저장할 딕셔너리
+# - accessKey : ETRI API에 접근하기 위한 키 (config.py에 명시)
+# - keywordList : 영상에서 추출한 키워드의 리스트
+# - responseData : getCategoryService()에서, ETRI API를 호출하여 얻은 결과값
+# - each_tag : getCategoryFromJson()에서, 결과값을 후처리하여 얻은 태그값
+# 
+# return
+# - totalDic : 카테고리의 종류와 확률을 넣어 반환합니다.
 
 import os
 import json
@@ -22,7 +41,6 @@ from .config import STT_API_KEY
 
 from . import audioService
 
-#from . import audioService
 
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/Recognition"
 languageCode = "korean"

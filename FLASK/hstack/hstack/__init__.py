@@ -1,3 +1,8 @@
+# __init__.py
+#
+# hstack을 실행하기 위한 파일입니다.
+
+
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy

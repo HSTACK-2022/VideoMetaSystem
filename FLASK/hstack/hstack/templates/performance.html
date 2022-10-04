@@ -1,3 +1,14 @@
+<!--
+
+performance.html 
+- 모니터링 페이지의 초기 화면입니다.
+- Data Overview의 모든 내용을 출력합니다.
+
+- redirect with : '/performance'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -132,7 +143,7 @@
                         cutoutPercentage: 50,
                         title: {
                             display: true,
-                            text: 'METHOD RATIO'
+                            text: 'PRESENTATION RATIO'
                         },
                         legend: {
                             display: true,
@@ -150,10 +161,10 @@
                 new Chart(document.getElementById("line-chart"), {
                     type: 'line',
                     data: {
-                        labels: {{upload_size|safe}},
+                        labels: {{upload_time|safe}},
                         datasets: [{ 
-                            data: {{upload_time|safe}},
-                            //label: "Europe",
+                            data: {{upload_size|safe}},
+                            label: "평균 재생 시간 (sec)",
                             borderColor: "#8e5ea2",
                             fill: false
                         }
@@ -175,7 +186,7 @@
                         labels: {{totalWord|safe}},
                         datasets: [{ 
                             data: {{totalWord_data|safe}},
-                            label: "전체 검색 단어",
+                            label: "검색 횟수",
                             lineTension: 0.3,
                             backgroundColor: "rgba(2,117,216,0.2)",
                             borderColor: "rgba(2,117,216,1)",
@@ -205,7 +216,7 @@
                         labels: {{titleWord|safe}},
                         datasets: [{ 
                             data: {{titleWord_data|safe}},
-                            label: "제목 검색 단어",
+                            label: "검색 횟수",
                             backgroundColor: [
                             '#661A69',
                             '#7F2B7A',
@@ -225,7 +236,7 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '제목 검색 단어 빈도수'
+                        text: '제목 검색어 빈도수'
                         },
                         
                         legend: {display: false},    // label 안보이게
@@ -239,7 +250,7 @@
                         labels: {{presenterWord|safe}},
                         datasets: [{ 
                             data: {{presenterWord_data|safe}},
-                            label: "발표자 검색 단어",
+                            label: "검색 횟수",
                             backgroundColor: [
                             '#143468',
                             '#224A7D',
@@ -259,7 +270,7 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '발표자 검색 단어 빈도수'
+                        text: '발표자 검색어 빈도수'
                         },
                         legend: {display: false},    // label 안보이게
                        
@@ -272,7 +283,7 @@
                         labels: {{keyWord|safe}},
                         datasets: [{ 
                             data: {{keyWord_data|safe}},
-                            label: "키워드 검색 단어",
+                            label: "검색 횟수",
                             borderColor: "#c45850",
                             backgroundColor: [
                             '#24460B',
@@ -292,7 +303,7 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '키워드 검색 단어 빈도수'
+                        text: '키워드 검색어 빈도수'
                         },
                         legend: {display: false},    // label 안보이게
                     }
@@ -306,7 +317,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
-
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">
@@ -363,11 +374,11 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
                                             <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/>
                                         </svg>
-                                        전체 검색 단어 빈도수
+                                        통합 검색어 빈도수 (Top 30)
                                     </div>
-                
-                                    <canvas id="search-chart" style="width:1000px; height:350px"></canvas>
-                                
+                                    <div class="mx-3">
+                                        <canvas id="search-chart" style="width:1020px; height:350px"></canvas>
+                                    </div>
                                 </div>
                             </div>
 
@@ -375,7 +386,7 @@
                                 <div class="card card-raised h-100">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                        많이 검색된 단어 Top7
+                                        통합 검색어 Top7
                                     </div>
 
                                     <div class="card-body mt-2">
@@ -385,7 +396,7 @@
                                                 <tr>
                                                     <th>순위</th>
                                                     <th>단어</th>
-                                                    <th>검색량</th>
+                                                    <th>검색횟수</th>
                                             </thead>
                                             
                                             <tbody>
@@ -413,7 +424,7 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-4">
                                                 <h2 class="card-title mb-0 mb-1">
-                                                    세부 검색 단어 빈도수</h2>
+                                                    세부 검색어 빈도수</h2>
                                                 <div class="card-subtitle">
                                                     Advanced Search</div>
                                             </div>
@@ -439,7 +450,7 @@
                         <div class="card card-raised h-100 my-4">
                             <div class="card-header">
                                 <i class="fas fa-chart-bar me-1"></i>
-                                세부검색 내 많이 검색된 단어 Top7
+                                세부 검색어 Top7
                             </div>
                             
                             <div class="card-body mt-2">
@@ -449,7 +460,7 @@
                                             <tr>
                                                 <th style="background-color:#661A69;">순위</th>
                                                 <th style="background-color:#661A69;">제목</th>
-                                                <th style="background-color:#661A69;">검색량</th>
+                                                <th style="background-color:#661A69;">검색횟수</th>
                                             </tr>
                                         </thead>
                                         
@@ -473,7 +484,7 @@
                                             <tr>
                                                 <th style="background-color:#143468;">순위</th>
                                                 <th style="background-color:#143468;">발표자</th>
-                                                <th style="background-color:#143468;">검색량</th>
+                                                <th style="background-color:#143468;">검색횟수</th>
                                             </tr>
                                         </thead>
                                         
@@ -497,7 +508,7 @@
                                             <tr>
                                                 <th  style="background-color:#24460B;">순위</th>
                                                 <th  style="background-color:#24460B;">키워드</th>
-                                                <th style="background-color:#24460B;">검색량</th>
+                                                <th style="background-color:#24460B;">검색횟수</th>
                                             </tr>
                                         </thead>
                                         
@@ -516,9 +527,7 @@
                                 </div>
                                 
                             </div>
-                            <div id="current_time" class="card-footer small text-muted">
-                                <script>date();</script>
-                            </div>
+                        </div>
 
                         <div class="row mt-4">
                             <div class="col-lg-8">
@@ -528,7 +537,7 @@
                                             <div class="me-4">
                                                 <h2 class="card-title mb-0 mb-1">
                                                     비디오 분류</h2>
-                                                <div class="card-subtitle">method / category / narrative</div>
+                                                <div class="card-subtitle">category / narrative / presentation</div>
                                             </div>
                                         </div>
                                     </div>
@@ -550,7 +559,7 @@
                                             <div class="me-4">
                                                 <h2 class="card-title mb-0 mb-1">
                                                     영상 크기 당 업로드 시간</h2>
-                                                <div class="card-subtitle">Upload time per video size(MB)</div>
+                                                <div class="card-subtitle">Upload time(sec) per video size(MB)</div>
                                             </div>
                                         </div>
                                     </div>
@@ -576,19 +585,19 @@
                                 </div>
     
                                 <div class="card-body">
-                                    <canvas class="my-3" id="video-time-chart" width="1000" height="300"></canvas>
+                                    <canvas class="my-3" id="video-time-chart" width="1370" height="300"></canvas>
                                 </div>
                             </div>
                         
     
                         
-                            <div class="card card-raised mt-4">
+                            <div class="card card-raised mt-4 mb-4">
                                 <div class="card-header py-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="me-4">
                                             <h2 class="card-title mb-0 mb-1">
                                                 영상 조회수</h2>
-                                            <div class="card-subtitle">Ranking of video views</div>
+                                            <div class="card-subtitle">Ranking of video views (Top 10)</div>
                                         </div>
                                     </div>
                                 </div>
@@ -598,8 +607,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width:5%;">Rank</th>
-                                                    <th>ID</th>
-                                                    <th>Title</th>
+                                                    <th>Title (ID)</th>
                                                     <th>Presenter</th>
                                                     <th>Views</th>
                                                     <th>Uploaded Date</th>
@@ -609,9 +617,9 @@
                                             <tbody>
                                                 {% for video in idView %}
                                                 <tr>
-                                                    <td>{{loop.index}}</td>
-                                                    <td>{{video.id}}</td>
-                                                    <td>{{video.title}}</td>
+                                                    <td style="text-align:center;">{{loop.index}}</td>
+                                                    
+                                                    <td>{{video.title}} <span style="color:gray;">(ID:{{video.id}})</span></td>
                                                     <td>{{video.presenter}}</td>
                                                     <td>{{video.views}}</td>
                                                     <td>{{video.uploadDate}}</td>

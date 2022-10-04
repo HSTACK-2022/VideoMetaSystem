@@ -1,4 +1,26 @@
-# Api calls
+# main.py
+#
+# uploadApi로 request가 들어오면
+# 영상에서 메타데이터를 추출하고, 그 값을 DB에 저장합니다.
+# 외부(본 프로젝트에서는 주로 hstack)에 의해 호출됩니다.
+# 
+# uses / parameters
+# - POST로 아래의 값 전달
+# - title : 영상의 제목
+# - filePresenter : 영상 업로더 (제공자)
+# - uploadURL : 영상이 업로드 된 서버 내의 경로
+# - password : 영상 편집시 업로더 인증을 위한 비밀번호
+# - canSearch : 검색을 허용할 것인지에 대한 flag
+# 
+# * canSearch는 추후 uploadApi만을 단독으로 사용할 경우를 위한 변수이며,
+# 22.09.15 기준 현재 프로젝트에서는 hstack만 uploadApi를 호출하기 때문에
+# canSearch의 값은 항상 true로 고정되어 있습니다.
+# 
+#
+# return
+# - finalDic : 영상의 메타데이터를 json 형태로 반환합니다.
+# - DB : 메타데이터와 영상 업로드에 소요된 시간을 DB에 저장합니다.
+
 from flask import jsonify
 from flask import request
 from flask_restx import Resource, Namespace

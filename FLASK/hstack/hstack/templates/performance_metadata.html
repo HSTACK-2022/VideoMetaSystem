@@ -1,3 +1,15 @@
+<!--
+
+performance_metadata.html 
+- 모니터링 페이지 중 Data Overview의 metadata를 나타냅니다.
+- 시스템 DB에 저장된 영상들의 Category, narrative, presentation 비율과,
+- 영상 크기당 업로드 시간 그래프를 나타냅니다.
+
+- redirect with : '/performance/metadata'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -100,7 +112,7 @@
                         cutoutPercentage: 50,
                         title: {
                             display: true,
-                            text: 'METHOD RATIO'
+                            text: 'PRSEENTATION RATIO'
                         },
                         legend: {
                             display: true,
@@ -118,10 +130,10 @@
                 new Chart(document.getElementById("line-chart"), {
                     type: 'line',
                     data: {
-                        labels: {{upload_size|safe}},
+                        labels: {{upload_time|safe}},
                         datasets: [{ 
-                            data: {{upload_time|safe}},
-                            //label: "Europe",
+                            data: {{upload_size|safe}},
+                            label: "업로드 소요 시간 (sec)",
                             borderColor: "#8e5ea2",
                             fill: false
                         }
@@ -145,7 +157,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href='/performance'>Monitoring Page</a>
-
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">
@@ -179,58 +191,57 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                            <h1 class="px-4  pt-5">Metadata</h1>
-                            <ol class="breadcrumb px-4" >
-                                <li class="breadcrumb-item active">비디오 분류</li>
-                                <li class="breadcrumb-item active">업로드 시간</li>
-                            </ol>
+                        <h1 class="px-4 pt-5">Metadata</h1>
+                        <ol class="breadcrumb px-4 pb-2" >
+                            <li class="breadcrumb-item active">비디오 분류</li>
+                            <li class="breadcrumb-item active">업로드 시간</li>
+                        </ol>
 
-                            <br>
+                        <div class="row mt-4">
+                            <div class="col">
+                                <div class="card card-raised h-100">
+                                    <div class="card-header px-4 py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-4">
+                                                <h2 class="card-title mb-0 mb-1">
+                                                    비디오 분류</h2>
+                                                <div class="card-subtitle">category / narrative / presentation</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body my-4">
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-4"><canvas id="category-chart" style="width:420px; height:420px;"></canvas></div>
+                                            <div class="col-lg-4"><canvas id="narrative-chart" style="width:420px; height:420px;"></canvas></div>
+                                            <div class="col-lg-4"><canvas id="method-chart" style="width:420px; height:420px;"></canvas></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                            <div class="row mt-4">
+                            <div class="row my-4">
                                 <div class="col">
                                     <div class="card card-raised h-100">
                                         <div class="card-header px-4 py-3">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="me-4">
                                                     <h2 class="card-title mb-0 mb-1">
-                                                        비디오 분류</h2>
-                                                    <div class="card-subtitle">method / category / narrative</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body my-5 mx-2">
-                                            <div class="row">
-                                                <div class="col-lg-4"><canvas id="category-chart"></canvas></div>
-                                                <div class="col-lg-4"><canvas id="narrative-chart" ></canvas></div>
-                                                <div class="col-lg-4"><canvas id="method-chart" ></canvas></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-4">
-                                    <div class="card card-raised h-100">
-                                    
-                                        <div class="card-header px-4 py-3">
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div class="me-4">
-                                                    <h2 class="card-title mb-0 mb-1">
                                                         영상 크기 당 업로드 시간</h2>
-                                                    <div class="card-subtitle">Upload time per video size(MB)</div>
+                                                    <div class="card-subtitle">Upload time(sec) per video size(MB)</div>
                                                 </div>
                                             </div>
                                         </div>
-    
+
                                         <div class="card-body">
                                             <div class="d-flex justify-content-around">
-                                                <canvas id="line-chart" width="500px" height="500px"></canvas>
+                                                <canvas id="line-chart" width="1300px" height="500px"></canvas>
                                             </div>
                                         </div>
                                 
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
                     </div> <!--end of container-->
                 </main> <!--end of main-->
