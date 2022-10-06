@@ -32,7 +32,7 @@ from flask import render_template
 from flask import send_from_directory
 from flask import current_app as app # app.config 사용을 위함
 
-from hstack.config import DB
+from hstack.config import DB, OS
 from hstack.models import Videopath
 from hstack.models import Metadatum
 from hstack.models import Keyword
@@ -50,7 +50,10 @@ bp = Blueprint('detail', __name__, url_prefix='/')
 @bp.route('/detail/data/<path:filepath>')
 def data(filepath):
     print(filepath)
-    return send_from_directory('../media', filepath.split('media\\')[1].replace("\\", '/'))
+    if OS == "Windows":
+        return send_from_directory('../media', filepath.split('media\\')[1].replace("\\", '/'))
+    else :
+        return send_from_directory('../media', filepath.split('media/')[1])
 
 @bp.route('/detail/download/<string:path>/<string:title>')
 def download(path, title):
@@ -83,7 +86,10 @@ def detailFile(pk):
     makePPT.getPPTFile(videoPath, title)
 
     # PPT 파일을 얻기 위한 폴더명 얻기
-    pptPath = os.path.dirname(videoPath.split('Uploaded\\')[1])
+    if OS == "Windows":
+        pptPath = os.path.dirname(videoPath.split('Uploaded\\')[1])
+    else :
+        pptPath = os.path.dirname(videoPath.split('Uploaded')[1])
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     print(pptPath)
 

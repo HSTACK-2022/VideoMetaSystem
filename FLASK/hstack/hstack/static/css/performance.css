@@ -170,3 +170,42 @@ tr:last-child td:last-child {
 #homeBtn :hover {
     cursor: pointer;
 }
+
+
+.dataOverviewHead {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 10px 10px 0px 0px;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.dataOverviewBody {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0px 0px 10px 10px;
+    background: rgba(0, 0, 0, 0);
+    align-items: center;
+}
+
+.dataOverviewTitle {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.dataOverviewSub {
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.detailSearchContainer {
+    width: 33.3%;
+    display: inline;
+}
+
+.mainSearchContainer {
+    width: 100vw;
+    height: 100vh;
+    border: 1px solid black;
+}

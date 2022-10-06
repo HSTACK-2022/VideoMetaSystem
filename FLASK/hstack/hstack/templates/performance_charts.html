@@ -43,6 +43,14 @@ performance_charts.html
                 title: {
                     display: true,
                     text: '스크립트 검색 단어 빈도수'
+                },
+                scales : {
+                    xAxes : [{
+                        ticks : {
+                            beginAtZero : true, // 0부터 시작하게 합니다.
+                            stepSize: 1   // 1 씩 증가하도록 설정합니다.
+                        }
+                    }]
                 }
             }
         });

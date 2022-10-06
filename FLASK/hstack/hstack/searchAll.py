@@ -93,10 +93,7 @@ class Total:
         self.finalDict['keyword'] = keywordList
         self.finalDict['thumbnail'] = None
 
-        if OS == 'Windows':
-            filePath = DB.session.query(Videopath).filter(Videopath.id == videoId).first().imageAddr.split('media')[1]
-        else :
-            filePath = DB.session.query(Videopath).filter(Videopath.id == videoId).first().imageAddr.split('media')[2]
+        filePath = DB.session.query(Videopath).filter(Videopath.id == videoId).first().imageAddr.split('media')[1]
 
         count = 0
         imageList = os.listdir(DB.session.query(Videopath).filter(Videopath.id == videoId).first().imageAddr)

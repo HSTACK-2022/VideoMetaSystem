@@ -269,3 +269,6 @@ FLASK/hstack/tensorflow/ImageSeperate/validation/
 Flask/myenv/
 Flask/flaskenv/
 FLASK_TEST/
+
+#VENV
+venv/

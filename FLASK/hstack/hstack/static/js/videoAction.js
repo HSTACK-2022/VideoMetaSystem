@@ -136,7 +136,7 @@ function downloadPPT(path, title){
     console.log(`hello ${path}, ${title}`);
     var element = document.createElement('form');
     element.setAttribute('method', 'GET');
-    element.setAttribute('action', `http://localhost:5000/detail/download/${path}/${title}`);
+    element.setAttribute('action', `/detail/download/${path}/${title}`);
     document.body.appendChild(element);
     element.submit();
     document.body.removeChild(element);
