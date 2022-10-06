@@ -16,6 +16,11 @@
 이전 Django Framework를 사용한 프로젝트는 [여기](https://github.com/yeondelight/VideoMetaSystem/tree/c8f0593a7dfdaf904dcb72204b0092fa8b1f5429)를 참고해주세요.
 
 <br/>
+
+**Installation Docs : [KO](INSTALL_KO.md) / [EN](INSTALL_EN.md)**
+**Execute Docs : [KO](EXECUTE_KO.md) / [EN](EXECUTE_EN.md)**
+
+<br/>
 <br/>
 <br/>
 
