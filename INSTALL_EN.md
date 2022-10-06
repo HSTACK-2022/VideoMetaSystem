@@ -2,8 +2,8 @@
 
 <br/>
 
-> 본 문서는 local 환경에서의 VMeta 설치 방법에 대해 기술합니다. <br/>
-> <b>Windows10</b>를 기준으로 작성되었습니다.<br/><br/>
+> This document describes how to install VMeta in your local environment.<br/>
+> It is base on <b>Windows10</b>.<br/><br/>
 > Last Edit : 2022.10.06
 
 <br/>
@@ -20,8 +20,8 @@
 
 ## 1. Get Project File
 
-자신의 Workspace에 프로젝트 파일을 다운로드합니다.
-이 문서에서는 Workspace의 위치를 <b>E:\Workspace</b>로 가정합니다.
+Download the project file to your workspace.
+This document assumes the workspace location as <b>E:\Workspace</b>.
 ```
 C:\ > cd E:/Workspace
 E:\Workspace > git clone https://github.com/HSTACK-2022/VideoMetaSystem.git
@@ -38,8 +38,8 @@ E:\Workspace > cd VideoMetaSystem
 - <b>Install</b>
 
 	<a href = "https://www.python.org/downloads/release/python-389/">Download Link</a><br/>
-	VMeta는 <b>Python 3.8.9</b> 버전을 사용합니다.<br/>
-	프로젝트 내 라이브러리와의 충돌을 방지하기 위해 <b>3.8.* ~ 3.9.*</b> 버전의 설치를 권장합니다.
+	VMeta uses Python <b>v3.8.9.</b><br/>
+	Installation of <b>3.8.* to 3.9.*</b> version is recommended to avoid conflicts with libraries within the project.
 	<br/>
 	![Python install steps](https://user-images.githubusercontent.com/73868349/194226601-3b692582-04ef-4a82-8f3f-cffe4db866b1.jpg)
 <br/>	
@@ -47,7 +47,7 @@ E:\Workspace > cd VideoMetaSystem
 - <b>Setup Virtual Env</b>
 
 	<a href = "https://docs.python.org/ko/3/library/venv.html">Official Docs</a><br/>
-	프로젝트 실행을 위한 가상환경을 설정합니다.<br/>
+	Set up a virtual environment for project execution.<br/>
 	```
 	E:\Workspace\VideoMetaSystem > python -m venv venv (venv is your virtualenv name)
 	E:\Workspace\VideoMetaSystem > .\venv\Scripts\activate.bat
@@ -59,19 +59,19 @@ E:\Workspace > cd VideoMetaSystem
 
 ## 3. Install Libraries
 
-VMeta에 사용되는 라이브러리들을 설치합니다.
+Install the libraries uses in VMeta.
 
 - <b>Ffmpeg</b>
 
 	<a href = "https://www.gyan.dev/ffmpeg/builds/">Download Link</a><br/>
-	영상에서의 음원 추출을 위해 Ffmpeg을 설치합니다.<br/>
-	본 프로젝트는 <b>4.4.1</b> 버전을 사용하였으나, <b>3.*</b> 이상의 버전이면 호환 가능합니다.<br/>
+	Install Ffmpeg to extract the sound source from the video.<br/>
+	This project uses <b>v4.4.1</b>, but is compatible with <b>4.*</b> or higher.<br/>
 	![ffmpeg install](https://user-images.githubusercontent.com/73868349/194247003-7a3941c8-38d0-4025-aee1-c7f7b3df29cf.jpg)
 	
-	${Workspace}\VideoMetaSytem 에 압축 파일을 해제하고, 환경 변수를 등록합니다.<br/>
+	Release the compressed file on ${Workspace}\VideoMetaSytem and set up the env.<br/>
 	![setup $PATH](https://user-images.githubusercontent.com/73868349/194247822-cd6ef909-eda1-4a85-beaa-1f7547397c17.jpg)
 	
-	VideoMetaSystem 하위의 구조가 아래와 같아야 합니다.
+	tree arch under directory VideoMetaSystem must be like this.
 	```
 	(venv) E:\Workspace\VideoMetaSystem > dir
 	E 드라이브의 볼륨: 
@@ -98,15 +98,15 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 - <b>Tesseract</b>
 
 	<a href = "https://tesseract-ocr.github.io/tessdoc/Installation.html">Official Docs / Download link</a><br/>
-	OCR을 사용하기 위해 Tesseract를 설치합니다.<br/>
-	공식 문서의 Windows 부분을 참고하여 다운로드 합니다.<br/>
+	Install Tesseract to use OCR.<br/>
+	Download by referring to the <b>Windows part</b> of the official document.<br/>
 	
 	
 <br/>
 
 - <b>requirements.txt</b>
 
-	requirements.txt에 있는 라이브러리들을 설치합니다.
+	Install libraries in requirements.txt
 	```
 	(venv) E:\Workspace\VideoMetaSystem > pip install -r requirements.txt
 	```
@@ -115,7 +115,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 
 - <b>special requirements</b>
 
-	subprocess에서의 정상 동작을 위해 특정 라이브러리들은 가상환경이 아닌 곳에도 설치합니다.<br/>
+	For execute subprocess, certain libraries are installed in a non-virtual environment.<br/>
 	```
 	(venv) E:\Workspace\VideoMetaSystem > deactivate
 	E:\Workspace\VideoMetaSystem > pip install -r special_reqirements.txt
@@ -123,9 +123,9 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	<br/>
 
 
-	또한, 일부 라이브러리는 git에서 별도로 가져와 사용합니다.<br/>
-	<a href = "https://github.com/haven-jeon/PyKoSpacing">pykospacing</a> : 한국어 전처리에 이용합니다.<br/>
-	<a href = "https://github.com/ParthS007/background">background</a> : uploadApi를 비동기적으로 실행하기 위해 사용합니다.<br/>
+	Also, some libraries are imported separately from git.<br/>
+	<a href = "https://github.com/haven-jeon/PyKoSpacing">pykospacing</a> : Use for Korean preprocessing.<br/>
+	<a href = "https://github.com/ParthS007/background">background</a> :Use to run uploadApi asynchronously.<br/>
 	```
 	(venv) E:\Workspace\VideoMetaSystem > pip install git+https://github.com/haven-jeon/PyKoSpacing.git
 	(venv) E:\Workspace\VideoMetaSystem > pipenv install background
@@ -139,15 +139,15 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 
 ## 4. Set up MySQL
 
-프로젝트 DB를 설정합니다.<br/>
-컴퓨터에 MySQL이 설치되어 있다고 가정합니다.<br/>
+Set up the project DB.<br/>
+Assume MySQL is installed on your computer.<br/>
 
-- hstackDB 생성 <br/>
+- Create hstackDB <br/>
 	```
 	CREATE DATABASE hstackDB;
 	```
 
-- 메타데이터 테이블 생성 <br/>
+- Create table for Metadata <br/>
 	```
 	use hstackDB;
 	
@@ -199,7 +199,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	);
 	```
 	
-- 모니터링 테이블 생성 <br/>
+- Create table for Monitoring <br/>
 	```
 	use hstackDB;
 
@@ -239,7 +239,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 
 ## 5. Set up config.py
 
-자신의 DB와 API Key를 이용해 설정파일을 수정합니다.
+Modify the configuration file using your DB and API Key.
 
 
 - FLASK\hstack\hstack

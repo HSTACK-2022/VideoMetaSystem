@@ -1,4 +1,5 @@
 numpy==1.19.5
 tensorflow==2.7.2
 matplotlib==3.5.1
-Keras==2.4.3
+Keras==2.7.0
+protobuf==3.20.0
