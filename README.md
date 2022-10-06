@@ -10,15 +10,20 @@
 <br/>
 <br/>
 
+## 🔑 GUIDE
+
+VMeta의 설치와 실행 과정은 아래 문서를 참고해주세요.
+
+<h4>Installation Docs : <a href="INSTALL_KO.md">KO</a> / <a href="INSTALL_EN.md">EN</a> </h4>
+<h4>Execute Docs : <a href="EXECUTE_KO.md">KO</a> / <a href="EXECUTE_EN.md">EN</a> </h4>
+
+<br/>
+<br/>
+
 ## ✔ NOTICE
 
 2022년 7월부터, 본 프로젝트는 <b>Flask Framework를 사용합니다.</b><br/>
 이전 Django Framework를 사용한 프로젝트는 [여기](https://github.com/yeondelight/VideoMetaSystem/tree/c8f0593a7dfdaf904dcb72204b0092fa8b1f5429)를 참고해주세요.
-
-<br/>
-
-**Installation Docs : [KO](INSTALL_KO.md) / [EN](INSTALL_EN.md)** <br/>
-**Execute Docs : [KO](EXECUTE_KO.md) / [EN](EXECUTE_EN.md)**
 
 <br/>
 <br/>
