@@ -53,7 +53,7 @@ import collections
 
 from ..config import DB
 
-from ..models import Keyword
+from ..models import Keyword, SearchSatisfy
 from ..models import Videopath
 from ..models import Metadatum
 from ..models import Timestamp
@@ -123,6 +123,15 @@ def ratio():
         uploadTime.append(res.time)
         uploadSize.append(res.size)
 
+    # 검색 만족도 그래프
+    satisfy = {}
+    satisfySum = 0
+    for res in DB.session.query(SearchSatisfy).order_by(SearchSatisfy.val.desc()):
+        satisfy[res.val-1] = res.cnt
+        satisfySum += res.cnt
+    print("검색 만족도 >>")
+    print(satisfy)
+
     # 검색 단어 그래프
     totalWord = {}
     for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
@@ -191,6 +200,8 @@ def ratio():
 
     return render_template('/performance.html',
                            code=200,
+                           satisfy=satisfy,
+                           satisfySum=satisfySum,
                            category=list(categories_dict.keys()),
                            category_data=list(categories_dict.values()),
                            narrative=list(narrative_dict.keys()),
@@ -217,9 +228,17 @@ def ratio():
                            )
 
 
-
 @bp.route('/performance/search/')
 def performance_search():
+    # 검색 만족도 그래프
+    satisfy = {}
+    satisfySum = 0
+    for res in DB.session.query(SearchSatisfy).order_by(SearchSatisfy.val.desc()):
+        satisfy[res.val-1] = res.cnt
+        satisfySum += res.cnt
+    print("검색 만족도 >>")
+    print(satisfy)
+
     # 검색 단어 그래프
     totalWord = {}
     for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
@@ -239,6 +258,8 @@ def performance_search():
 
     return render_template('/performance_search.html',
                            code=200,
+                           satisfy=satisfy,
+                           satisfySum=satisfySum,
                            totalWord=list(totalWord.keys()),
                            totalWord_data=list(totalWord.values()),
                            totalWord_total=totalWord.items(),

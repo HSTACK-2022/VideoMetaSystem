@@ -50,7 +50,7 @@ performance_videoview.html
                         }]
                     },
                     options: {
-                        responsive: false,
+                        maintainAspectRatio: false,
                         title: {
                         display: false,
                         text: '영상별 평균 재생 시간'
@@ -133,7 +133,7 @@ performance_videoview.html
                             </div>
 
                             <div class="card-body">
-                                <canvas class="my-3" id="video-time-chart" width="1360" height="300"></canvas>
+                                <canvas id="video-time-chart" style="position: relative; width: 1020vw; height: 350px;"></canvas>
                             </div>
                         </div>
                     

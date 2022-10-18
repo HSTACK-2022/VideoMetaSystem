@@ -33,6 +33,48 @@ performance.html
             }
 
             function first_load(){
+                var satisfyName = ['매우불만족', '불만족', '보통', '만족', '매우만족']
+                var satisfyBackground = [
+                    '#24460B',
+                    '#315512',
+                    '#44691D',
+                    '#587E2B',
+                    '#6f933b',
+                ];
+
+                new Chart(document.getElementById("satisfaction-chart"), {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: [''],
+                        datasets: [
+                            {% for d in satisfy %}
+                            {
+                                data: [{{satisfy[d]}}],
+                                label: satisfyName[{{d}}],
+                                backgroundColor: satisfyBackground[{{d}}],
+                            },
+                            {% endfor %}
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales : {
+                            xAxes : [{
+                                stacked: true,
+                                display: false,
+                                ticks: {
+                                    max: {{satisfySum}},
+                                }
+                            }],
+                            yAxes : [{
+                                stacked: true,
+                                display: false,
+                            }],
+                        },
+                        indexAxis: 'y',
+                    }
+                });
+
                 new Chart(document.getElementById("video-time-chart"), {
                     type: 'bar',
                     data: {
@@ -50,7 +92,7 @@ performance.html
                         }]
                     },
                     options: {
-                        responsive: false,
+                        maintainAspectRatio: false,
                         title: {
                         display: false,
                         text: '영상별 평균 재생 시간'
@@ -183,7 +225,7 @@ performance.html
                         ]
                     },
                     options: {
-                        responsive: false,
+                        maintainAspectRatio: false,
                         title: {
                         display: true,
         
@@ -228,7 +270,7 @@ performance.html
                         }]
                     },
                     options: {
-                        responsive: false,
+                        maintainAspectRatio: false,
                         title: {
                         display: true,
                         },
@@ -412,9 +454,35 @@ performance.html
                                 현재 DB에 저장된 모든 영상의 데이터를 확인합니다.
                             </div>
                             
-                            <br>
 
-                        
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="card card-raised h-100">
+                                        <div class="card-header mb-4 py-3">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="me-4">
+                                                    <h2 class="card-title mb-1">검색 만족도</h2>
+                                                    <div class="card-subtitle">Search satisfaction</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="card-body px-4">
+                                                <div class="row">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <canvas id="satisfaction-chart" style="position: relative; width: 1080vw; height: 100px;"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br/>
+
                         <div class="row">
                             <div class="col-lg-9">
                                 <div class="card card-raised">
@@ -425,7 +493,7 @@ performance.html
                                         통합 검색어 빈도수 (Top 30)
                                     </div>
                                     <div class="mx-3">
-                                        <canvas id="search-chart" style="width: 1020px; height: 350px;"></canvas>
+                                        <canvas id="search-chart" style="position: relative; width: 1020vw; height: 350px;"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -614,7 +682,7 @@ performance.html
 
                                     <div class="card-body">
                                         <div class="d-flex justify-content-around">
-                                            <canvas id="line-chart" width="400" height="400"></canvas>
+                                            <canvas id="line-chart" style="position: relative; width: 1020vw; height: 350px;"></canvas>
                                         </div>
                                     </div>
                                     
@@ -633,7 +701,7 @@ performance.html
                                 </div>
     
                                 <div class="card-body">
-                                    <canvas class="my-3" id="video-time-chart" width="1360" height="300"></canvas>
+                                    <canvas id="video-time-chart" style="position: relative; width: 1020vw; height: 350px;"></canvas>
                                 </div>
                             </div>
                         
