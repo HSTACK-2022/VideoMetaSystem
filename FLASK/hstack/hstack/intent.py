@@ -1,10 +1,10 @@
 # intent.py
 #
-# 검색어에서 핵심어와 연관어를 추출합니다.
+# 검색어에서 핵심어를 추출합니다.
 # 
 # uses
 # - init() : wiki 모델을 불러옵니다.
-# - findWord(word) : word 검색어에서 핵심어와 연관어를 추출합니다.
+# - findWord(word) : word 검색어에서 핵심어를 추출합니다.
 #
 # parameters
 # - word : 검색어
@@ -53,5 +53,7 @@ def findWord(word):
 
     print(searchWiki)
     '''
+
+    print(searchText)
 
     return searchText

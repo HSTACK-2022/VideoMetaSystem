@@ -1,11 +1,11 @@
-# License of 3rd party libararies
+# License of 3rd party libraries
 
-> VMeta (Video Meta System) Project is licensed under the terms of the <a href="./README.md">GPLv3</a>. <br/>
+> VMeta (Video Meta System) Project is licensed under the terms of the <a href="./README.md">GPL v3.0</a>. <br/>
 > But, VMeta includes a few 3rd party Open-Source libraries, which are licensed under their own.
 
 <br/>
 
-> VMeta(Video Meta System)는 <a href="/.README.md">GPLv3</a> 라이선스를 가집니다. <br/>
+> VMeta(Video Meta System)는 <a href="./README.md">GPL v3.0</a> 라이선스를 가집니다. <br/>
 > 그러나, VMeta에 사용되는 몇몇 서드파티 라이브러리들은 해당 라이브러리에 종속된 라이선스를 적용받습니다.
 
 <br/>
@@ -52,3 +52,9 @@ https://github.com/tensorflow/tensorflow/blob/master/LICENSE
 <b> opencv-python by opencv</b><br/>
 License : MIT<br/>
 https://github.com/opencv/opencv-python/blob/4.x/LICENSE.txt
+
+<br/>
+
+<b> startbootstrap-sb-admin by StartBootstrap</b><br/>
+License : MIT<br/>
+https://github.com/startbootstrap/startbootstrap-sb-admin/blob/master/LICENSE

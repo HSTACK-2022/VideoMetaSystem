@@ -90,6 +90,11 @@ def uploadFile():
             existError['passwordError'] = "파일 수정을 위한 비밀번호를 입력해주세요."
         if (secure_filename(uploadedFile.filename) == ""):
             existError['fileError'] = "영상 파일을 첨부해주세요."
+        else:
+            # file valid check.
+            fileExtension = os.path.splitext(uploadedFile.filename)[1]
+            if (fileExtension != '.mp4'):
+                existError['fileError'] = ".mp4 형식의 파일을 업로드해주세요."
 
         if existError:
             return render_template('upload.html', error=existError)

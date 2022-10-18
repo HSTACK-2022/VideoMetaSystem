@@ -152,19 +152,18 @@ search.html
                     </td>
                
                     <td class="aside">
-                            
-                            <form action='/search' method="GET" id="form">
-                                <input type="hidden" name="isDetail" value="True">
-                                <input type="hidden" name="category" id="category" value="{{category}}">
-                                <input type="hidden" name="method" id="method" value="{{method}}">
-                                <input type="hidden" name="narrative" id="narrative" value="{{narrative}}">
-                                <input type="hidden" name="searchText" value="{{searchWord}}">
-                                <input type="hidden" name="searchWordTitle" value="{{searchWordDetailTitle}}">
-                                <input type="hidden" name="searchWordKeyword" value="{{searchWordDetailKeyword}}">
-                                <input type="hidden" name="searchWordPresenter" value="{{searchWordDetailPresenter}}">
-                                <div class="category">
+                        <form action='/search' method="GET" id="form">
+                            <input type="hidden" name="isDetail" value="True">
+                            <input type="hidden" name="category" id="category" value="{{category}}">
+                            <input type="hidden" name="method" id="method" value="{{method}}">
+                            <input type="hidden" name="narrative" id="narrative" value="{{narrative}}">
+                            <input type="hidden" name="searchText" value="{{searchWord}}">
+                            <input type="hidden" name="searchWordTitle" value="{{searchWordDetailTitle}}">
+                            <input type="hidden" name="searchWordKeyword" value="{{searchWordDetailKeyword}}">
+                            <input type="hidden" name="searchWordPresenter" value="{{searchWordDetailPresenter}}">
+                            <div class="category">
 
-                                    <h2 class="todo-cmp__header">검색 내 세부검색</h2>
+                                <h2 class="todo-cmp__header">검색 내 세부검색</h2>
                                     
                                     <ul class="todo-cmp__list">
                                         <li> CATEGORY</li>
@@ -216,6 +215,28 @@ search.html
                                 </div>
                             </div>
                         </form>
+
+                    </td>
+
+                    <td class="aside">
+                        <h3 class="todo-cmp__header">검색 결과에 만족하셨나요?</h3>
+                        <table id="satisfyTable" style="width: 100%">
+                            <tr>
+                                <td><input type="radio" name="satisfy" value="1"></td>
+                                <td><input type="radio" name="satisfy" value="2"></td>
+                                <td><input type="radio" name="satisfy" value="3"></td>
+                                <td><input type="radio" name="satisfy" value="4"></td>
+                                <td><input type="radio" name="satisfy" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td>매우<br/>불만족</td>
+                                <td>불만족</td>
+                                <td>보통</td>
+                                <td>만족</td>
+                                <td>매우<br/>만족</td>
+                            </tr>
+                        </table>
+                        <button id="satisfyBtn" onclick="satisfySave()">SUBMIT</button>
                     </td>
               
                 </tr>

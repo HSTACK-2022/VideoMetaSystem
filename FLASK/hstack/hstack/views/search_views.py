@@ -29,6 +29,7 @@ from hstack.models import TotalSearch
 from hstack.models import TitleSearch
 from hstack.models import PresenterSearch
 from hstack.models import KeywordSearch
+from hstack.models import SearchSatisfy
 
 import os
 import re
@@ -45,6 +46,10 @@ def data(filepath):
     else :
         return send_from_directory('../media', filepath)
 
+@bp.route('/search/satisfy/<int:value>')
+def satisfySave(value):
+    DB.session.query(SearchSatisfy).filter(SearchSatisfy.val == value).update({'cnt': SearchSatisfy.cnt+1})
+    DB.session.commit()
 
 @bp.route('/search/', methods=['GET'])
 def searchFile():
