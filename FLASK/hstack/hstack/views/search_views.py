@@ -20,6 +20,7 @@ from flask import Blueprint
 from flask import render_template
 from flask import send_from_directory
 
+from hstack import intent
 from hstack import searchAll
 
 # from sqlalchemy import SQLAlchemy
@@ -28,6 +29,7 @@ from hstack.models import TotalSearch
 from hstack.models import TitleSearch
 from hstack.models import PresenterSearch
 from hstack.models import KeywordSearch
+from hstack.models import SearchSatisfy
 
 import os
 import re
@@ -44,6 +46,10 @@ def data(filepath):
     else :
         return send_from_directory('../media', filepath)
 
+@bp.route('/search/satisfy/<int:value>')
+def satisfySave(value):
+    DB.session.query(SearchSatisfy).filter(SearchSatisfy.val == value).update({'cnt': SearchSatisfy.cnt+1})
+    DB.session.commit()
 
 @bp.route('/search/', methods=['GET'])
 def searchFile():
@@ -77,30 +83,16 @@ def searchFile():
 
     else :
         # if totalSearch
-        searchWords = []
-        words = re.split(r'[ ,:]', word)
-        for item in words:
-            if item != "":
-                #searchWords.append(item)
+        searchWords = intent.findWord(word)
 
-                #DB에서 전체 단어 검색
-                print(TotalSearch.query.filter(TotalSearch.tKeyword == item))
-                
-                # [Logging] 전체 검색 LOG 파일 생성 (필요 없으면 삭제해도 됨)
-                file = open(os.path.join('logs', 'full.txt'),'a+', encoding='UTF-8') #a : 이어쓰기
-                date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                print(item)
-                file.write(date+" "+item+"\n")
-                file.close()
-
-                # 요기 까지
-                searchWords.append(item)
-                if len(TotalSearch.query.filter(TotalSearch.tKeyword.contains(item)).all()) != 0:
-                    DB.session.query(TotalSearch).filter(TotalSearch.tKeyword == item).update({'cnt': TotalSearch.cnt+1})
-                else:
-                    ts = TotalSearch(tKeyword=item, cnt=1)
-                    DB.session.add(ts)
-                DB.session.commit()
+        # [Logging] 전체 검색 DB (필요 없으면 삭제해도 됨)
+        for item in searchWords:
+            if len(TotalSearch.query.filter(TotalSearch.tKeyword.contains(item)).all()) != 0:
+                DB.session.query(TotalSearch).filter(TotalSearch.tKeyword == item).update({'cnt': TotalSearch.cnt+1})
+            else:
+                ts = TotalSearch(tKeyword=item, cnt=1)
+                DB.session.add(ts)
+            DB.session.commit()
 
         if len(searchWords) == 0:
             searchWords = None
@@ -125,7 +117,6 @@ def searchFile():
         if len(searchTitles) == 0:
             searchTitles = None
 
-
         # keywordSearch
         searchKeywords = []
         word = word + keyword + " " if keyword != "" else word
@@ -145,7 +136,6 @@ def searchFile():
         if len(searchKeywords) == 0:
             searchKeywords = None
 
-
         # presenterSearch
         searchPresenters = []
         word = word + presenter + " " if presenter != "" else word
@@ -164,7 +154,6 @@ def searchFile():
 
         if len(searchPresenters) == 0:
             searchPresenters = None
-   
 
         # get Rank
         videoMetaList = []

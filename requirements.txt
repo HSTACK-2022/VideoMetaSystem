@@ -18,6 +18,7 @@ flask-sqlacodegen==1.1.8
 Flask-SQLAlchemy==2.5.1
 flatbuffers==1.12
 gast==0.4.0
+gensim==4.2.0
 google-auth==2.12.0
 google-auth-oauthlib==0.4.6
 google-pasta==0.2.0

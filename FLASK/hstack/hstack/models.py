@@ -147,3 +147,14 @@ class UploadTime(db.Model):
 
     def __repr__(self):
         return f"<UpoladTime('{self.id}', '{self.time}', '{self.size}')>"
+
+        
+class SearchSatisfy(db.Model):
+    __tablename__='searchSatisfy'
+
+    val = db.Column(db.Integer, primary_key=True)
+    cnt = db.Column(db.Integer)
+
+    def __init__(self, val, cnt, **kwargs):
+        self.val = val
+        self.cnt = cnt
