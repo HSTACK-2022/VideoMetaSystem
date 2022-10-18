@@ -14,6 +14,8 @@ from flask_sqlalchemy import SQLAlchemy
 OS = platform.system()
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_FILE_DIR = os.path.join('.', 'media', 'Uploaded')
+MODEL_DIR = os.path.join('.', 'uploadApi', 'ImageSeperate', 'test.py')
+
 
 JSON_AS_ASCII = False
 
