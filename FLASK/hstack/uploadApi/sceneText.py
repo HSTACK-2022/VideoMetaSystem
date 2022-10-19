@@ -21,6 +21,7 @@
 
 from . import calTime
 from .config import OS
+from .config import MODEL_DIR
 
 from pykospacing import Spacing
 from pyrsistent import CheckedKeyTypeError
@@ -102,15 +103,10 @@ def sceneText(imagePath, textPath):
 
 # 이론/실습 구분
 def sceneSeperate(imagePath):
-    if OS == "Windows" : 
-        modelPath = os.path.join(os.getcwd(), "tensorflow\\ImageSeperate\\test.py")
-    else :
-        modelPath = os.path.join(os.getcwd(), "tensorflow/ImageSeperate/test.py")
-
-    print(modelPath)
+    print(MODEL_DIR)
     
-    #>python tensorflow\ImageSeperate\test.py -f dirname
-    result = subprocess.Popen(['python', modelPath, '-f', imagePath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # call ImageSeperate function.
+    result = subprocess.Popen(['python', MODEL_DIR, '-f', imagePath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = result.communicate()
     exitcode = result.returncode
     if exitcode != 0:

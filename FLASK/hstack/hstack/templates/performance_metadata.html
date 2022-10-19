@@ -40,7 +40,26 @@ performance_metadata.html
                         labels: {{category|safe}},
                         datasets: [{
                             label: "Population (millions)",
-                            backgroundColor: ["#EC5B55", "#F08C34","#F9DD6C","#388174","#49c5b6","#A9D1D5","#7A55E7","#495DE6"],
+                            backgroundColor: ['#f44336',
+                            '#e81e63',
+                            '#9c27b0',
+                            '#673ab7',
+                            '#3f51b5',
+                            '#2196f3',
+                            '#03a9f4',
+                            '#00bcd4',
+                            '#009688',
+                            '#4caf50',
+                            '#8bc34a',
+                            '#cddc39',
+                            '#ffeb3b',
+                            '#ffc107',
+                            '#ff9800',
+                            '#ff5722',
+                            '#795548',
+                            '#9e9e9e',
+                            '#607d8b',
+                            '#000000'],
                             data: {{category_data|safe}}
                         }]
                     },
@@ -145,7 +164,22 @@ performance_metadata.html
                         display: true,
         
                         },
-                        legend: {display: false}    // label 안보이게
+                        legend: {display: false},    // label 안보이게
+                        scales: {
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: '시간(sec)'
+                                }
+                            }],
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    alien : screenLeft,
+                                    labelString: '영상 크기 (MB)'
+                                }
+                            }]
+                        }
                     }
                     });
             }

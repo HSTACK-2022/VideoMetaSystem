@@ -1,19 +1,29 @@
 # intent.py
 #
-# 검색 문장에서 핵심어를 추출합니다.
+# 검색어에서 핵심어를 추출합니다.
 # 
 # uses
 # - init() : wiki 모델을 불러옵니다.
-# - findWord(word) : word 검색 문장에서 핵심어를 추출합니다.
+# - findWord(word) : word 검색어에서 핵심어를 추출합니다.
 #
 # parameters
-# - word : 검색 문장
+# - word : 검색어
+
 
 import os
 
 from gensim.models import word2vec
 from konlpy.tag import Okt
 from . import deepRank
+
+def init():
+    global wikiModel
+
+    print("load wiki...")
+    wikiPath = os.path.join('.', 'models', 'wiki.model')
+    wikiModel=word2vec.Word2Vec.load(wikiPath)
+    print("load wiki... success")
+
 
 def findWord(word):
     # 0. search tags

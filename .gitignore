@@ -244,7 +244,7 @@ cython_debug/
 
 
 
-#가상환경, ffmpeg, test media 제외
+# Django
 ffmpeg-4.4.1-full_build/
 DJANGO/myenv/
 DJANGO/hstack/media/
@@ -258,14 +258,12 @@ DJANGO/hstack/secrets.json
 FLASK/venv
 FLASK/hstack/logs/
 FLASK/hstack/media/
+FLASK/hstack/models/
 FLASK/hstack/migrations/
+FLASK/hstack/tensorflow/
 FLASK/hstack/__pycache__/
 FLASK/hstack/background/
-FLASK/hstack/tensorflow/ImageSeperate/train/
-FLASK/hstack/tensorflow/ImageSeperate/validation/
-
-
-#FLASK_TEST
-Flask/myenv/
-Flask/flaskenv/
 FLASK_TEST/
+
+#VENV
+venv/

@@ -17,6 +17,10 @@ def create_app():
     #DB = SQLAlchemy(app)
     #migrate = Migrate(app, DB)
 
+    # init models
+    # from . import intent
+    # intent.init()
+
     # Blueprint
     from .views import main_views
     from .views import search_views
