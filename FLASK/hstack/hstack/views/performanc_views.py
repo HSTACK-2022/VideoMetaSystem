@@ -151,43 +151,43 @@ def ratio():
 
 
     # 각 객체별 log파일 open : 조회수 count
-    datetime_format = "%H:%M:%S"
+    # datetime_format = "%H:%M:%S"
 
-    for key in idViewDict:
-        logPath = os.path.join(app.config.get('UPLOAD_LOG_DIR'), str(key)+".txt")
-        if os.path.isfile(logPath):
-            viewCnt = 0
-            timeCnt = 0
-            startTime = 0
-            endTime = 0
-            log = open(logPath, 'r', encoding='utf-8-sig')
-            scripts = log.readlines()
-            for line in scripts: 
-                cmd = line.split(' ')
-                if (cmd[2] == '*open\n'):
-                    startTime = datetime.datetime.strptime(cmd[1], datetime_format)
-                elif (cmd[2] == '*close\n'):
-                    viewCnt += 1
-                    endTime = datetime.datetime.strptime(cmd[1], datetime_format)
-                    timeCnt += datetime2sec(endTime - startTime)
+    # for key in idViewDict:
+    #     logPath = os.path.join(app.config.get('UPLOAD_LOG_DIR'), str(key)+".txt")
+    #     if os.path.isfile(logPath):
+    #         viewCnt = 0
+    #         timeCnt = 0
+    #         startTime = 0
+    #         endTime = 0
+    #         log = open(logPath, 'r', encoding='utf-8-sig')
+    #         scripts = log.readlines()
+    #         for line in scripts: 
+    #             cmd = line.split(' ')
+    #             if (cmd[2] == '*open\n'):
+    #                 startTime = datetime.datetime.strptime(cmd[1], datetime_format)
+    #             elif (cmd[2] == '*close\n'):
+    #                 viewCnt += 1
+    #                 endTime = datetime.datetime.strptime(cmd[1], datetime_format)
+    #                 timeCnt += datetime2sec(endTime - startTime)
 
-            idViewDict[key] = viewCnt
-            idTimeDict[key] = round(timeCnt / viewCnt, 2)
+    #         idViewDict[key] = viewCnt
+    #         idTimeDict[key] = round(timeCnt / viewCnt, 2)
 
-    idViewList = sorted(idViewDict.items(), key = lambda item: item[1], reverse = True)
-    idViewMeta = list()
-    for key, value in idViewList:
-        videoObj = DB.session.query(Metadatum).filter(Metadatum.id == key).first()
-        valDict = dict()
-        valDict['id'] = key
-        valDict['views'] = value
-        valDict['title'] = videoObj.title
-        valDict['presenter'] = videoObj.presenter
-        valDict['uploadDate'] = videoObj.uploadDate
-        idViewMeta.append(valDict)
+    # idViewList = sorted(idViewDict.items(), key = lambda item: item[1], reverse = True)
+    # idViewMeta = list()
+    # for key, value in idViewList:
+    #     videoObj = DB.session.query(Metadatum).filter(Metadatum.id == key).first()
+    #     valDict = dict()
+    #     valDict['id'] = key
+    #     valDict['views'] = value
+    #     valDict['title'] = videoObj.title
+    #     valDict['presenter'] = videoObj.presenter
+    #     valDict['uploadDate'] = videoObj.uploadDate
+    #     idViewMeta.append(valDict)
 
-    print(idViewMeta)
-    print(idTimeDict)
+    # print(idViewMeta)
+    # print(idTimeDict)
 
     return render_template('/performance.html',
                            code=200,
@@ -211,7 +211,7 @@ def ratio():
                            keyWord=list(keyWord.keys()),
                            keyWord_data=list(keyWord.values()),
                            keyWord_total=keyWord.items(),
-                           idView = idViewMeta,
+                           #idView = idViewMeta,
                            idTime = list(idTimeDict.keys()),
                            idTime_data = list(idTimeDict.values())
                            )

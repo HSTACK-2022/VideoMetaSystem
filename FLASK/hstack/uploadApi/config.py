@@ -9,6 +9,7 @@
 
 import os
 import platform
+
 from flask_sqlalchemy import SQLAlchemy
 
 OS = platform.system()
@@ -29,7 +30,7 @@ STT_API_KEY = {
 
 db = {
     'user' : 'root',
-    'password' : 'hstackdbadmin',
+    'password' : 'csedbadmin',
     'host' : 'localhost',
     'port' : 3306,
     'database' : 'hstackDB'
