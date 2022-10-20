@@ -156,8 +156,7 @@ body{
 }
 
 .aside {
-
-    margin: 55px 30px 50px 50px;
+    margin: 55px 30px 0px 50px;
     background-color: #eeeeee;
     border-radius: 20px;
     padding: 0px 0px 10px 10px;
@@ -320,6 +319,31 @@ body{
 }
 
 #resetBtn:hover {
+    cursor: pointer;
+    background-color:rgb(50, 46, 93);
+}
+
+#satisfyTable td {
+    width: 20%;
+    font-size: 14px;
+    text-align: center;
+}
+
+#satisfyBtn {
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    font-size: 14px;
+    font-family: 'pre1';
+    padding: 3px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #ffffff;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+#satisfyBtn:hover {
     cursor: pointer;
     background-color:rgb(50, 46, 93);
 }

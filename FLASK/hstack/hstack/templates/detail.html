@@ -1,19 +1,43 @@
+<!--
+
+detail.html 
+- 영상의 상세페이지입니다.
+- 영상 플레이어와 메타데이터 탭을 제공합니다.
+
+- redirect with : '/detail/<int:pk>'
+- linked with : views/detail_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
         {% for metadata in metadatas %}
             <link rel="stylesheet" href="{{ url_for('static', filename='css/videoDetail.css') }}">
-            <link rel="stylesheet" href="{{ url_for('static', filename='css/csstab3.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/tab3.css') }}">
             <script type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
-            <title>VMeta - {{metadata.title}}
-            </title>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
+            <script>
+                window.addEventListener('load', function() {
+                    console.log("open");
+                    writeOpenLog({{pk}}, 'open');
+                    loadImg('{{ metadata.title }}');
+                    onloads();
+                });
+                window.addEventListener('beforeunload', function() {
+                    console.log("close");
+                    writeOpenLog({{pk}}, 'close');
+                });
+            </script>
+            <title>VMeta - {{metadata.title}}</title>
             <meta charset="UTF-8">
         </head>
         {% include 'header.html' %}
-        <body class="bodyArea"
-            onload="writeOpenLog({{pk}}, 'open'); loadImg('{{ metadata.title }}'); onloads();"
-            onunload="writeOpenLog({{pk}}, 'close');"
-        >
+        <body class="bodyArea">
             <div class="divParent">
                 <!-- Post content-->
                 <div class="detailHeader">
@@ -47,11 +71,16 @@
                             <div class="videoPresenter">
                                 by
                                 {{metadata.presenter}}</div>
-
                         </div>
-
+                        <div class="right">
+                            <button
+                                type="button"
+                                id="save"
+                                onclick="location.href='{{url_for("edit.editFile", pk=pk ) }}'">
+                                EDIT
+                            </button>
+                        </div>
                     </div>
-
                 </div>
                 <!-- end of detail Header-->
 
@@ -131,7 +160,7 @@
                                             placeholder="Search in &quot;{{ metadata.title }}&quot;"
                                             id="searchContent"></input>
                                         <input
-                                            type="submit"
+                                            type="button"
                                             class="searchBtn"
                                             value=""
                                             onclick="searchPost({{scripts}}); writeSearchLog({{pk}});"
@@ -178,17 +207,46 @@
                                 </div>
                             </li>
 
-
+                            <li id="tab4" class="btnCon">
+                                <a class="btn fourth" href="#tab4">Images</a>
+                                <div class="tabCon">
+                                    <div class="donwloadBtns">
+                                        <button id="downloadImg" type="button" onclick="downloadImg('{{ metadata.title }}')">
+                                            <img id="down" src="{{ url_for('static', filename='img/download.png') }}">
+                                            <br>
+                                            <span class="sceneDownloadBtn">장면</span><br>
+                                            <span class="sceneDownloadBtn">저장</span><br>
+                                            <span class="sceneDownloadBtn">(jpg)</span>
+                                        </button>
+                                        <button id="downloadImg" type="button" onclick="downloadPPT('{{pptPath}}', '{{metadata.title}}')">
+                                            <img id="down" src="{{ url_for('static', filename='img/download.png') }}">
+                                            <br>
+                                            <span lass="sceneDownloadBtn">장면</span><br>
+                                            <span lass="sceneDownloadBtn">저장</span><br>
+                                            <span lass="sceneDownloadBtn">(ppt)</span>
+                                        </button>
+                                    </div>
+                                    <div class="searchScroll">
+                                        <div class="metadataTR2">
+                                            <div class="metadataTitle3">{{metadata.title}}에서 총 {{images|length}} 개의 장면을 감지했습니다.</div>
+                                        </div>  
+                                        <div id = "pptImage">
+                                            {% for image in images %}
+                                                <image
+                                                    id="{{image}}"
+                                                    class="imageLists"
+                                                    src="{{ url_for('detail.data', filepath=image) }}">
+                                                </image>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
 
                         </ul>
                     </div>
                 </div>
             </div>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/download.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip.min.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/jszip/jszip-utils-ie.js') }}"></script>
-            <script type="text/javascript" src="{{ url_for('static', filename='js/videoAction.js') }}"></script>
             
             <script>
                 location.href = "#tab1";

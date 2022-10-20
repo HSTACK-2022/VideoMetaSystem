@@ -1,3 +1,14 @@
+<!--
+
+performance_detail.html 
+- 모니터링 페이지 중 Video Details에서 선택된 Category에 대해
+- 해당 Category 값을 갖는 영상들의 목록을 출력합니다.
+
+- redirect with : '/performance/category/<string:category>'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,6 +39,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">

@@ -1,79 +1,164 @@
-# categoryService.py
+# intent.py
 #
-# 영상의 키워드와 제목을 기반으로 카테고리를 추출합니다.
-# extractMetadata.py에 의해 호출됩니다.
+# 검색어에서 핵심어를 추출합니다.
 # 
 # uses
-# - extractCategory(fileURL, totalDic) : 비디오 파일에서 카테고리 추출
-# - getCategoryService(accessKey, keywordList) : ETRI API를 호출하여 단어 정보 추출
-# - getCategoryFromJson(responseData) : 추출된 단어 정보중 형태소 분리
-# - categoryClassification(each_tag) : 10진 분류법을 바탕으로 카테고리 추출
-# 
-# * extractCategory() 호출시 나머지 함수 역시 호출됩니다.
+# - init() : wiki 모델을 불러옵니다.
+# - findWord(word) : word 검색어에서 핵심어를 추출합니다.
 #
 # parameters
-# - fileURL : 비디오 파일이 저장된 경로
-# - totalDic : 카테고리 값과 확률을 저장할 딕셔너리
-# - accessKey : ETRI API에 접근하기 위한 키 (config.py에 명시)
-# - keywordList : 영상에서 추출한 키워드의 리스트
-# - responseData : getCategoryService()에서, ETRI API를 호출하여 얻은 결과값
-# - each_tag : getCategoryFromJson()에서, 결과값을 후처리하여 얻은 태그값
-# 
-# return
-# - totalDic : 카테고리의 종류와 확률을 넣어 반환합니다.
-#
-# reference
-# https://aiopen.etri.re.kr/guide_wiseNLU.php#group03
+# - word : 검색어
 
 
+import os
 
-from tkinter import E
-from xmlrpc.client import boolean
-from http.client import HTTPConnection, ImproperConnectionState
+from gensim.models import word2vec
+from konlpy.tag import Okt
+from . import deepRank
 
-import urllib3
-import json
-import time
+def init():
+    global wikiModel
 
-from .config import STT_API_KEY
- 
-# 언어 분석 기술(문어)
+    print("load wiki...")
+    wikiPath = os.path.join('.', 'models', 'wiki.model')
+    wikiModel=word2vec.Word2Vec.load(wikiPath)
+    print("load wiki... success")
+
+
+def findWord(word):
+    # 0. search tags
+    availTag = {
+        'Adjective',
+        'Adverb',
+        'Noun',
+        'Verb'
+    }
+
+    # 1. pos tagging
+    okt = Okt()
+    wordWithTag = okt.pos(word, norm=True, stem=True)
+    print(wordWithTag)
+
+    # 2. extract noun, adj, verb
+    searchText = set()
+    for word, val in wordWithTag:
+        if val in availTag:
+            searchText.add(word)
+            #searchWiki.append((word, 1.0))
+
+    # 3. get Category from word
+    # 검색어에 해당하는 Category도 All에 포함
+    l = getCategory(list(searchText))
+    for ll in l:
+        searchText.add(ll)
+
+    '''
+    # 3. run wiki model : get similar words
+    wiki = wikiModel.wv.most_similar(positive = list(searchText))[:5]
+    for w in wiki:
+        searchWiki.append(w)
+    print(searchWiki)
+    '''
+
+    print(searchText)
+
+    return searchText
+
+def doIntent(indexTexts):   
+    # 문장 검색의 각 검색 파라미터의 가중치 계산
+    # 예: '운영체제가 스레드를 만드는 방법'을 검색 -> 검색 파라미터 = '운영','체제','스레드','만들다','방법' -> 각 파라미터의 가중치 = 0.2
+    n = len(indexTexts)
+    intent_weight = 1/n
+    result_all = [] # 검색된 전체 결과 리스트
+
+    for s in indexTexts:
+        deepRank_weight = [0.3,0.3,0.2,0.2]
+        perc = deepRank.deepRank(deepRank_weight, s.split(), None, None, None)
+        # 검색 파라미터의 검색 결과가 없는 경우 가중치 재정립
+        if perc=={}:
+            n -= 1
+            if n == 0 :
+                return
+            intent_weight += round(intent_weight/n,2)
+        else:
+            result_all.append(perc)
+            
+    # print("최종 weight")
+    # print(intent_weight)
+    # print("최종 percentage")
+    # print(result_all)
+
+    deepRank_weight = [0.3,0.3,0.2,0.2] # deepRank_weight 재저장
+    # 결과 딕셔너리 합치기
+    result_dict = {} 
+    for result in result_all:  # 리스트의 각 딕셔너리 (예: result={101: [100, 0, 65.5, 0], 77: [100, 0, 100.0, 0]})
+        for r in result:    # 예: r=101,77
+            if r in result_dict:
+                result_dict[r].extend(result[r])
+            else:
+                result_dict[r] = result[r]
+
+    # 가중치 적용된 확률 딕셔너리
+    n = 0
+    re_dict={}
+    for key,value in result_dict.items():   # {101: [100, 0, 65.5, 0], 77: [100, 0, 100.0, 0]}
+        n = 0
+        perlist = [0,0,0,0]
+        for v in value:
+            perlist[n%4] += v*intent_weight
+            n += 1
+        re_dict[key] = perlist
+    # print("최종 dict")
+    # print(re_dict)
+
+    # max 구하기
+    maxList = [0, 0, 0, 0]
+    for value in re_dict.values():
+        for i in range(0, 4):
+            maxList[i] = max(maxList[i], value[i])
+
+    # max weight 구하기
+    whatzero = []
+    for i in range(0, 4):
+        if (maxList[i] != 0):
+            maxList[i] = round(100/maxList[i], 2)
+        else:
+            whatzero.append(i)
+            deepRank_weight[i] = 0
+    # print("MAX : ")
+    # print(maxList)
+
+    # max weight 적용
+    for key, value in re_dict.items():
+        for i in range(0, 4):
+            if (maxList[i] != 0):
+                value[i] = round(value[i]*maxList[i],2)
+            value[i] = 100 if value[i] > 100 else value[i]
+    # print("After apply weight : ")
+    # print(re_dict)
+
+    return re_dict
+
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU"
 analysisCode = "ner"
-
-def extractCategory(fileURL, totalDic):
-    # get from config.py
+import urllib3
+import random
+import json
+from .config import STT_API_KEY
+def getCategory(wordList):
     global accessKey
     accessKey = list(STT_API_KEY)
-
-    # videoId를 통해 Keyword list를 받아온다.
-    getTopicDict = {}
-    transferTo_list = []
-    for key in totalDic['keyword'].keys():
-        transferTo_list.append(key)
-    transferTo_list.append(totalDic['title'])
-    for j in range(0,5):
-        time.sleep(0.5)
-        for i in range(0,5):
-            getTopicDict = getCategoryService(accessKey[i], transferTo_list)
-    
-
-    print(".......................")
-    print(getTopicDict)
-    if (len(getTopicDict) == 0):
-        getTopicDict['None'] = 0
-        
-    print(getTopicDict)
-    totalDic['category'] = getTopicDict
-
-
-def getCategoryService(accessKey, keywordList):
-    text = ', '.join(keywordList) # 리스트를 문자열로 변환
-
+    # for i in range(0,len(wordList)):
+    #     key_list = list(getCategoryService(accessKey[i%5],wordList[i]).keys())
+    #     for key in key_list:
+    #         to_category_set.add(key)
+    # return list(to_category_set)    
+    return list(getCategoryService(accessKey[random.randint(0,4)],' '.join(wordList)).keys())
+def getCategoryService(accessKey, searchWord):
     requestJson = {
         "access_key": accessKey,
         "argument": {
-            "text": text,
+            "text": searchWord,
             "analysis_code": analysisCode
         }
     }
@@ -88,8 +173,7 @@ def getCategoryService(accessKey, keywordList):
     if response.status == 200:
         return getCategoryFromJson(str(response.data, "utf-8"))
     else:
-        return set()
-
+        return dict()
 def getCategoryFromJson(responseData):
     str = responseData
     json_obj = json.loads(str) # dumps - 파이썬 문자열을 json 형태로 변환
@@ -101,6 +185,9 @@ def getCategoryFromJson(responseData):
         #print("+++")
         #print(i['weight'])
         percent = round(i['weight'], 3)
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(categoryClassification(i['type']))
+        print(i)
         categoryDetect = categoryClassification(i['type'])
         if (categoryDetect != None):
             totalPerc += i['weight']
@@ -115,8 +202,6 @@ def getCategoryFromJson(responseData):
         returnTypes[key] = round(weight * returnTypes[key], 3)
         
     return returnTypes
-
-
 def categoryClassification(each_tag):
     # 참고 십진분류법: http://www.booktrade.or.kr/kdc/kdc.jsp
     # 분류 ->
@@ -177,7 +262,7 @@ def categoryClassification(each_tag):
         elif each_tag == 'OGG_SCIENCE':
             return('과학')
         elif each_tag == 'OGG_LAW':
-            return('법률*법학')
+            return('법률/법학')
         elif each_tag == 'OGG_POLITICS':
             return('행정')
         elif each_tag == 'OGG_FOOD':
@@ -187,7 +272,7 @@ def categoryClassification(each_tag):
 
     elif' AF' in each_tag:
         if each_tag == 'AF_CULTURAL_ASSET':
-            return('문명*문화') #문화재
+            return('문명/문화') #문화재
         elif each_tag == 'AF_BUILDING':
             return('건축')
         elif each_tag == 'AF_MUSICAL_INSTRUMENT':
@@ -210,14 +295,12 @@ def categoryClassification(each_tag):
             #return('미술')
         elif each_tag == 'AFW_MUSIC':
             return('음악')
-        elif each_tag == 'AFW_DOCUMENT':
-            return('예술')
 
     elif 'CV' in each_tag:
         if each_tag == 'CV_NAME':
-            return('문명*문화')
+            return('문명/문화')
         elif each_tag == 'CV_TRIBE':
-            return('문명*문화')
+            return('문명/문화')
         elif each_tag == 'CV_SPORTS':
             return('스포츠')
         elif each_tag == 'CV_SPORTS_INST':
@@ -241,9 +324,12 @@ def categoryClassification(each_tag):
         elif each_tag == 'CV_CURRENCY':
             return('경제')
         elif each_tag == 'CV_LAW':
-            return('법률*법학')
+            return('법률/법학')
         elif each_tag == 'CV_FOOD_STYLE   ':
             return('요리')
+    
+    elif 'PS_NAME' in each_tag:
+        return
   
     elif 'AM' in each_tag:
         return('동물')
@@ -289,6 +375,3 @@ def categoryClassification(each_tag):
     
     elif 'MT' in each_tag:
         return('과학')
-
-    elif 'PS' in each_tag:
-        return ('인물')

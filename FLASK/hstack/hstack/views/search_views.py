@@ -1,16 +1,35 @@
+# search_views.py
+#
+# 영상 검색 목록 router
+#
+#
+# [routes]
+# - data(filepath)
+#   : '/search/data/<path:filepath>'
+#   : 이미지 파일 전송.
+#   : filepath 경로에 있는 파일을 파일 시스템에서 찾아 전달.
+#
+# - searchFile()
+#   : '/search/', method=['GET']
+#   : searchAll()을 호출하여 검색 결과를 제공합니다.
+#   : Category, Narrative, Presentation에 대해 필터가 주어진 경우 필터 결과를 전달합니다.
+
+
 from flask import request
 from flask import Blueprint
 from flask import render_template
 from flask import send_from_directory
 
+from hstack import intent
 from hstack import searchAll
 
 # from sqlalchemy import SQLAlchemy
-from hstack.config import DB
+from hstack.config import DB, OS
 from hstack.models import TotalSearch
 from hstack.models import TitleSearch
 from hstack.models import PresenterSearch
 from hstack.models import KeywordSearch
+from hstack.models import SearchSatisfy
 
 import os
 import re
@@ -21,8 +40,16 @@ bp = Blueprint('search', __name__, url_prefix='/')
 
 @bp.route('/data/<path:filepath>')
 def data(filepath):
-    return send_from_directory('../media', filepath.replace("\\", '/')[1:])
+    print(filepath)
+    if OS == "Windows":
+        return send_from_directory('../media', filepath.replace("\\", '/')[1:])
+    else :
+        return send_from_directory('../media', filepath)
 
+@bp.route('/search/satisfy/<int:value>')
+def satisfySave(value):
+    DB.session.query(SearchSatisfy).filter(SearchSatisfy.val == value).update({'cnt': SearchSatisfy.cnt+1})
+    DB.session.commit()
 
 @bp.route('/search/', methods=['GET'])
 def searchFile():
@@ -59,32 +86,16 @@ def searchFile():
 
     else:
         # if totalSearch
-        searchWords = []
-        words = re.split(r'[ ,:]', word)
-        for item in words:
-            if item != "":
-                #searchWords.append(item)
+        searchWords = intent.findWord(word)
 
-                # DB에서 전체 단어 검색
-                print(TotalSearch.query.filter(TotalSearch.tKeyword == item))
-
-                # [Logging] 전체 검색 LOG 파일 생성 (필요 없으면 삭제해도 됨)
-                file = open(os.path.join('logs', 'full.txt'),
-                            'a+', encoding='UTF-8')  # a : 이어쓰기
-                date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                print(item)
-                file.write(date+" "+item+"\n")
-                file.close()
-
-                # 요기 까지
-                searchWords.append(item)
-                if len(TotalSearch.query.filter(TotalSearch.tKeyword.contains(item)).all()) != 0:
-                    DB.session.query(TotalSearch).filter(
-                        TotalSearch.tKeyword == item).update({'cnt': TotalSearch.cnt+1})
-                else:
-                    ts = TotalSearch(tKeyword=item, cnt=1)
-                    DB.session.add(ts)
-                DB.session.commit()
+        # [Logging] 전체 검색 DB (필요 없으면 삭제해도 됨)
+        for item in searchWords:
+            if len(TotalSearch.query.filter(TotalSearch.tKeyword.contains(item)).all()) != 0:
+                DB.session.query(TotalSearch).filter(TotalSearch.tKeyword == item).update({'cnt': TotalSearch.cnt+1})
+            else:
+                ts = TotalSearch(tKeyword=item, cnt=1)
+                DB.session.add(ts)
+            DB.session.commit()
 
         if len(searchWords) == 0:
             searchWords = None

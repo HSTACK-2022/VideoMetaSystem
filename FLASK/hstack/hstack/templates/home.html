@@ -1,3 +1,13 @@
+<!--
+
+home.html 
+- 초기 화면을 나타냅니다.
+
+- redirect with : '/'
+- linked with : views/main_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,7 +29,7 @@
                     <div id="home_search">
                         <form
                             name="search"
-                            action="http://localhost:5000/search"
+                            action="/search"
                             method="GET"
                             enctype="multipart/form-data">
                             <input type="hidden" name="isDetail" value="False">
@@ -34,7 +44,7 @@
                                             class="searchInput"
                                             type="text"
                                             name="searchText"
-                                            placeholder="검색어를 입력하세요">
+                                            placeholder="단어나 문장을 검색해 원하는 영상을 찾아보세요.">
                                     </td>
 
                                     <!-- Please enter your search words. -->

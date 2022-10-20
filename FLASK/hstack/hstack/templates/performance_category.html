@@ -1,3 +1,14 @@
+<!--
+
+performance_category.html 
+- 모니터링 페이지 중 Video Details의 초기 화면입니다.
+- 각 카테고리별 영상의 갯수를 출력합니다.
+
+- redirect with : '/performance/category'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,6 +39,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">

@@ -1,3 +1,8 @@
+# models.py
+#
+# 시스템 DB와 연결되는 코드입니다.
+# uploadApi의 models.py와 동일합니다.
+# 
 # coding: utf-8
 from .config import DB as db
 
@@ -145,3 +150,14 @@ class UploadTime(db.Model):
 
     def __repr__(self):
         return f"<UpoladTime('{self.id}', '{self.time}', '{self.size}')>"
+
+        
+class SearchSatisfy(db.Model):
+    __tablename__='searchSatisfy'
+
+    val = db.Column(db.Integer, primary_key=True)
+    cnt = db.Column(db.Integer)
+
+    def __init__(self, val, cnt, **kwargs):
+        self.val = val
+        self.cnt = cnt

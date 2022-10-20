@@ -1,3 +1,30 @@
+# main_views.py
+#
+# 홈화면, 영상 편집 가능 리스트 화면, 업로드 화면에 대한 router
+#
+#
+# [routes]
+# - home()
+#   : '/'
+#   : 홈 화면을 출력합니다.
+#
+# - uploadFile()
+#   : '/uploadFile/', methods=['GET', 'POST']
+#   : 영상 업로드를 위한 정보를 입력받습니다.
+#   : 모든 정보를 입력받으면 영상을 서버 내부 저장소에 저장한 뒤
+#     send2API()를 통해 uploadApi로 메타데이터 추출을 요청합니다.
+#
+# - uploadList()
+#   : '/uploadFile/lists', methods=['GET', 'POST']
+#   : 현재 DB에 저장된 영상들 중 편집이 가능한 영상의 목록을 전달합니다.
+#   : Category, Narrative, Presentation에 대해 필터가 주어진 경우 필터 결과를 전달합니다.
+#
+# 
+# [etc]
+# - send2API(title, presenter, password, uploadURL)
+#   : uploadApi로 메타데이터 추출을 위한 request를 전송합니다.
+
+
 from flask import url_for
 from flask import request
 from flask import redirect
@@ -63,6 +90,11 @@ def uploadFile():
             existError['passwordError'] = "파일 수정을 위한 비밀번호를 입력해주세요."
         if (secure_filename(uploadedFile.filename) == ""):
             existError['fileError'] = "영상 파일을 첨부해주세요."
+        else:
+            # file valid check.
+            fileExtension = os.path.splitext(uploadedFile.filename)[1]
+            if (fileExtension != '.mp4'):
+                existError['fileError'] = ".mp4 형식의 파일을 업로드해주세요."
 
         if existError:
             return render_template('upload.html', error=existError)

@@ -1,10 +1,22 @@
+# config.py
+#
+# uploadApi를 실행하기 위한 정보들을 저장합니다.
+# 
+# - DB 접근 정보
+# - STT API 접근 키
+# - 영상을 업로드한 경로
+# - 운영체제의 종류 (Windows / Linux 구분을 위함)
+
 import os
 import platform
+
 from flask_sqlalchemy import SQLAlchemy
 
 OS = platform.system()
 BASE_DIR = os.path.dirname(__file__)
 UPLOAD_FILE_DIR = os.path.join('.', 'media', 'Uploaded')
+MODEL_DIR = os.path.join('.', 'uploadApi', 'ImageSeperate', 'test.py')
+
 
 JSON_AS_ASCII = False
 

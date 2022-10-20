@@ -1,3 +1,18 @@
+# tensorflow/ImageSeperate/test.py
+#
+# 이미지 폴더의 경로를 받아 그 안에 있는 이미지들을 분류합니다.
+# 기본적으로 imageTraining.h5 모델을 이용하여 분류하나,
+# 다시 학습이 필요한 경우 101번째 줄의 train()의 주석을 삭제하면
+# 학습 데이터를 기반으로 다시 학습할 수 있습니다.
+#
+# 이미지는 아래 5개의 기준으로 분류됩니다.
+# N (News) : 뉴스 형식의 이미지
+# L (Leceture) : 강의, 강연 이미지
+# P (PPT) : PPT와 같이 정적인 자료를 사용한 이미지
+# A (Application) : N, L, P가 아닌 이미지
+# E (Error) : 이미지 분류가 불가능한 경우
+
+
 import os
 import numpy as np
 import tensorflow as tf

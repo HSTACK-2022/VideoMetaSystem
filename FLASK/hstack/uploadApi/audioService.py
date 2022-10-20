@@ -1,19 +1,21 @@
 # audioService.py
 #
-# video에서 audio를 추출하고, 이를 이용한 metadata를 얻어냅니다.
-# - audio에서 성별 정보 얻기
-# - audio에서 다수가 말하는지의 여부 추출
-# - audio를 통해 script, keyword, topic 추출 (sttService.py 참고)
+# video에서 10초 단위의 audio를 추출합니다.
+# sttService.py에 의해 호출됩니다.
 # 
 # uses
-# - doAudioService(videoId)
+# - video2audio(fileURL) : 비디오 파일을 오디오 파일로 추출
+# - splitAudio(fileURL) : 오디오 파일을 10초 단위로 쪼개어 저장
+# - video2splitedAudio(fileURL) : 비디오 파일을 10초 단위의 오디오 파일로 추출
+#
+# * video2splitedAudio() 내에서 video2audio(), splitAudio를 호출합니다.
 #
 # parameters
-# - videoId : DB Table들의 key로 쓰이는 video의 고유 id
+# - fileURL : 비디오 파일이 저장된 경로
 # 
 # return
-# - True : 작업이 정상적으로 완료된 경우
-# - False : 중간에 오류가 발생한 경우
+# - audioDirPath : 10초 단위의 오디오들이 저장된 폴더의 경로
+# * os.path.join(os.path.dirname(fileURL), 'Audio')와 동일.
 
 import os
 import math

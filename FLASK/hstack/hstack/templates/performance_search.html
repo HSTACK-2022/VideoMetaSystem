@@ -1,3 +1,14 @@
+<!--
+
+performance_search.html 
+- 모니터링 페이지 중 Data Overview의 search를 나타냅니다.
+- 각 검색 방법에 따른 검색어를 나타냅니다.
+
+- redirect with : '/performance/search'
+- linked with : views/performanc_views.py
+
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -22,13 +33,56 @@
             }
 
             function first_load(){
+                var satisfyName = ['매우불만족', '불만족', '보통', '만족', '매우만족']
+                var satisfyBackground = [
+                    '#24460B',
+                    '#315512',
+                    '#44691D',
+                    '#587E2B',
+                    '#6f933b',
+                ]
+                new Chart(document.getElementById("satisfaction-chart"), {
+                    type: 'horizontalBar',
+                    data: {
+                        labels: [''],
+                        datasets: [
+                            {% for d in satisfy %}
+                            {
+                                data: [{{satisfy[d]}}],
+                                label: satisfyName[{{d}}],
+                                backgroundColor: satisfyBackground[{{d}}],
+                            },
+                            {% endfor %}
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales : {
+                            xAxes : [{
+                                stacked: true,
+                                display: false,
+                                ticks: {
+                                    max: {{satisfySum}},
+                                }
+                            }],
+                            yAxes : [{
+                                stacked: true,
+                                display: false,
+                            }],
+                            
+                        },
+                        indexAxis: 'y',
+                    }
+                });
+                
+
                 new Chart(document.getElementById("search-chart"), {
                 type: 'line',
                 data: {
                         labels: {{totalWord|safe}},
                         datasets: [{ 
                             data: {{totalWord_data|safe}},
-                            label: "전체 검색 단어",
+                            label: "검색 횟수",
                             lineTension: 0.3,
                             backgroundColor: "rgba(2,117,216,0.2)",
                             borderColor: "rgba(2,117,216,1)",
@@ -39,15 +93,11 @@
                             pointHoverBackgroundColor: "rgba(2,117,216,1)",
                             pointHitRadius: 50,
                             pointBorderWidth: 2,
-                            
                         }]
                     },
                     options: {
-                        responsive: false,
-                        title: {
-                        display: true,
-                        },
-                        
+                        maintainAspectRatio: false,
+                        title: {display: true,},
                         legend: {display: false}    // label 안보이게
                     }
                     });
@@ -58,7 +108,8 @@
                         labels: {{titleWord|safe}},
                         datasets: [{ 
                             data: {{titleWord_data|safe}},
-                            label: "제목 검색 단어",
+                            label: "검색 횟수",
+                            borderColor: "#3cba9f",
                             backgroundColor: [
                             '#661A69',
                             '#7F2B7A',
@@ -70,7 +121,6 @@
                             '#FBD5E2',
                             '#FDEAEE'
                             ],
-                            borderColor: "#3cba9f",
                             fill: false
                         }]
                     },
@@ -78,11 +128,17 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '제목 검색 단어 빈도수'
+                        text: '제목 검색어 빈도수'
                         },
-                        
                         legend: {display: false},    // label 안보이게
-                        
+                        scales : {
+                            yAxes : [{
+                                ticks : {
+                                    beginAtZero : true, // 0부터 시작하게 합니다.
+                                    stepSize: 1   // 1 씩 증가하도록 설정합니다.
+                                }
+                            }]
+                        }
                     }
                     });
 
@@ -92,7 +148,8 @@
                         labels: {{presenterWord|safe}},
                         datasets: [{ 
                             data: {{presenterWord_data|safe}},
-                            label: "발표자 검색 단어",
+                            label: "검색 횟수",
+                            borderColor: "#e8c3b9",
                             backgroundColor: [
                             '#143468',
                             '#224A7D',
@@ -104,7 +161,6 @@
                             '#C8F1FB',
                             '#E3F9FD'
                             ],
-                            borderColor: "#e8c3b9",
                             fill: false
                         }]
                     },
@@ -112,10 +168,17 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '발표자 검색 단어 빈도수'
+                        text: '발표자 검색어 빈도수'
                         },
                         legend: {display: false},    // label 안보이게
-                       
+                        scales : {
+                            yAxes : [{
+                                ticks : {
+                                    beginAtZero : true, // 0부터 시작하게 합니다.
+                                    stepSize: 1   // 1 씩 증가하도록 설정합니다.
+                                }
+                            }]
+                        }
                     }
                     });
 
@@ -125,7 +188,7 @@
                         labels: {{keyWord|safe}},
                         datasets: [{ 
                             data: {{keyWord_data|safe}},
-                            label: "키워드 검색 단어",
+                            label: "검색 횟수",
                             borderColor: "#c45850",
                             backgroundColor: [
                             '#24460B',
@@ -145,9 +208,17 @@
                         responsive: false,
                         title: {
                         display: true,
-                        text: '키워드 검색 단어 빈도수'
+                        text: '키워드 검색어 빈도수'
                         },
                         legend: {display: false},    // label 안보이게
+                        scales : {
+                            yAxes : [{
+                                ticks : {
+                                    beginAtZero : true, // 0부터 시작하게 합니다.
+                                    stepSize: 1   // 1 씩 증가하도록 설정합니다.
+                                }
+                            }]
+                        }
                     }
                     });
             }
@@ -159,7 +230,7 @@
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="/performance">Monitoring Page</a>
-
+            <div id="homeBtn"><img id="home" src="{{ url_for('static', filename='img/home.png') }}" onclick="location.href='/'"></div>
         </nav>
 
         <div id = "layoutSidenav">
@@ -193,14 +264,39 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                            <h1 class="px-4  pt-5">Search</h1>
-                            <ol class="breadcrumb px-4" >
-                                <li class="breadcrumb-item active">통합 검색</li>
-                                <li class="breadcrumb-item active">세부 검색</li>
-                            </ol>
+                        <h1 class="px-4  pt-5">Search</h1>
+                        <ol class="breadcrumb px-4 pb-2" >
+                            <li class="breadcrumb-item active">통합 검색</li>
+                            <li class="breadcrumb-item active">세부 검색</li>
+                        </ol>
                         
-                            <br>
-                         
+                        <div class="row mt-4">
+                            <div class="col">
+                                <div class="card card-raised h-100">
+                                    <div class="card-header mb-4 py-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="me-4">
+                                                <h2 class="card-title mb-1">검색 만족도</h2>
+                                                <div class="card-subtitle">Search satisfaction</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="card-body px-4">
+                                            <div class="row">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <canvas id="satisfaction-chart" style="position: relative; width: 1080vw; height: 100px;"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="row">
                             <div class="col-lg-9">
                                 <div class="card card-raised">
@@ -208,10 +304,10 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bar-chart-fill" viewBox="0 0 16 16">
                                             <path d="M1 11a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3zm5-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2z"/>
                                         </svg>
-                                        통합 검색 단어 빈도수
+                                        통합 검색어 빈도수 (Top 30)
                                     </div>
                 
-                                    <canvas id="search-chart" style="width:1000px; height:350px"></canvas>
+                                    <div class="mx-3"><canvas id="search-chart" style="position: relative; width: 1020vw; height: 350px;"></canvas></div>
                                 
                                 </div>
                             </div>
@@ -220,7 +316,7 @@
                                 <div class="card card-raised h-100">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                        통합 검색 단어 Top7
+                                        통합 검색어 Top7
                                     </div>
 
                                     <div class="card-body mt-2">
@@ -253,11 +349,11 @@
                             <div class="row mt-4">
                                 <div class="col">
                                     <div class="card card-raised h-100">
-                                        <div class="card-header px-4 py-3">
+                                        <div class="card-header mb-4 py-3">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="me-4">
-                                                    <h2 class="card-title mb-0 mb-1">
-                                                        세부 검색 단어 빈도수</h2>
+                                                    <h2 class="card-title mb-1">
+                                                        세부 검색어 빈도수</h2>
                                                     <div class="card-subtitle">
                                                         Advanced Search</div>
                                                 </div>
@@ -265,7 +361,7 @@
                                         </div>
     
                                         <div class="card-body">
-                                            <div class="card-body my-6 mx-3">
+                                            <div class="card-body px-4">
                                                 <div class="row">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <canvas id="title-search-chart" width="400" height="320"></canvas>
@@ -280,88 +376,93 @@
                                 </div>
                             </div>
 
-                            <div class="card card-raised h-100 my-4">
-                                <div class="card-header">
-                                    <i class="fas fa-chart-bar me-1"></i>
-                                    세부검색 내 많이 검색된 단어 Top7
-                                </div>
-                                
-                                <div class="card-body mt-2">
-                                    <div class="row">
-                                        <table id="datatablesSimple" style="width:33%;">
-                                            <thead>
-                                                <tr>
-                                                    <th style="background-color:#661A69;">순위</th>
-                                                    <th style="background-color:#661A69;">제목</th>
-                                                    <th style="background-color:#661A69;">검색량</th>
-                                                </tr>
-                                            </thead>
+                            <div class="row my-4">
+                                <div class="col">
+                                    <div class="card card-raised h-100">
+                                        <div class="card-header">
+                                            <i class="fas fa-chart-bar me-1"></i>
+                                            세부 검색어 Top7
+                                        </div>
+                                        
+                                        
+                                        <div class="card-body mt-2">
+                                            <div class="row">
+                                                <table id="datatablesSimple" style="width:33%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background-color:#661A69;">순위</th>
+                                                            <th style="background-color:#661A69;">제목</th>
+                                                            <th style="background-color:#661A69;">검색횟수</th>
+                                                        </tr>
+                                                    </thead>
+                                                    
+                                                    <tbody>
+                                                        {% for key, value in titleWord_total %}
+                                                        {% if loop.index <= 7 %}
+                                                        <tr>
+                                                            <td>{{loop.index}}</td>
+                                                            <td>{{key}}</td>
+                                                            <td>{{value}}</td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
                                             
-                                            <tbody>
-                                                {% for key, value in titleWord_total %}
-                                                {% if loop.index <= 7 %}
-                                                <tr>
-                                                    <td>{{loop.index}}</td>
-                                                    <td>{{key}}</td>
-                                                    <td>{{value}}</td>
-                                                </tr>
-                                                {% endif %}
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    
-    
-                                    
-                                        <table id="datatablesSimple" style="width:33%;">
-                                            <thead>
-                                                <tr>
-                                                    <th style="background-color:#143468;">순위</th>
-                                                    <th style="background-color:#143468;">발표자</th>
-                                                    <th style="background-color:#143468;">검색량</th>
-                                                </tr>
-                                            </thead>
+            
                                             
-                                            <tbody>
-                                                {% for key, value in presenterWord_total %}
-                                                {% if loop.index <= 7 %}
-                                                <tr>
-                                                    <td>{{loop.index}}</td>
-                                                    <td>{{key}}</td>
-                                                    <td>{{value}}</td>
-                                                </tr>
-                                                {% endif %}
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    
-    
-                                    
-                                        <table id="datatablesSimple" style="width:33%;">
-                                            <thead>
-                                                <tr>
-                                                    <th  style="background-color:#24460B;">순위</th>
-                                                    <th  style="background-color:#24460B;">키워드</th>
-                                                    <th style="background-color:#24460B;">검색횟수</th>
-                                                </tr>
-                                            </thead>
+                                                <table id="datatablesSimple" style="width:33%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background-color:#143468;">순위</th>
+                                                            <th style="background-color:#143468;">발표자</th>
+                                                            <th style="background-color:#143468;">검색횟수</th>
+                                                        </tr>
+                                                    </thead>
+                                                    
+                                                    <tbody>
+                                                        {% for key, value in presenterWord_total %}
+                                                        {% if loop.index <= 7 %}
+                                                        <tr>
+                                                            <td>{{loop.index}}</td>
+                                                            <td>{{key}}</td>
+                                                            <td>{{value}}</td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
                                             
-                                            <tbody>
-                                                {% for key, value in keyWord_total %}
-                                                {% if loop.index <= 7 %}
-                                                <tr>
-                                                    <td>{{loop.index}}</td>
-                                                    <td>{{key}}</td>
-                                                    <td>{{value}}</td>
-                                                </tr>
-                                                {% endif %}
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+            
+                                            
+                                                <table id="datatablesSimple" style="width:33%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th  style="background-color:#24460B;">순위</th>
+                                                            <th  style="background-color:#24460B;">키워드</th>
+                                                            <th style="background-color:#24460B;">검색횟수</th>
+                                                        </tr>
+                                                    </thead>
+                                                    
+                                                    <tbody>
+                                                        {% for key, value in keyWord_total %}
+                                                        {% if loop.index <= 7 %}
+                                                        <tr>
+                                                            <td>{{loop.index}}</td>
+                                                            <td>{{key}}</td>
+                                                            <td>{{value}}</td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            
+                                        </div>
+                                        <div id="current_time" class="card-footer small text-muted">
+                                            <script>date();</script>
+                                        </div>
                                     </div>
-                                    
-                                </div>
-                                <div id="current_time" class="card-footer small text-muted">
-                                    <script>date();</script>
                                 </div>
                             </div>
 

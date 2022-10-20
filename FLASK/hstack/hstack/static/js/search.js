@@ -73,7 +73,7 @@ function writeSearchLog(pk) {
     var content = document.getElementById("searchContent").value;
     console.log(content)
     var request = new XMLHttpRequest();
-    request.open('GET', `http://localhost:5000/detail/${pk}/search/${content}`);
+    request.open('GET', `/detail/${pk}/search/${content}`);
     request.send();
     request.onload = ()=>{
         console.log(JSON.parse(request.response));
@@ -83,9 +83,46 @@ function writeSearchLog(pk) {
 // detail 페이지에서 open시 로그 기록
 function writeOpenLog(pk, flag){
     var request = new XMLHttpRequest();
-    request.open('GET', `http://localhost:5000/detail/${pk}/time/${flag}`);
+    request.open('GET', `/detail/${pk}/time/${flag}`);
     request.send();
     request.onload = ()=>{
         console.log(JSON.parse(request.response));
+    }
+}
+
+// 만족도조사 저장
+function satisfySave(){
+    var flag = false;
+    var radioBtn = document.getElementsByName("satisfy");
+    for (var radio of radioBtn) {
+        if (radio.checked) {
+            console.log(radio.value);
+            var request = new XMLHttpRequest();
+            request.open('GET', `/search/satisfy/${radio.value}`);
+            request.send();
+            request.onload = ()=>{
+                console.log(JSON.parse(request.response));
+            }
+            flag = true;
+            break;
+        }
+    }
+
+    if (flag == true) {
+        // disable btn
+        var satisfyBtn = document.getElementById("satisfyBtn");
+        satisfyBtn.style.display = "none";
+
+        // thank you msg
+        var satisfyTable = document.getElementById("satisfyTable");
+        var satisfyTableParent = satisfyTable.parentElement;
+        satisfyTable.remove();
+            
+        var newMsg = document.createElement("div");
+        newMsg.innerText="설문에 참여해주셔서 감사합니다."
+        newMsg.style.width="100%";
+        newMsg.style.marginLeft="12px";
+        newMsg.style.marginBottom="15px";
+        satisfyTableParent.appendChild(newMsg);
     }
 }

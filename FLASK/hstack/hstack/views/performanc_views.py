@@ -1,7 +1,45 @@
-from ast import keyword
-from email.policy import default
-from tkinter.messagebox import QUESTION
-from winreg import QueryInfoKey
+# performanc_views.py
+#
+# 모니터링 페이지에 대한 router
+#
+#
+# [routes]
+# - ratio()
+#   : '/performance/'
+#   : 모니터링 페이지의 초기 화면으로,
+#     performance_search(), performance_metadata(), performance_videoviews()의 정보를 출력합니다.
+#
+# - performance_search()
+#   : '/performance/search'
+#   : 통합 검색, 상세 검색에 대한 모니터링 정보를 출력합니다.
+#   : 각 검색 방법에 따른 검색어와 검색 횟수를 출력합니다.
+#
+# - performance_metadata()
+#   : '/performance/metadata'
+#   : 시스템 DB에 저장된 영상들의 메타데이터 정보를 출력합니다.
+#   : 영상의 Category, Narrative, Presentation 비율과
+#     영상 업로드에 걸린 시간을 출력합니다.
+#
+# - performance_videoviews()
+#   : '/performance/videoviews'
+#   : 영상 상세 페이지에서의 모니터링 정보를 출력합니다.
+#   : 영상의 조회수 순위 Top10과 각 영상별 평균 재생 시간을 출력합니다.
+#
+# - performance_category()
+#   : '/performance/category'
+#   : 모니터링 페이지 중 Video Details의 초기 화면입니다.
+#     각 카테고리별 영상의 개수를 출력합니다.
+#
+# - performance_datail(category)
+#   : '/performance/category/<string:category>'
+#   : category에 해당하는 영상들의 목록을 출력합니다.
+#
+# - performance_detailFile(pk)
+#   : '/performance/detail/<int:pk>', methods=['GET']
+#   : id = pk인 영상의 메타데이터 정보를 출력합니다.
+#     id = pk인 영상의 detail 페이지에서, Script 검색에 쓰인 검색어들을 출력합니다.
+
+
 from flask import request
 from flask import Blueprint
 from flask import render_template
@@ -15,7 +53,7 @@ import collections
 
 from ..config import DB
 
-from ..models import Keyword
+from ..models import Keyword, SearchSatisfy
 from ..models import Videopath
 from ..models import Metadatum
 from ..models import Timestamp
@@ -48,7 +86,8 @@ def ratio():
             if word in categories_dict:
                 categories_dict[word] += 1
             else:
-                categories_dict[word] = 1
+                if (len(word) != 0):
+                    categories_dict[word] = 1
     print(categories_dict)
 
     narrative_dict = {}
@@ -77,13 +116,6 @@ def ratio():
         else:
             method_dict[item] = 1
 
-    # for item in categories:
-    #     words = re.split(r'[ ,:]',item)
-    #     if words != "": categories2.append(words)
-    #     if len(categories2) == 0:
-    #         categories2 = None
-    # print(categories2)
-
     # 업로드 시간 그래프
     uploadTime = []
     uploadSize = []
@@ -91,9 +123,18 @@ def ratio():
         uploadTime.append(res.time)
         uploadSize.append(res.size)
 
+    # 검색 만족도 그래프
+    satisfy = {}
+    satisfySum = 0
+    for res in DB.session.query(SearchSatisfy).order_by(SearchSatisfy.val.desc()):
+        satisfy[res.val-1] = res.cnt
+        satisfySum += res.cnt
+    print("검색 만족도 >>")
+    print(satisfy)
+
     # 검색 단어 그래프
     totalWord = {}
-    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(10):
+    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
         totalWord[res.tKeyword] = res.cnt
     print("Total Search에서 나온 단어>>")
     print(totalWord)
@@ -163,6 +204,8 @@ def ratio():
 
     return render_template('/performance.html',
                            code=200,
+                           satisfy=satisfy,
+                           satisfySum=satisfySum,
                            category=list(categories_dict.keys()),
                            category_data=list(categories_dict.values()),
                            narrative=list(narrative_dict.keys()),
@@ -191,9 +234,18 @@ def ratio():
 
 @bp.route('/performance/search/')
 def performance_search():
+    # 검색 만족도 그래프
+    satisfy = {}
+    satisfySum = 0
+    for res in DB.session.query(SearchSatisfy).order_by(SearchSatisfy.val.desc()):
+        satisfy[res.val-1] = res.cnt
+        satisfySum += res.cnt
+    print("검색 만족도 >>")
+    print(satisfy)
+
     # 검색 단어 그래프
     totalWord = {}
-    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(10):
+    for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
         totalWord[res.tKeyword] = res.cnt
     print("Total Search에서 나온 단어>>")
     print(totalWord)
@@ -210,6 +262,8 @@ def performance_search():
 
     return render_template('/performance_search.html',
                            code=200,
+                           satisfy=satisfy,
+                           satisfySum=satisfySum,
                            totalWord=list(totalWord.keys()),
                            totalWord_data=list(totalWord.values()),
                            totalWord_total=totalWord.items(),
@@ -241,7 +295,8 @@ def performance_metadata():
             if word in categories_dict:
                 categories_dict[word] += 1
             else:
-                categories_dict[word] = 1
+                if (len(word) != 0):
+                    categories_dict[word] = 1
     print(categories_dict)
 
     narrative_dict = {}
@@ -437,7 +492,7 @@ def performance_detailFile(pk):
                 endTime = datetime.datetime.strptime(cmd[1], datetime_format)
                 timeCnt += datetime2sec(endTime - startTime)
             else:
-                key = cmd[2].split('\n')[0]
+                key = line[20:].strip() #띄어쓰기도 감지하기 위해서 strip으로 수정
                 if key in searchDict:
                     searchDict[key] += 1
                 else:
@@ -450,10 +505,16 @@ def performance_detailFile(pk):
         metadataDict['view'] = 0
         metadataDict['avgTime'] = 0
 
+    #searchDict 내림차순으로 정렬
+    counts = collections.Counter(searchDict)
+    sorted_dict = dict(sorted(counts.items(), key = lambda item: item[1], reverse = True))
+    
+    print(list(sorted_dict.values())[0:10])
+
     return render_template('/performance_charts.html',
-                           code=200,
-                           pk=pk,
-                           scriptsWord=list(searchDict.keys()),
-                           scriptsCnt=list(searchDict.values()),
-                           metadatas=metadataDict
-                           )
+        code = 200,
+        pk = pk,
+        scriptsWord = list(sorted_dict.keys())[0:10], # 10개만 제공
+        scriptsCnt = list(sorted_dict.values())[0:10],
+        metadatas = metadataDict
+    )
