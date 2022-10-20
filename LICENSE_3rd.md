@@ -14,7 +14,7 @@
 # Libraries in VMeta
 
 <b> MySQL by Oracle</b><br/>
-VMeta uses MySQL Commercial License.
+VMeta uses MySQL Commercial License.<br/>
 License : GPL<br/>
 http://www.mysqlkorea.com/sub.html?mcode=shop&scode=01_1&m_no=127
 
