@@ -9,7 +9,7 @@ Your contribution will be of great help to the VMeta project.<br/>
 
 ## Contribute Guide
 
-See <a href="./README.md">README</a> file for general information on VMeta. <br/>
+See <a href="./README.md">README</a> file to get general information on VMeta. <br/>
 VMeta project and everyone participating in this project is governed by the <a href="https://www.contributor-covenant.org/version/2/0/code_of_conduct/">CODE_OF_CONDUCT</a>.
 
 

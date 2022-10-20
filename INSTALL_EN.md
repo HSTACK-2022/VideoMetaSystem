@@ -4,7 +4,7 @@
 
 > This document describes how to install VMeta in your local environment.<br/>
 > It is base on <b>Windows10</b>.<br/><br/>
-> Last Edit : 2022.10.06
+> Last Edit : 2022.10.20
 
 <br/>
 

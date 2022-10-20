@@ -17,6 +17,7 @@ If you run VMeta on local, change the port number to 8000 to avoid conflict.
 ```
 (venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > set FLASK_APP=uploadApi
 (venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > set FLASK_DEBUG=1
+(venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > set FLASK_ENV=development
 (venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > flask run --host 127.0.0.1 --port 8000
 ```
 
@@ -43,5 +44,6 @@ App hstack contains main pages of VMeta.
 ```
 (venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > set FLASK_APP=hstack
 (venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > set FLASK_DEBUG=1
+(venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > set FLASK_ENV=development
 (venv) E:\Workspace\VideoMetaSystem\FLASK\hstack > flask run
 ```

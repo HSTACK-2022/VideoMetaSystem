@@ -38,9 +38,9 @@ http://ffmpeg.org/doxygen/4.4/md_LICENSE.html
 
 <br/>
 
-<b> Tesseract by tesseract-OCR</b><br/>
+<b> Tesseract by UB-Mannheim</b><br/>
 License : Apache 2.0<br/>
-https://tesseract-ocr.github.io/tessdoc/Installation.html
+https://github.com/UB-Mannheim/tesseract/blob/main/LICENSE
 
 <br/>
 
@@ -65,3 +65,10 @@ https://github.com/opencv/opencv-python/blob/4.x/LICENSE.txt
 <b> startbootstrap-sb-admin by StartBootstrap</b><br/>
 License : MIT<br/>
 https://github.com/startbootstrap/startbootstrap-sb-admin/blob/master/LICENSE
+
+<br/>
+
+<b> ETRI Open API</b><br/>
+VMeta uses ETRI's Open API across speech recognition and language processing technologies.<br/>
+The license of the ETRI Open API is in accordance with the requirements of the link below.<br/>
+https://aiopen.etri.re.kr/service_guide.php

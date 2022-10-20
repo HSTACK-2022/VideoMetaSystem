@@ -5,7 +5,7 @@
 
 > 본 문서는 local 환경에서의 VMeta 설치 방법에 대해 기술합니다. <br/>
 > <b>Windows10</b>를 기준으로 작성되었습니다.<br/><br/>
-> Last Edit : 2022.10.06
+> Last Edit : 2022.10.20
 
 <br/>
 
