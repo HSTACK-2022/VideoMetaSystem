@@ -139,7 +139,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	subprocess에서의 정상 동작을 위해 특정 라이브러리들은 가상환경이 아닌 곳에도 설치합니다.<br/>
 	```
 	(venv) E:\Workspace\VideoMetaSystem > deactivate
-	E:\Workspace\VideoMetaSystem > pip install -r special_reqirements.txt
+	E:\Workspace\VideoMetaSystem > pip install -r special_requirements.txt
 	```
 	<br/>
 
@@ -259,7 +259,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	);
 	```
 
-- Insert Column for SearchSatisfy<br/>
+- SearchSatisfy를 위한 데이터 추가<br/>
 	```
 	INSERT INTO searchSatisfy (val, cnt) VALUE (1, 0);
 	INSERT INTO searchSatisfy (val, cnt) VALUE (2, 0);
@@ -284,7 +284,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	# in __init__.py
 	# line 15
 	
-	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASWORD}@localhost/hstackdb"
+	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASSWORD}@localhost/hstackdb"
 	```
 	```
 	# in config.py
@@ -306,7 +306,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	
 	db = {
 	'user' : 'root',
-	'password' : ${YOUR_DB_PASWORD},
+	'password' : ${YOUR_DB_PASSWORD},
 	'host' : 'localhost',
 	'port' : 3306,
 	'database' : 'hstackDB'
@@ -324,7 +324,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	# in __init__.py
 	# line 17
 	
-	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASWORD}@localhost/hstackdb"
+	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASSWORD}@localhost/hstackdb"
 	```
 	```
 	# in config.py
@@ -346,7 +346,7 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	
 	db = {
 	'user' : 'root',
-	'password' : ${YOUR DB PASWORD},
+	'password' : ${YOUR DB PASSWORD},
 	'host' : 'localhost',
 	'port' : 3306,
 	'database' : 'hstackDB'
