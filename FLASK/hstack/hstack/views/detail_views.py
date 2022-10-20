@@ -49,7 +49,6 @@ bp = Blueprint('detail', __name__, url_prefix='/')
 
 @bp.route('/detail/data/<path:filepath>')
 def data(filepath):
-    print(filepath)
     if OS == "Windows":
         return send_from_directory('../media', filepath.split('media\\')[1].replace("\\", '/'))
     else :
@@ -58,7 +57,6 @@ def data(filepath):
 @bp.route('/detail/download/<string:path>/<string:title>')
 def download(path, title):
     filepath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), path, title+".pptx")
-    print(filepath)
     return send_file(filepath)
 
 @bp.route('/detail/<int:pk>', methods=['GET'])
@@ -70,11 +68,8 @@ def detailFile(pk):
         with open(textPath, 'r', encoding='UTF-8-sig') as f:
             scripts = f.readlines()
     except FileNotFoundError as err:
-        print(err)
+        print("Error: "+err)
         scripts = []
-
-    print("############################")
-    print(textPath)
 
     keywordQ = and_(Keyword.id == pk, Keyword.expose == True)
 
@@ -90,8 +85,6 @@ def detailFile(pk):
         pptPath = os.path.dirname(videoPath.split('Uploaded\\')[1])
     else :
         pptPath = os.path.dirname(videoPath.split('Uploaded')[1])
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print(pptPath)
 
     return render_template('detail.html',
         pk = pk,

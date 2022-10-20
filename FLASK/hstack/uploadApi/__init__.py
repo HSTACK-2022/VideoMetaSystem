@@ -14,7 +14,7 @@ def create_app():
     api = Api(app)
 
     app.config.from_pyfile('config.py')
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:hstackdbadmin@localhost/hstackdb"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:csedbadmin@localhost/hstackdb"
     models.db.init_app(app)
 
     # Namespace

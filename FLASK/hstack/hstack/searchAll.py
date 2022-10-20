@@ -1,23 +1,16 @@
 # searchAll.py
 #
 # 검색 결과를 제공합니다.
-# Deep Rank 알고리즘을 이용해 정확도를 계산합니다.
 # 
 # uses
 # - search(All, T, K, P) : 검색어에 맞는 영상들을 찾아 메타데이터와 Deep Rank 결과를 반환합니다.
 # - detailSearch(All, T, K, P, category, narrative, presentation) : search()에서 필터링이 걸린 경우 필터 결과를 반환합니다.
 #
-# - findAt(searchTexts, index) : searchTexts를 포함하는 영상들의 목록을 반환합니다.
-# - organize_weight(weight, whatzero) : 검색의 가중치를 동적으로 조절합니다.
 # - getVideoMetadataFromID(self, videoId) : videoId를 통해 해당 영상의 메타데이터 정보를 가져옵니다.
 #
 # - extractType(videoIdList) : videoIdList에 존재하는 Narrative Type을 뽑아냅니다.
 # - extractData(videoIdList) : videoIdList에 존재하는 Prsentation을 뽑아냅니다.
 # - extractCategories(videoIdList) : videoIdList에 존재하는 Category를 뽑아냅니다.
-#
-# - getCategoryPerc(videoid, searchText_list) : category의 확률을 계산합니다.
-# - getKeywordPerc(videoid, searchText_list) : category의 확률을 계산합니다.
-#
 #
 # * search(), detailSearch() 호출시 extract*()함수를 제외한 함수들이 호출됩니다.
 #
@@ -55,7 +48,6 @@ class Total:
         # values_list('title') # [('post #1',), ('title #1',), ('title #2',)]
         # values_list는 flat가능 -> 튜플이 아닌 리스트로 값 반환 그러나 값이 여러개일때는 사용X
         # values_list() - [5, 6, 7]  # values_list('title', flat=True) - ['post #1', 'title #1', 'title #2']
-        print(videoId)
         self.finalDict = {} # 초기화
         keywordQ = and_(Keyword.id == videoId, Keyword.expose == True)
         
@@ -120,7 +112,6 @@ def extractType(videoIdList):
         if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().narrative):
             types = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().narrative
             types = types.split(',')
-            print(types)
             for c in types:
                 typeList.add(c)
 
@@ -133,7 +124,6 @@ def extractCategories(videoIdList):
         if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category):
             category = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().category
             category = category.split(', ')
-            print(category)
             for c in category:
                 if c != 'None' :
                     categoryList.add(c)
@@ -147,7 +137,6 @@ def extractData(videoIdList):
         if (DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation):
             datas = DB.session.query(Metadatum).filter(Metadatum.id == videoId).first().presentation
             datas = datas.split(', ')
-            print(datas)
             for c in datas:
                 dataList.add(c)
 
@@ -158,11 +147,10 @@ from . import intent
 
 # not DetailSearch
 def search(All, T, K, P):
-    #All = ["운영","스레드","체제","만들다","방법"]
-    weight = [0.3,0.3,0.2,0.2] # Title Presenter Keyword Category    
+    weight = [0.3,0.3,0.2,0.2] # Title, Presenter, Keyword, Category    
     perc = {}
     if All != None:
-        perc,weight = intent.doIntent(All)
+        perc = intent.doIntent(All)
     else:
         perc = deepRank.deepRank(weight, All, T, K, P) # return 예시: {80: [0, 0, 0], 21: [0, 0, 0.567], 22: [0, 0, 0.567], 77: [0, 0, 0.058]}
 
@@ -170,7 +158,7 @@ def search(All, T, K, P):
     searchResultMeta = []
     tttt ={}
     # deepRank 결과, 검색 결과 영상이 없을 경우
-    if len(perc) == 0:
+    if type(perc) == type(None) or len(perc) == 0:
         return (videoIdList, searchResultMeta, tttt)
 
     rankDict = {}
@@ -184,35 +172,26 @@ def search(All, T, K, P):
         # if sum == 0:
         #     continue
         rankDict[videoid]=sum
-    print("***************")
-    print(rankDict)  #{80: 0.0, 21: 0.567, 22: 0.567, 77: 0.058, 78: 0.0}
+    print("VideoID and Ranking percent: "+str(rankDict)) #{80: 0.0, 21: 0.567, 22: 0.567, 77: 0.058, 78: 0.0}
 
     #value 큰 순서대로 딕셔너리 재배열
     sdict = sorted(rankDict.items(), key=lambda x: x[1], reverse=True)
 
     maxlist = dict(sdict) #list형태의 딕셔너리를 딕셔너리 형태로 전환
-    print(maxlist.keys())
-
 
     a = Total()
     #searchResultMeta = []
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print(maxlist)
     for j in maxlist:
         a.getVideoMetadataFromID(j) #id 받아오기
         searchResultMeta.append(a.finalDict)
-        #print(a.finalDict)
         searchResultMeta.append(perc[j])
-        #print(perc[j])
 
-    #tttt ={}
-    #print(maxlist)
     for m in maxlist:
         newlist = []
         newlist = perc[m]
         newlist.append(maxlist[m])
         tttt[m] = newlist
-    print(tttt)
+    print("Ranking Result: "+ str(tttt))
 
     videoIdList = list(maxlist.keys())
     searchResultMeta = list(searchResultMeta)
@@ -249,7 +228,5 @@ def detailSearch(All, T, K, P, category, narrative, presentation):
             newVideoIdList.append(videoIdList[i])
             newVideoMetaList.append(videoMetaList[i*2])
             newRankData[videoIdList[i]] = rankData[videoIdList[i]]
-
-    print(newVideoMetaList)
 
     return (newVideoIdList, newVideoMetaList, newRankData)

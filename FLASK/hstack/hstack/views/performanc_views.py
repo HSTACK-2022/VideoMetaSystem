@@ -88,8 +88,6 @@ def ratio():
             else:
                 if (len(word) != 0):
                     categories_dict[word] = 1
-    print(categories_dict)
-
     narrative_dict = {}
     narrative = []
     for res in Metadatum.query.with_entities(Metadatum.narrative).all():
@@ -129,15 +127,11 @@ def ratio():
     for res in DB.session.query(SearchSatisfy).order_by(SearchSatisfy.val.desc()):
         satisfy[res.val-1] = res.cnt
         satisfySum += res.cnt
-    print("검색 만족도 >>")
-    print(satisfy)
 
     # 검색 단어 그래프
     totalWord = {}
     for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
         totalWord[res.tKeyword] = res.cnt
-    print("Total Search에서 나온 단어>>")
-    print(totalWord)
 
     titleWord = {}
     keyWord = {}
@@ -195,9 +189,6 @@ def ratio():
         valDict['uploadDate'] = videoObj.uploadDate
         idViewMeta.append(valDict)
 
-    print(idViewMeta)
-    print(idTimeDict)
-
     return render_template('/performance.html',
                            code=200,
                            satisfy=satisfy,
@@ -236,15 +227,11 @@ def performance_search():
     for res in DB.session.query(SearchSatisfy).order_by(SearchSatisfy.val.desc()):
         satisfy[res.val-1] = res.cnt
         satisfySum += res.cnt
-    print("검색 만족도 >>")
-    print(satisfy)
 
     # 검색 단어 그래프
     totalWord = {}
     for res in DB.session.query(TotalSearch).order_by(TotalSearch.cnt.desc()).limit(30):
         totalWord[res.tKeyword] = res.cnt
-    print("Total Search에서 나온 단어>>")
-    print(totalWord)
 
     titleWord = {}
     keyWord = {}
@@ -292,7 +279,6 @@ def performance_metadata():
             else:
                 if (len(word) != 0):
                     categories_dict[word] = 1
-    print(categories_dict)
 
     narrative_dict = {}
     narrative = []
@@ -387,9 +373,6 @@ def performance_videoviews():
         valDict['uploadDate'] = videoObj.uploadDate
         idViewMeta.append(valDict)
 
-    print(idViewMeta)
-    print(idTimeDict)
-
 
     return render_template('/performance_videoview.html',
                            code = 200,
@@ -415,7 +398,6 @@ def performance_category():
 
     category = list()
     categoryList = sorted(categoryDict.items())
-    print(categoryList)
 
     for key, value in categoryList:
         tempDict = dict()
@@ -432,10 +414,6 @@ def performance_category():
 def performance_datail(category):
     page = request.args.get('page', type=int, default=1)
     pagination = DB.session.query(Metadatum).filter(Metadatum.category.contains(category)).paginate(page, per_page=10)  # 한 페이지에 5개 게시글 나열
-
-    print("PAGEEEEEEEEEEEEEEEEEEEEEEE")
-    print(pagination)
-    print(pagination.items)
 
     return render_template('/performance_detail.html',
                            code=200,
@@ -497,8 +475,6 @@ def performance_detailFile(pk):
     #searchDict 내림차순으로 정렬
     counts = collections.Counter(searchDict)
     sorted_dict = dict(sorted(counts.items(), key = lambda item: item[1], reverse = True))
-    
-    print(list(sorted_dict.values())[0:10])
 
     return render_template('/performance_charts.html',
         code = 200,
