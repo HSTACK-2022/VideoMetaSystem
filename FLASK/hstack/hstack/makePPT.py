@@ -22,7 +22,6 @@ def getPPTImage(fileURL):
     pptImage = set()
     imagePath = os.path.join(os.path.dirname(fileURL), 'Image')
     imageList = os.listdir(imagePath)
-    print(imageList)
 
     for image in imageList:
         if image.startswith("L") or image.startswith("P"):
@@ -38,21 +37,17 @@ def getPPTFile(fileURL, title):
     imagePath = os.path.join(os.path.dirname(fileURL), 'Image')
 
     imageList = os.listdir(imagePath)
-    print(imagePath)
-    print(imageList)
 
     slide_layout = pptFile.slide_layouts[6]
 
     for image in imageList:
         if image.startswith("L") or image.startswith("P"):
-            print("**")
             path = os.path.join(imagePath, image)
             slide = pptFile.slides.add_slide(slide_layout)
             slide.shapes.add_picture(
                 path, 0, 0, pptFile.slide_width, pptFile.slide_height)
 
-    if OS != "Windows":
-        title = "extractedPPT"
+    title = "extractedPPT"
         
     pptPathRel = os.path.join(os.path.dirname(fileURL), title + '.pptx')
     pptFile.save(pptPathRel)

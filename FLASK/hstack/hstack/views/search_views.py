@@ -40,7 +40,6 @@ bp = Blueprint('search', __name__, url_prefix='/')
 
 @bp.route('/data/<path:filepath>')
 def data(filepath):
-    print(filepath)
     if OS == "Windows":
         return send_from_directory('../media', filepath.replace("\\", '/')[1:])
     else :
@@ -62,12 +61,10 @@ def searchFile():
         'searchTextPresenter') != None else ""
     isDetail = request.args.get('isDetail')
 
-    print("###############################")
-    print(word)
-    print(title)
-    print(keyword)
-    print(presenter)
-    print(isDetail)
+    print("검색: ")
+    print("검색 문장/단어: "+word)
+    print("세부 검색: ")
+    print("title: "+title+" keyword: "+keyword+" presenter: "+presenter)
 
     if word == "" and title == "" and keyword == "" and presenter == "":
         return render_template('search.html',
@@ -222,9 +219,7 @@ def searchFile():
             rankDict['total'] = rankData[j][4]
             rankList.append(rankDict)
 
-        print(rankList)
-
-        if not videoIdList:
+        if not videoIdList :
             return render_template('search.html',
                                    code=404,
                                    searchWord=word,

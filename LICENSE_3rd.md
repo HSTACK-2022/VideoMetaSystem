@@ -13,6 +13,13 @@
 
 # Libraries in VMeta
 
+<b> MySQL by Oracle</b><br/>
+VMeta uses MySQL Commercial License.<br/>
+License : GPL<br/>
+http://www.mysqlkorea.com/sub.html?mcode=shop&scode=01_1&m_no=127
+
+<br/>
+
 <b> pykospacing by haven-jeon</b><br/>
 License : GPL v3.0<br/>
 https://github.com/haven-jeon/PyKoSpacing/blob/master/LICENSE

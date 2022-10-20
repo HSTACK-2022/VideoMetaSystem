@@ -9,14 +9,16 @@
 <br/>
 <br/>
 
-## 🔑 GUIDE
+## 🔑 GUIDES
 
-VMeta의 라이선스, 설치 및 실행 과정은 아래 문서를 참고해주세요.
+VMeta 실행을 위한 모든 사항은 아래 문서를 참고해주세요.
 
 <h4>LICENSE : <a href="LICENSE">GPL v3.0</a> / <a href="LICENSE_3rd.md">Third Party</a> </h4>
 <h4>INSTALL : <a href="INSTALL_KO.md">KO</a> / <a href="INSTALL_EN.md">EN</a> </h4>
 <h4>EXECUTE : <a href="EXECUTE_KO.md">KO</a> / <a href="EXECUTE_EN.md">EN</a> </h4>
+<h4>CONTRIBUTE : <a href="CONTRIBUTE.md">How to Contribute</a>
 
+<br/>
 <br/>
 <br/>
 

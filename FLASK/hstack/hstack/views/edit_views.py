@@ -68,15 +68,13 @@ def editFile(pk):
     userKEList = request.form.getlist("userKEList")
     userKCList = request.form.getlist("userKCList")
         
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-    print(sysKEList)
-    print(sysKCList)
-    print(userKEList)
-    print(userKCList)
-    print(newUserKEList)
-    print(newUserKCList)
-    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-
+    # print("Check Key List: ")
+    # print(sysKEList)
+    # print(sysKCList)
+    # print(userKEList)
+    # print(userKCList)
+    # print(newUserKEList)
+    # print(newUserKCList)
     
     # edit Keyword perc
     if (len(newUserKCList) != 0):

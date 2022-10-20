@@ -1,3 +1,4 @@
+
 # How to Install VMeta
 
 <br/>
@@ -100,8 +101,28 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	<a href = "https://tesseract-ocr.github.io/tessdoc/Installation.html">Official Docs / Download link</a><br/>
 	OCR을 사용하기 위해 Tesseract를 설치합니다.<br/>
 	공식 문서의 Windows 부분을 참고하여 다운로드 합니다.<br/>
+	![Tesseract download](https://user-images.githubusercontent.com/73868349/196878213-a9b52f42-2d37-49c5-b636-906c9ac9278b.png)
+
 	
+	install 파일을 다운로드 한 후, 설치 가이드에 따라 설치를 진행합니다. <br/>
+	5의 [Set up config.py](#5-set-up-configpy)를 진행하기 위해, Tesseract의 경로를 기억해주시기 바랍니다.<br/>
+
+<br/>
+
+- <b>Java</b>
+
+	<a href = "https://www.oracle.com/java/technologies/downloads/#java11"> Download link</a><br/>
+	JPype1의 정상적인 사용을 위해 Java를 다운로드합니다.<br/>
+	프로젝트 내 라이브러리와의 충돌을 방지하기 위해 <b>JDK 11</b>의 설치를 권장합니다.<br/>
+	![JAVA download](https://user-images.githubusercontent.com/73868349/196880251-d2c8239c-58f1-4f50-bb83-08cb5e34bcc0.png)
+
 	
+	install 파일을 다운로드 한 후, 설치 가이드에 따라 설치를 진행합니다. <br/>
+	이후 시스템 환경 변수를 설정합니다.<br/>
+	![그림3](https://user-images.githubusercontent.com/73868349/196880993-09d5dc4f-3cd2-461b-89ed-e7ea24e005b4.png)
+
+	만약 JAVA_HOME 환경변수가 없다면 새로 생성합니다.
+
 <br/>
 
 - <b>requirements.txt</b>
@@ -174,6 +195,8 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 		videoType VARCHAR(5),
 		videoSize VARCHAR(10),
 		uploadDate DATE,
+		voiceManRate FLOAT,
+		voiceWomanRate FLOAT,
 		category_percent VARCHAR(30),
 		FOREIGN KEY (id) REFERENCES videopath(id)
 	);
@@ -203,6 +226,11 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	```
 	use hstackDB;
 
+	CREATE TABLE SearchSatisfy (
+		val int PRIMARY KEY,
+    		cnt int
+	);
+
 	CREATE TABLE upload_time (
 		id int PRIMARY KEY,
 		time float,
@@ -229,6 +257,15 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 		kKeyword VARCHAR(50) PRIMARY KEY,
 		cnt int
 	);
+	```
+
+- Insert Column for SearchSatisfy<br/>
+	```
+	INSERT INTO searchSatisfy (val, cnt) VALUE (1, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (2, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (3, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (4, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (5, 0);
 	```
 
 <br/>
@@ -325,6 +362,3 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	
 	pytesseract.pytesseract.tesseract_cmd = ${YOUR_TESSERACT_LOCATION}
 	```
-<br/>
-<br/>
-<br/>
