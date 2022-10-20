@@ -1,3 +1,17 @@
+# deepRank.py
+#
+# Deep Rank 알고리즘을 이용해 정확도를 계산합니다.
+# 
+# uses
+# # - findAt(searchTexts, index) : searchTexts를 포함하는 영상들의 목록을 반환합니다.
+# - organize_weight(weight, whatzero) : 검색의 가중치를 동적으로 조절합니다.
+#
+# - getCategoryPerc(videoid, searchText_list) : category의 확률을 계산합니다.
+# - getKeywordPerc(videoid, searchText_list) : category의 확률을 계산합니다.
+#
+# return
+# - (new)perc : 검색 결과 영상들의 id와 각 검색 파라미터의 확률을 반환합니다.
+
 from .config import DB
 
 from .models import Keyword
@@ -5,10 +19,6 @@ from .models import Metadatum
 
 from sqlalchemy import and_
 import re
-
-# - findAt(searchTexts, index) : searchTexts를 포함하는 영상들의 목록을 반환합니다.
-# - organize_weight(weight, whatzero) : 검색의 가중치를 동적으로 조절합니다.
-
 
 def deepRank(weight, All, T, K, P):
     # searchTexts로 저장
@@ -23,9 +33,6 @@ def deepRank(weight, All, T, K, P):
         for i in All:
             searchText.append(i)
         searchTexts[0] = searchText
-        # print("********************************************")
-        # print(All)
-        # print(searchText)
         titleSet = findAt(searchTexts[0], 0)
         presenterSet = findAt(searchTexts[0], 1)
         keywordSet = findAt(searchTexts[0], 2)
@@ -76,13 +83,12 @@ def deepRank(weight, All, T, K, P):
     video = titleSet.union(presenterSet)
     video.update(keywordSet)
     video.update(categorySet)
-    print(video)
-    print(weight)
+    print("video id list: "+str(video))
+    print("organized weight: "+str(weight))
     # id 당 T P K C 확률 구하기
     perc = {}
     for vi in video:
-        # print("$$$$$$$$$$$$$$$$$$")
-        # print(vi)
+        print("Retrieved video ID: "+str(vi))
         in_perc = []
         if weight[0] != 0:  # T의 확률 구하기
             p = 0
@@ -139,13 +145,9 @@ def deepRank(weight, All, T, K, P):
             in_perc.append(0)
         perc[vi] = in_perc
         #print(in_perc)
-        #print(perc)
-    # print("^^^^^^^^^^^")
-    # print(in_perc)
     # print(perc) #{80: [0, 0, 0], 21: [0, 0, 0.567], 22: [0, 0, 0.567], 77: [0, 0, 0.058]}
     # ranking 결과
-    print("Ranking result: ")
-    print(weight)
+    print("Ranking result: "+ str(perc))
 
     return perc
 
@@ -169,7 +171,6 @@ def organize_weight(weight, whatzero):
         if w != 0:
             weight[c] += sum
         c+=1
-    #print(weight)
     return weight    
 
 # 특정 단어가 들어있는 video들을 찾는다.
@@ -202,13 +203,11 @@ def getKeywordPerc(videoid, searchText_list):
     for res in DB.session.query(Keyword).filter(Keyword.id == videoid).with_entities(Keyword.percent).all():
         for k in res:
             keywordPercFull.append(k)
-    print("******************************************")
-    print(videoid)
+    print("Video ID get keyword Percentage: "+str(videoid))
 
     resultKeyword = set() # resultKeyword, keyword 검색 결과 (percent, keyword)를 저장
     for searchText in searchText_list:
         for res in DB.session.query(Keyword).filter(Keyword.id == videoid).filter(Keyword.keyword.contains(searchText)).with_entities(Keyword.percent,Keyword.keyword).all():
-            print(res)
             resultKeyword.add(res)
     # 검색을 끝낸 후, 검색 결과 중 percent를 합한다.
     for r in resultKeyword:
@@ -226,19 +225,16 @@ def getKeywordPerc(videoid, searchText_list):
         keywordPercFull_bak.remove(max_percent)
         n -= 1
    
-    print(sum_list)
     sum = 0
     for i in range(0,len(sum_list)):
         sum += sum_list[i]
     sum = 1 if sum > 0.1 else sum
 
-    print(searchText_perc)
     if max(keywordPercFull) == 0 or searchText_perc == 0:
         return 0
     num = round(1 / len(searchText_list),1)     # 찾는 단어가 1개인 경우 가장 큰 확률을 1로, n개인 경우 가장 큰 확률을 1/n으로
     m = round(1/sum,3)
-    print("결과 확률:")
-    print(round(searchText_perc*m,3))
+    print("get keyword result percentage: "+ str(round(searchText_perc*m,3)))
     return round(searchText_perc*m,3)
 
 # category 파라미터의 확률 구하기
@@ -257,9 +253,6 @@ def getCategoryPerc(videoid, searchText_list):
             for w in words:
                 if len(w) != 0: 
                     k_v2.append(w)
-    print(k_v)
-    # print(k_v2)
-    # print(max(k_v))
 
     searchCategory_percent = 0
     for k in k_v2:
@@ -270,13 +263,9 @@ def getCategoryPerc(videoid, searchText_list):
                 if k_v2.index(k) >= len(k_v):
                     searchCategory_percent += 0
                 else:
-                    print(">>>")
-                    print(k_v2.index(k))
                     searchCategory_percent += k_v[k_v2.index(k)]
                 if searchCategory_percent > 1:  # 예: 0.408, 0.595 확률일 경우 (숫자상 근소한 차이)
                     searchCategory_percent = 1
-    print("중간계산:")
-    print(searchCategory_percent)
 
     ## 가장 큰 수끼리의 합 = sum (예: 2단어를 검색할 시 제일 큰 두 수의 합이 가장 높은 확률=1로 치환하기 위함)
     n = len(searchText_list)
@@ -299,8 +288,7 @@ def getCategoryPerc(videoid, searchText_list):
         return 0
 
     m = round(1/sum,3)
-    print(m)
-    print("결과 확률:")
-    print(round(searchCategory_percent*m,3))
+    print("Video ID get Category Percentage: "+str(videoid))
+    print("get Category result percentage: "+ str(round(searchCategory_percent*m,3)))
     return round(searchCategory_percent*m,3)
 

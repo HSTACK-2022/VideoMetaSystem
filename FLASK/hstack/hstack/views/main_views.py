@@ -63,9 +63,10 @@ def send2API(title, presenter, password, uploadURL):
     }
     res = requests.post(reqUrl, data=data)
     res.apparent_encoding
+    print("API request: ")
     print(res.encoding)
     print(res.text)
-    print("password for Editing : " + password)
+    #print("password for Editing : " + password)
     
 
 
@@ -196,7 +197,6 @@ def uploadList():
                 newVideoIdList.append(videoIdList[i])
                 newVideoMetaList.append(searchAll.Total().getVideoMetadataFromID(videoIdList[i]))
 
-        print(newVideoMetaList)
 
         if not newVideoIdList :
             return render_template('uploadLists.html', code = 404)
