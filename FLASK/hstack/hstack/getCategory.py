@@ -87,6 +87,7 @@ def getCategoryFromJson(responseData):
         returnTypes[key] = round(weight * returnTypes[key], 3)
         
     return returnTypes
+    
 def categoryClassification(each_tag):
     # 참고 십진분류법: http://www.booktrade.or.kr/kdc/kdc.jsp
     # 분류 ->
