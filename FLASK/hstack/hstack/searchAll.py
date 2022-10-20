@@ -150,7 +150,7 @@ def search(All, T, K, P):
     weight = [0.3,0.3,0.2,0.2] # Title, Presenter, Keyword, Category    
     perc = {}
     if All != None:
-        perc = intent.doIntent(All)
+        perc, weight = intent.doIntent(All)
     else:
         perc = deepRank.deepRank(weight, All, T, K, P) # return 예시: {80: [0, 0, 0], 21: [0, 0, 0.567], 22: [0, 0, 0.567], 77: [0, 0, 0.058]}
 

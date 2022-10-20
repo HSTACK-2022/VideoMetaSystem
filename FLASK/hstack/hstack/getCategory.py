@@ -1,3 +1,29 @@
+# getCategory.py
+#
+# 검색어 핵심 단어들의 카테고리를 추출합니다.
+# intent.py에 의해 호출됩니다.
+# 
+# uses
+# - getCategory(wordList) : 핵심 단어 리스트에서 카테고리 추출
+# - getCategoryService(accessKey, keywordList) : ETRI API를 호출하여 단어 정보 추출
+# - getCategoryFromJson(responseData) : 추출된 단어 정보중 형태소 분리
+# - categoryClassification(each_tag) : 10진 분류법을 바탕으로 카테고리 추출
+# 
+# * getCategory() 호출시 나머지 함수 역시 호출됩니다.
+#
+# parameters
+# - wordList : 핵심 단어 리스트
+# - accessKey : ETRI API에 접근하기 위한 키 (config.py에 명시)
+# - keywordList : 핵심 단어 리스트
+# - responseData : getCategoryService()에서, ETRI API를 호출하여 얻은 결과값
+# - each_tag : getCategoryFromJson()에서, 결과값을 후처리하여 얻은 태그값
+# 
+# return
+# - getCategoryService의 key값 : 카테고리의 종류를 반환합니다.
+#
+# reference
+# https://aiopen.etri.re.kr/guide_wiseNLU.php#group03
+
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU"
 analysisCode = "ner"
 import urllib3

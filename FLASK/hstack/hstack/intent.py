@@ -134,4 +134,7 @@ def doIntent(indexTexts):
             value[i] = 100 if value[i] > 100 else value[i]
     print("Final Ranking result : "+str(re_dict))
 
-    return re_dict
+    # 총 랭킹 구하기
+    ranking_weight = deepRank.organize_weight(deepRank_weight,whatzero)
+
+    return re_dict, ranking_weight
