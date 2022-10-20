@@ -53,12 +53,9 @@ def satisfySave(value):
 @bp.route('/search/', methods=['GET'])
 def searchFile():
     word = request.args.get('searchText')
-    title = request.args.get('searchTextTitle') if request.args.get(
-        'searchTextTitle') != None else ""
-    keyword = request.args.get('searchTextKeyword') if request.args.get(
-        'searchTextKeyword') != None else ""
-    presenter = request.args.get('searchTextPresenter') if request.args.get(
-        'searchTextPresenter') != None else ""
+    title = request.args.get('searchTextTitle') if request.args.get('searchTextTitle') != None else ""
+    keyword = request.args.get('searchTextKeyword') if request.args.get('searchTextKeyword') != None else ""
+    presenter = request.args.get('searchTextPresenter') if request.args.get('searchTextPresenter') != None else ""
     isDetail = request.args.get('isDetail')
 
     print("검색: ")
@@ -68,20 +65,20 @@ def searchFile():
 
     if word == "" and title == "" and keyword == "" and presenter == "":
         return render_template('search.html',
-                               code=404,
-                               searchWord="",
-                               categoryList="",
-                               typeList="",
-                               dataList="",
-                               videoMetaList="",
-                               videoIdList="",
-                               searchWordDetailTitle="",
-                               searchWordDetailKeyword="",
-                               searchWordDetailPresenter="",
-                               rankData="",
-                               )
+            code = 404,
+            searchWord = "",
+            categoryList = "",
+            typeList = "",
+            dataList = "",
+            videoMetaList = "",
+            videoIdList = "",
+            searchWordDetailTitle = "",
+            searchWordDetailKeyword = "",
+            searchWordDetailPresenter = "",
+            rankData = "",
+        )
 
-    else:
+    else :
         # if totalSearch
         searchWords = intent.findWord(word)
 
@@ -108,8 +105,7 @@ def searchFile():
 
                 # [Logging] 제목 세부 검색 DB 생성
                 if len(TitleSearch.query.filter(TitleSearch.tiKeyword.contains(item)).all()) != 0:
-                    DB.session.query(TitleSearch).filter(
-                        TitleSearch.tiKeyword == item).update({'cnt': TitleSearch.cnt+1})
+                    DB.session.query(TitleSearch).filter(TitleSearch.tiKeyword == item).update({'cnt': TitleSearch.cnt+1})
                 else:
                     tis = TitleSearch(tiKeyword=item, cnt=1)
                     DB.session.add(tis)
@@ -128,8 +124,7 @@ def searchFile():
 
                 # [Logging] 키워드 세부 검색 DB 생성
                 if len(KeywordSearch.query.filter(KeywordSearch.kKeyword.contains(item)).all()) != 0:
-                    DB.session.query(KeywordSearch).filter(
-                        KeywordSearch.kKeyword == item).update({'cnt': KeywordSearch.cnt+1})
+                    DB.session.query(KeywordSearch).filter(KeywordSearch.kKeyword == item).update({'cnt': KeywordSearch.cnt+1})
                 else:
                     ks = KeywordSearch(kKeyword=item, cnt=1)
                     DB.session.add(ks)
@@ -148,12 +143,11 @@ def searchFile():
 
                 # [Logging] 발표자 세부 검색 DB 생성
                 if len(PresenterSearch.query.filter(PresenterSearch.pKeyword.contains(item)).all()) != 0:
-                    DB.session.query(PresenterSearch).filter(
-                        PresenterSearch.pKeyword == item).update({'cnt': PresenterSearch.cnt+1})
+                    DB.session.query(PresenterSearch).filter(PresenterSearch.pKeyword == item).update({'cnt': PresenterSearch.cnt+1})
                 else:
                     ps = PresenterSearch(pKeyword=item, cnt=1)
                     DB.session.add(ps)
-                DB.session.commit()
+                DB.session.commit() 
 
         if len(searchPresenters) == 0:
             searchPresenters = None
@@ -191,8 +185,8 @@ def searchFile():
                 presentation=method
             )
 
-        # if not detailSearch
-        else:
+        # if not detailSearch    
+        else :
             category = ""
             narrative = ""
             method = ""
@@ -204,7 +198,7 @@ def searchFile():
                 K=searchKeywords
             )
 
-        # get Specific Lists
+        # get Specific Lists    
         categoryList = searchAll.extractCategories(videoIdList)
         typeList = searchAll.extractType(videoIdList)
         dataList = searchAll.extractData(videoIdList)
@@ -221,35 +215,35 @@ def searchFile():
 
         if not videoIdList :
             return render_template('search.html',
-                                   code=404,
-                                   searchWord=word,
-                                   categoryList="",
-                                   typeList="",
-                                   dataList="",
-                                   videoMetaList="",
-                                   videoIdList="",
-                                   searchWordDetailTitle="",
-                                   searchWordDetailKeyword="",
-                                   searchWordDetailPresenter="",
-                                   rankData="",
-                                   category="",
-                                   narrative="",
-                                   method=""
-                                   )
-        else:
+                code = 404,
+                searchWord = word,
+                categoryList = "",
+                typeList = "",
+                dataList = "",
+                videoMetaList = "",
+                videoIdList = "",
+                searchWordDetailTitle = "",
+                searchWordDetailKeyword = "",
+                searchWordDetailPresenter = "",
+                rankData = "",
+                category = "",
+                narrative = "",
+                method = ""
+            )
+        else :
             return render_template('search.html',
-                                   code=200,
-                                   categoryList=categoryList,
-                                   typeList=typeList,
-                                   dataList=dataList,
-                                   videoMetaList=videoMetaList,
-                                   videoIdList=videoIdList,
-                                   searchWord=word,
-                                   searchWordDetailTitle=title,
-                                   searchWordDetailKeyword=keyword,
-                                   searchWordDetailPresenter=presenter,
-                                   rankData=rankList,
-                                   category=category,
-                                   narrative=narrative,
-                                   method=method
-                                   )
+                code = 200,
+                categoryList = categoryList,
+                typeList = typeList,
+                dataList = dataList,
+                videoMetaList = videoMetaList,
+                videoIdList = videoIdList,
+                searchWord = word,
+                searchWordDetailTitle = title,
+                searchWordDetailKeyword = keyword,
+                searchWordDetailPresenter = presenter,
+                rankData = rankList,
+                category = category,
+                narrative = narrative,
+                method = method
+            )

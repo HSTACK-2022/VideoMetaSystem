@@ -150,7 +150,7 @@ def search(All, T, K, P):
     weight = [0.3,0.3,0.2,0.2] # Title, Presenter, Keyword, Category    
     perc = {}
     if All != None:
-        perc= intent.doIntent(All)
+        perc, weight = intent.doIntent(All)
     else:
         perc = deepRank.deepRank(weight, All, T, K, P) # return 예시: {80: [0, 0, 0], 21: [0, 0, 0.567], 22: [0, 0, 0.567], 77: [0, 0, 0.058]}
 
@@ -172,15 +172,12 @@ def search(All, T, K, P):
         # if sum == 0:
         #     continue
         rankDict[videoid]=sum
-    print("***************")
-    print(rankDict)  #{80: 0.0, 21: 0.567, 22: 0.567, 77: 0.058, 78: 0.0}
+    print("VideoID and Ranking percent: "+str(rankDict)) #{80: 0.0, 21: 0.567, 22: 0.567, 77: 0.058, 78: 0.0}
 
     #value 큰 순서대로 딕셔너리 재배열
     sdict = sorted(rankDict.items(), key=lambda x: x[1], reverse=True)
 
     maxlist = dict(sdict) #list형태의 딕셔너리를 딕셔너리 형태로 전환
-    print(maxlist.keys())
-
 
     a = Total()
     #searchResultMeta = []

@@ -29,19 +29,11 @@ STT_API_KEY = {
 }
 
 db = {
-<<<<<<< HEAD
     'user': 'root',
     'password': '1891265',
     'host': 'localhost',
     'port': 3306,
     'database': 'hstackDB'
-=======
-    'user' : 'root',
-    'password' : 'hstackdbadmin',
-    'host' : 'localhost',
-    'port' : 3306,
-    'database' : 'hstackdb'
->>>>>>> b554e3d64572072b4c793f98fbdc31badabeac17
 }
 
 DB = SQLAlchemy()
