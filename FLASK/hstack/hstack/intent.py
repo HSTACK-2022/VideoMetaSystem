@@ -48,7 +48,6 @@ def findWord(word):
 
     # 3. get Category from word
     # 검색어에 해당하는 Category도 All에 포함
-    searchText_bak = list(searchText)
     l = getCategory(list(searchText))
     for ll in l:
         searchText.add(ll)
@@ -63,7 +62,7 @@ def findWord(word):
 
     print(searchText)
 
-    return doIntent(searchText)
+    return searchText
 
 def doIntent(indexTexts):   
     # 문장 검색의 각 검색 파라미터의 가중치 계산
@@ -145,19 +144,18 @@ def doIntent(indexTexts):
 openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU"
 analysisCode = "ner"
 import urllib3
+import random
 import json
 from .config import STT_API_KEY
 def getCategory(wordList):
     global accessKey
     accessKey = list(STT_API_KEY)
-
-    to_category_set = set()
-    for i in range(0,len(wordList)):
-        key_list = list(getCategoryService(accessKey[i%5],wordList[i]).keys())
-        for key in key_list:
-            to_category_set.add(key)
-    
-    return list(to_category_set)
+    # for i in range(0,len(wordList)):
+    #     key_list = list(getCategoryService(accessKey[i%5],wordList[i]).keys())
+    #     for key in key_list:
+    #         to_category_set.add(key)
+    # return list(to_category_set)    
+    return list(getCategoryService(accessKey[random.randint(0,4)],' '.join(wordList)).keys())
 def getCategoryService(accessKey, searchWord):
     requestJson = {
         "access_key": accessKey,
@@ -189,6 +187,9 @@ def getCategoryFromJson(responseData):
         #print("+++")
         #print(i['weight'])
         percent = round(i['weight'], 3)
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(categoryClassification(i['type']))
+        print(i)
         categoryDetect = categoryClassification(i['type'])
         if (categoryDetect != None):
             totalPerc += i['weight']
@@ -328,6 +329,9 @@ def categoryClassification(each_tag):
             return('법률/법학')
         elif each_tag == 'CV_FOOD_STYLE   ':
             return('요리')
+    
+    elif 'PS_NAME' in each_tag:
+        return
   
     elif 'AM' in each_tag:
         return('동물')
