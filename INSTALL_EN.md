@@ -138,7 +138,7 @@ Install the libraries uses in VMeta.
 	For execute subprocess, certain libraries are installed in a non-virtual environment.<br/>
 	```
 	(venv) E:\Workspace\VideoMetaSystem > deactivate
-	E:\Workspace\VideoMetaSystem > pip install -r special_reqirements.txt
+	E:\Workspace\VideoMetaSystem > pip install -r special_requirements.txt
 	```
 	<br/>
 
