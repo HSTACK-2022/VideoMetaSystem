@@ -100,8 +100,28 @@ Install the libraries uses in VMeta.
 	<a href = "https://tesseract-ocr.github.io/tessdoc/Installation.html">Official Docs / Download link</a><br/>
 	Install Tesseract to use OCR.<br/>
 	Download by referring to the <b>Windows part</b> of the official document.<br/>
+	![Tesseract download](https://user-images.githubusercontent.com/73868349/196878213-a9b52f42-2d37-49c5-b636-906c9ac9278b.png)
+
 	
+	After downloading the installation file, follow the installation guide to proceed with the installation.<br/>
+	Please remember the path of Tesseract to proceed [Setup config.py] (#5-set-up-configpy) in 5.<br/>
 	
+<br/>
+
+- <b>Java</b>
+
+	<a href = "https://www.oracle.com/java/technologies/downloads/#java11"> Download link</a><br/>
+	Download Java to use JPype1.<br/>
+	Installation of <b>JDK 11</b> is recommended to avoid conflicts with libraries within the project.<br/>
+	![JAVA download](https://user-images.githubusercontent.com/73868349/196880251-d2c8239c-58f1-4f50-bb83-08cb5e34bcc0.png)
+
+	
+	After downloading the installation file, follow the installation guide to proceed with the installation.<br/>
+	And, Set up the system env.<br/>
+	![그림3](https://user-images.githubusercontent.com/73868349/196880993-09d5dc4f-3cd2-461b-89ed-e7ea24e005b4.png)
+
+	You have to craete env JAVA_HOME if you don't have it.
+
 <br/>
 
 - <b>requirements.txt</b>
@@ -174,6 +194,8 @@ Assume MySQL is installed on your computer.<br/>
 		videoType VARCHAR(5),
 		videoSize VARCHAR(10),
 		uploadDate DATE,
+		voiceManRate FLOAT,
+		voiceWomanRate FLOAT,
 		category_percent VARCHAR(30),
 		FOREIGN KEY (id) REFERENCES videopath(id)
 	);
@@ -202,6 +224,11 @@ Assume MySQL is installed on your computer.<br/>
 - Create table for Monitoring <br/>
 	```
 	use hstackDB;
+
+	CREATE TABLE SearchSatisfy (
+		val int PRIMARY KEY,
+    		cnt int
+	);
 
 	CREATE TABLE SearchSatisfy (
 		val int PRIMARY KEY,
@@ -330,6 +357,3 @@ Modify the configuration file using your DB and API Key.
 	
 	pytesseract.pytesseract.tesseract_cmd = ${YOUR_TESSERACT_LOCATION}
 	```
-<br/>
-<br/>
-<br/>
