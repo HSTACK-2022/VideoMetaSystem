@@ -203,6 +203,11 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	```
 	use hstackDB;
 
+	CREATE TABLE SearchSatisfy (
+		val int PRIMARY KEY,
+    		cnt int
+	);
+
 	CREATE TABLE upload_time (
 		id int PRIMARY KEY,
 		time float,

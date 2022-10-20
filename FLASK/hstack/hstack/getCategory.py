@@ -4,6 +4,7 @@ import urllib3
 import random
 import json
 from .config import STT_API_KEY
+
 def getCategory(wordList):
     global accessKey
     accessKey = list(STT_API_KEY)
@@ -13,6 +14,7 @@ def getCategory(wordList):
     #         to_category_set.add(key)
     # return list(to_category_set)    
     return list(getCategoryService(accessKey[random.randint(0,4)],' '.join(wordList)).keys())
+
 def getCategoryService(accessKey, searchWord):
     requestJson = {
         "access_key": accessKey,
@@ -32,7 +34,8 @@ def getCategoryService(accessKey, searchWord):
     if response.status == 200:
         return getCategoryFromJson(str(response.data, "utf-8"))
     else:
-        return set()
+        return dict()
+
 def getCategoryFromJson(responseData):
     str = responseData
     json_obj = json.loads(str) # dumps - 파이썬 문자열을 json 형태로 변환

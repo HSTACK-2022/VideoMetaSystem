@@ -56,7 +56,7 @@ def data(filepath):
 
 @bp.route('/detail/download/<string:path>/<string:title>')
 def download(path, title):
-    filepath = os.path.join(app.config.get('UPLOAD_FILE_DIR'), path, title+".pptx")
+    filepath = os.path.join('..', app.config.get('UPLOAD_FILE_DIR'), path, title+".pptx")
     return send_file(filepath)
 
 @bp.route('/detail/<int:pk>', methods=['GET'])
