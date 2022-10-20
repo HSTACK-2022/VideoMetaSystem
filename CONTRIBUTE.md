@@ -32,8 +32,8 @@ Before create your Pull Request, Please let us know *what's the problem* with th
 ### Pull Request
 
 1. Fork the repo to your own repo.
-2. Git clone to the forked repo.
-:  Refer to the <a href="./INSTALL_EN.md">Installation</a> document.
+2. Git clone to the forked repo.<br/>
+  :  Refer to the <a href="./INSTALL_EN.md">Installation</a> document.
 3. Create your branch for PR.
 4. Modify the code.
 5. Push your changes to your own branch.

@@ -121,7 +121,7 @@ def categoryClassification(each_tag):
         elif each_tag == 'OGG_SCIENCE':
             return('과학')
         elif each_tag == 'OGG_LAW':
-            return('법률/법학')
+            return('법률*법학')
         elif each_tag == 'OGG_POLITICS':
             return('행정')
         elif each_tag == 'OGG_FOOD':
@@ -131,7 +131,7 @@ def categoryClassification(each_tag):
 
     elif' AF' in each_tag:
         if each_tag == 'AF_CULTURAL_ASSET':
-            return('문명/문화') #문화재
+            return('문명*문화') #문화재
         elif each_tag == 'AF_BUILDING':
             return('건축')
         elif each_tag == 'AF_MUSICAL_INSTRUMENT':
@@ -157,9 +157,9 @@ def categoryClassification(each_tag):
 
     elif 'CV' in each_tag:
         if each_tag == 'CV_NAME':
-            return('문명/문화')
+            return('문명*문화')
         elif each_tag == 'CV_TRIBE':
-            return('문명/문화')
+            return('문명*문화')
         elif each_tag == 'CV_SPORTS':
             return('스포츠')
         elif each_tag == 'CV_SPORTS_INST':
@@ -183,7 +183,7 @@ def categoryClassification(each_tag):
         elif each_tag == 'CV_CURRENCY':
             return('경제')
         elif each_tag == 'CV_LAW':
-            return('법률/법학')
+            return('법률*법학')
         elif each_tag == 'CV_FOOD_STYLE   ':
             return('요리')
     

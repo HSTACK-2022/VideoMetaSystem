@@ -259,6 +259,15 @@ VMeta에 사용되는 라이브러리들을 설치합니다.
 	);
 	```
 
+- Insert Column for SearchSatisfy<br/>
+	```
+	INSERT INTO searchSatisfy (val, cnt) VALUE (1, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (2, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (3, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (4, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (5, 0);
+	```
+
 <br/>
 <br/>
 <br/>

@@ -263,6 +263,15 @@ Assume MySQL is installed on your computer.<br/>
 	);
 	```
 
+- Insert Column for SearchSatisfy<br/>
+	```
+	INSERT INTO searchSatisfy (val, cnt) VALUE (1, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (2, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (3, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (4, 0);
+	INSERT INTO searchSatisfy (val, cnt) VALUE (5, 0);
+	```
+
 <br/>
 <br/>
 <br/>
