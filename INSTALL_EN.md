@@ -104,7 +104,7 @@ Install the libraries uses in VMeta.
 
 	
 	After downloading the installation file, follow the installation guide to proceed with the installation.<br/>
-	Please remember the path of Tesseract to proceed [Setup config.py] (#5-set-up-configpy) in 5.<br/>
+	Please remember the path of Tesseract to proceed [Setup config.py](#5-set-up-configpy) in 5.<br/>
 	
 <br/>
 
@@ -288,7 +288,7 @@ Modify the configuration file using your DB and API Key.
 	# in __init__.py
 	# line 15
 	
-	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASWORD}@localhost/hstackdb"
+	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASSWORD}@localhost/hstackdb"
 	```
 	```
 	# in config.py
@@ -310,7 +310,7 @@ Modify the configuration file using your DB and API Key.
 	
 	db = {
 	'user' : 'root',
-	'password' : ${YOUR_DB_PASWORD},
+	'password' : ${YOUR_DB_PASSWORD},
 	'host' : 'localhost',
 	'port' : 3306,
 	'database' : 'hstackDB'
@@ -328,7 +328,7 @@ Modify the configuration file using your DB and API Key.
 	# in __init__.py
 	# line 17
 	
-	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASWORD}@localhost/hstackdb"
+	app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:${YOUR_DB_PASSWORD}@localhost/hstackdb"
 	```
 	```
 	# in config.py
@@ -350,7 +350,7 @@ Modify the configuration file using your DB and API Key.
 	
 	db = {
 	'user' : 'root',
-	'password' : ${YOUR DB PASWORD},
+	'password' : ${YOUR DB PASSWORD},
 	'host' : 'localhost',
 	'port' : 3306,
 	'database' : 'hstackDB'
