@@ -135,7 +135,8 @@ def extractCategories(videoIdList):
             category = category.split(', ')
             print(category)
             for c in category:
-                categoryList.add(c)
+                if c != 'None' :
+                    categoryList.add(c)
 
     return sorted(categoryList)
 

@@ -114,7 +114,7 @@ performance.html
                             }]
                         }
                     }
-                    });
+                });
 
                 new Chart(document.getElementById("category-chart"), {
                     type: 'pie',
@@ -218,7 +218,7 @@ performance.html
                         labels: {{upload_time|safe}},
                         datasets: [{ 
                             data: {{upload_size|safe}},
-                            label: "평균 재생 시간 (sec)",
+                            label: "업로드 소요 시간 (sec)",
                             borderColor: "#8e5ea2",
                             fill: false
                         }
@@ -247,7 +247,7 @@ performance.html
                             }]
                         }
                     }
-                    });
+                });
 
                 new Chart(document.getElementById("search-chart"), {
                 type: 'line',
