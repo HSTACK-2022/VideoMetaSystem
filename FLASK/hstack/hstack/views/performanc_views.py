@@ -175,7 +175,10 @@ def ratio():
                     timeCnt += datetime2sec(endTime - startTime)
 
             idViewDict[key] = viewCnt
-            idTimeDict[key] = round(timeCnt / viewCnt, 2)
+            if (viewCnt != 0):
+                idTimeDict[key] = round(timeCnt / viewCnt, 2)
+            else:
+                idTimeDict[key] = 0
 
     idViewList = sorted(idViewDict.items(), key = lambda item: item[1], reverse = True)
     idViewMeta = list()
@@ -358,8 +361,10 @@ def performance_videoviews():
                     endTime = datetime.datetime.strptime(cmd[1], datetime_format)
                     timeCnt += datetime2sec(endTime - startTime)
 
-            idViewDict[key] = viewCnt
-            idTimeDict[key] = round(timeCnt / viewCnt, 2)
+            if (viewCnt != 0):
+                idTimeDict[key] = round(timeCnt / viewCnt, 2)
+            else:
+                idTimeDict[key] = 0
 
     idViewList = sorted(idViewDict.items(), key = lambda item: item[1], reverse = True)
     idViewMeta = list()
@@ -466,7 +471,10 @@ def performance_detailFile(pk):
                     searchDict[key] = 1
 
         metadataDict['view'] = viewCnt
-        metadataDict['avgTime'] = round(timeCnt / viewCnt, 2)
+        if (viewCnt != 0):
+            metadataDict['avgTime'] = round(timeCnt / viewCnt, 2)
+        else:
+            metadataDict['avgTime'] = 0
 
     else:
         metadataDict['view'] = 0
