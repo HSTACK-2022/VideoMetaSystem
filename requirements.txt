@@ -34,9 +34,6 @@ Jinja2==3.1.2
 joblib==1.2.0
 JPype1==1.4.0
 jsonschema==4.16.0
-keras==2.7.0
-keras-nightly==2.5.0.dev2021032900
-Keras-Preprocessing==1.1.2
 konlpy==0.6.0
 krwordrank==1.0.3
 libclang==14.0.6
@@ -93,3 +90,7 @@ Werkzeug==2.1.2
 wrapt==1.12.1
 XlsxWriter==3.0.3
 zipp==3.8.1
+
+keras==2.7.0
+keras-nightly==2.5.0.dev2021032900
+Keras-Preprocessing==1.1.2

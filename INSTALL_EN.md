@@ -4,7 +4,7 @@
 
 > This document describes how to install VMeta in your local environment.<br/>
 > It is base on <b>Windows10</b>.<br/><br/>
-> Last Edit : 2022.10.20
+> Last Edit : 2022.10.21
 
 <br/>
 
@@ -227,12 +227,7 @@ Assume MySQL is installed on your computer.<br/>
 
 	CREATE TABLE SearchSatisfy (
 		val int PRIMARY KEY,
-    		cnt int
-	);
-
-	CREATE TABLE SearchSatisfy (
-		val int PRIMARY KEY,
-    		cnt int
+		cnt int
 	);
 
 	CREATE TABLE upload_time (
