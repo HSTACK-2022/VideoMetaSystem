@@ -62,6 +62,13 @@ https://github.com/opencv/opencv-python/blob/4.x/LICENSE.txt
 
 <br/>
 
+<b> jszip by Stuk</b><br/>
+jszip is Dual License, and VMeta uses MIT.<br/>
+License : MIT<br/>
+https://github.com/Stuk/jszip/blob/main/LICENSE.markdown
+
+<br/>
+
 <b> startbootstrap-sb-admin by StartBootstrap</b><br/>
 License : MIT<br/>
 https://github.com/startbootstrap/startbootstrap-sb-admin/blob/master/LICENSE
