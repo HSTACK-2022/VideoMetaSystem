@@ -52,20 +52,23 @@ def satisfySave(value):
 
 @bp.route('/search/', methods=['GET'])
 def searchFile():
-    isDetail = request.args.get('isDetail') if request.args.get('isDetail') != None else False
+    isDetail = True if request.args.get('isDetail') == "True" else False
+    word = request.args.get('searchText')
 
-    if isDetail :
-        word = ""
+    if isDetail:
         title = request.args.get('searchWordTitle') if request.args.get('searchWordTitle') != None else ""
         keyword = request.args.get('searchWordKeyword') if request.args.get('searchWordKeyword') != None else ""
         presenter = request.args.get('searchWordPresenter') if request.args.get('searchWordPresenter') != None else ""
-    else :
-        word = request.args.get('searchText')
+    else:
         title = request.args.get('searchTextTitle') if request.args.get('searchTextTitle') != None else ""
         keyword = request.args.get('searchTextKeyword') if request.args.get('searchTextKeyword') != None else ""
         presenter = request.args.get('searchTextPresenter') if request.args.get('searchTextPresenter') != None else ""
+        
+    if (title != "") or (keyword != "") or (presenter != ""):
+        word = ""
 
     print("---SEARCH---")
+    print(isDetail is True)
     print("검색 문장/단어: "+word)
     print("세부 검색: ")
     print("title: "+title+" keyword: "+keyword+" presenter: "+presenter)
@@ -166,7 +169,7 @@ def searchFile():
         rankList = []
 
         # if DetailSearch
-        if isDetail == "True":
+        if isDetail:
             category = request.args.get('category')
             narrative = request.args.get('narrative')
             method = request.args.get('method')
