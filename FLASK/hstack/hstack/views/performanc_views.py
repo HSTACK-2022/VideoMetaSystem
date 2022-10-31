@@ -361,6 +361,7 @@ def performance_videoviews():
                     endTime = datetime.datetime.strptime(cmd[1], datetime_format)
                     timeCnt += datetime2sec(endTime - startTime)
 
+            idViewDict[key] = viewCnt
             if (viewCnt != 0):
                 idTimeDict[key] = round(timeCnt / viewCnt, 2)
             else:
@@ -368,6 +369,7 @@ def performance_videoviews():
 
     idViewList = sorted(idViewDict.items(), key = lambda item: item[1], reverse = True)
     idViewMeta = list()
+
     for key, value in idViewList:
         videoObj = DB.session.query(Metadatum).filter(Metadatum.id == key).first()
         valDict = dict()

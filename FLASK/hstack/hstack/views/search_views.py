@@ -52,13 +52,20 @@ def satisfySave(value):
 
 @bp.route('/search/', methods=['GET'])
 def searchFile():
-    word = request.args.get('searchText')
-    title = request.args.get('searchTextTitle') if request.args.get('searchTextTitle') != None else ""
-    keyword = request.args.get('searchTextKeyword') if request.args.get('searchTextKeyword') != None else ""
-    presenter = request.args.get('searchTextPresenter') if request.args.get('searchTextPresenter') != None else ""
-    isDetail = request.args.get('isDetail')
+    isDetail = request.args.get('isDetail') if request.args.get('isDetail') != None else False
 
-    print("검색: ")
+    if isDetail :
+        word = ""
+        title = request.args.get('searchWordTitle') if request.args.get('searchWordTitle') != None else ""
+        keyword = request.args.get('searchWordKeyword') if request.args.get('searchWordKeyword') != None else ""
+        presenter = request.args.get('searchWordPresenter') if request.args.get('searchWordPresenter') != None else ""
+    else :
+        word = request.args.get('searchText')
+        title = request.args.get('searchTextTitle') if request.args.get('searchTextTitle') != None else ""
+        keyword = request.args.get('searchTextKeyword') if request.args.get('searchTextKeyword') != None else ""
+        presenter = request.args.get('searchTextPresenter') if request.args.get('searchTextPresenter') != None else ""
+
+    print("---SEARCH---")
     print("검색 문장/단어: "+word)
     print("세부 검색: ")
     print("title: "+title+" keyword: "+keyword+" presenter: "+presenter)
