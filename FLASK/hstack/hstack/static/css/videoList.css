@@ -347,3 +347,35 @@ body{
     cursor: pointer;
     background-color:rgb(50, 46, 93);
 }
+
+#pageBtnList {
+    width: 100%;
+    text-align: center;
+}
+
+.pageBtn {
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+    padding: 0px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 25px;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    display: inline-block;
+}
+
+.pageBtn:hover {
+    height: 50px;
+    width: 50px;
+    margin: 10px;
+    padding: 0px 10px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 25px;
+    border: 1px solid #cccccc;
+    background-color: #007bff;
+    display: inline-block;
+    cursor: pointer;
+}

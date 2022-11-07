@@ -50,15 +50,25 @@ def satisfySave(value):
     DB.session.query(SearchSatisfy).filter(SearchSatisfy.val == value).update({'cnt': SearchSatisfy.cnt+1})
     DB.session.commit()
 
-@bp.route('/search/', methods=['GET'])
-def searchFile():
+@bp.route('/search/pg<int:pageNum>', methods=['GET'])
+def searchFile(pageNum):
+    isDetail = True if request.args.get('isDetail') == "True" else False
     word = request.args.get('searchText')
-    title = request.args.get('searchTextTitle') if request.args.get('searchTextTitle') != None else ""
-    keyword = request.args.get('searchTextKeyword') if request.args.get('searchTextKeyword') != None else ""
-    presenter = request.args.get('searchTextPresenter') if request.args.get('searchTextPresenter') != None else ""
-    isDetail = request.args.get('isDetail')
 
-    print("검색: ")
+    if isDetail:
+        title = request.args.get('searchWordTitle') if request.args.get('searchWordTitle') != None else ""
+        keyword = request.args.get('searchWordKeyword') if request.args.get('searchWordKeyword') != None else ""
+        presenter = request.args.get('searchWordPresenter') if request.args.get('searchWordPresenter') != None else ""
+    else:
+        title = request.args.get('searchTextTitle') if request.args.get('searchTextTitle') != None else ""
+        keyword = request.args.get('searchTextKeyword') if request.args.get('searchTextKeyword') != None else ""
+        presenter = request.args.get('searchTextPresenter') if request.args.get('searchTextPresenter') != None else ""
+        
+    if (title != "") or (keyword != "") or (presenter != ""):
+        word = ""
+
+    print("---SEARCH---")
+    print(isDetail is True)
     print("검색 문장/단어: "+word)
     print("세부 검색: ")
     print("title: "+title+" keyword: "+keyword+" presenter: "+presenter)
@@ -76,6 +86,7 @@ def searchFile():
             searchWordDetailKeyword = "",
             searchWordDetailPresenter = "",
             rankData = "",
+            pageNum = pageNum
         )
 
     else :
@@ -159,7 +170,7 @@ def searchFile():
         rankList = []
 
         # if DetailSearch
-        if isDetail == "True":
+        if isDetail:
             category = request.args.get('category')
             narrative = request.args.get('narrative')
             method = request.args.get('method')
@@ -228,7 +239,8 @@ def searchFile():
                 rankData = "",
                 category = "",
                 narrative = "",
-                method = ""
+                method = "",
+                pageNum = pageNum
             )
         else :
             return render_template('search.html',
@@ -245,5 +257,6 @@ def searchFile():
                 rankData = rankList,
                 category = category,
                 narrative = narrative,
-                method = method
+                method = method,
+                pageNum = pageNum
             )
