@@ -98,7 +98,7 @@ class Total:
                     break
 
         if self.finalDict['thumbnail'] == None:
-            self.finalDict['thumbnail'] = '/static/img/defThumbnail.jpg'
+            self.finalDict['thumbnail'] = './static/img/defThumbnail.jpg'
         
         #self.finalDict['filePath']=filePath
         #self.finalDict['timestamp']=timestamp

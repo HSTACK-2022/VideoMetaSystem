@@ -50,8 +50,8 @@ def satisfySave(value):
     DB.session.query(SearchSatisfy).filter(SearchSatisfy.val == value).update({'cnt': SearchSatisfy.cnt+1})
     DB.session.commit()
 
-@bp.route('/search/', methods=['GET'])
-def searchFile():
+@bp.route('/search/pg<int:pageNum>', methods=['GET'])
+def searchFile(pageNum):
     isDetail = True if request.args.get('isDetail') == "True" else False
     word = request.args.get('searchText')
 
@@ -86,6 +86,7 @@ def searchFile():
             searchWordDetailKeyword = "",
             searchWordDetailPresenter = "",
             rankData = "",
+            pageNum = pageNum
         )
 
     else :
@@ -238,7 +239,8 @@ def searchFile():
                 rankData = "",
                 category = "",
                 narrative = "",
-                method = ""
+                method = "",
+                pageNum = pageNum
             )
         else :
             return render_template('search.html',
@@ -255,5 +257,6 @@ def searchFile():
                 rankData = rankList,
                 category = category,
                 narrative = narrative,
-                method = method
+                method = method,
+                pageNum = pageNum
             )
