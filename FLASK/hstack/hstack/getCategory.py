@@ -53,10 +53,11 @@ def getCategoryService(accessKey, searchWord):
     response = http.request(
         "POST",
         openApiURL,
-        headers={"Content-Type": "application/json; charset=UTF-8"},
+        headers={"Content-Type": "application/json; charset=UTF-8", "Authorization" : accessKey},
         body=json.dumps(requestJson)
     )
     #print("[responseCode] " + str(response.status))
+    #print(response.data)   #오류코드의 reason도 여기서 출력함
     if response.status == 200:
         return getCategoryFromJson(str(response.data, "utf-8"))
     else:
