@@ -92,6 +92,8 @@ def searchFile(pageNum):
     else :
         # if totalSearch
         searchWords = intent.findWord(word)
+        print("*********************************************88")
+        print(searchWords)
 
         # [Logging] 전체 검색 DB (필요 없으면 삭제해도 됨)
         for item in searchWords:

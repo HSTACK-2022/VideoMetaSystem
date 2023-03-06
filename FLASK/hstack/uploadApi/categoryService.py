@@ -81,7 +81,7 @@ def getCategoryService(accessKey, keywordList):
     response = http.request(
         "POST",
         openApiURL,
-        headers={"Content-Type": "application/json; charset=UTF-8"},
+        headers={"Content-Type": "application/json; charset=UTF-8", "Authorization" : accessKey},
         body=json.dumps(requestJson)
     )
     #print("[responseCode] " + str(response.status))
