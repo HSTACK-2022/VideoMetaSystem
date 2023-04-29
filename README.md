@@ -13,10 +13,11 @@
 
 VMeta 실행을 위한 모든 사항은 아래 문서를 참고해주세요.
 
-<h4>LICENSE : <a href="LICENSE">GPL v3.0</a> / <a href="LICENSE_3rd.md">Third Party</a> </h4>
-<h4>INSTALL : <a href="INSTALL_KO.md">KO</a> / <a href="INSTALL_EN.md">EN</a> </h4>
-<h4>EXECUTE : <a href="EXECUTE_KO.md">KO</a> / <a href="EXECUTE_EN.md">EN</a> </h4>
-<h4>CONTRIBUTE : <a href="CONTRIBUTE.md">How to Contribute</a>
+<h4>License : <a href="LICENSE">GPL v3.0</a> / <a href="LICENSE_3rd.md">Third Party</a> </h4>
+<h4>Install : <a href="INSTALL_KO.md">KO</a> / <a href="INSTALL_EN.md">EN</a> </h4>
+<h4>Execute : <a href="EXECUTE_KO.md">KO</a> / <a href="EXECUTE_EN.md">EN</a> </h4>
+<h4>Contribute : <a href="CONTRIBUTE.md">How to Contribute</a>
+<h4>Related Article : <a href="http://www.jiibc.kr/bbs/board.php?bo_table=collect_paper&wr_id=3159&lc=kor">Performance Evaluation of Video Recommendation Systemwith Rich Metadata</a>
 
 <br/>
 <br/>
