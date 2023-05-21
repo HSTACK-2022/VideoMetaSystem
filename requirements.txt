@@ -90,6 +90,7 @@ Werkzeug==2.1.2
 wrapt==1.12.1
 XlsxWriter==3.0.3
 zipp==3.8.1
+img2pdf==0.4.4
 
 keras==2.7.0
 keras-nightly==2.5.0.dev2021032900

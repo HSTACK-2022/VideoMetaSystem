@@ -218,12 +218,19 @@ detail.html
                                             <span class="sceneDownloadBtn">저장</span><br>
                                             <span class="sceneDownloadBtn">(jpg)</span>
                                         </button>
-                                        <button id="downloadImg" type="button" onclick="downloadPPT('{{pptPath}}', 'extractedPPT')">
+                                        <button id="downloadImg" type="button" onclick="downloadFILE('ppt', '{{pptPath}}', 'extracted')">
                                             <img id="down" src="{{ url_for('static', filename='img/download.png') }}">
                                             <br>
                                             <span lass="sceneDownloadBtn">장면</span><br>
                                             <span lass="sceneDownloadBtn">저장</span><br>
                                             <span lass="sceneDownloadBtn">(ppt)</span>
+                                        </button>
+                                        <button id="downloadImg" type="button" onclick="downloadFILE('pdf', '{{pptPath}}', 'extracted')">
+                                            <img id="down" src="{{ url_for('static', filename='img/download.png') }}">
+                                            <br>
+                                            <span lass="sceneDownloadBtn">장면</span><br>
+                                            <span lass="sceneDownloadBtn">저장</span><br>
+                                            <span lass="sceneDownloadBtn">(pdf)</span>
                                         </button>
                                     </div>
                                     <div class="searchScroll">

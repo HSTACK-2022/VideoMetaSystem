@@ -45,9 +45,29 @@ def getPPTFile(fileURL, title):
             path = os.path.join(imagePath, image)
             slide = pptFile.slides.add_slide(slide_layout)
             slide.shapes.add_picture(path, 0, 0, pptFile.slide_width, pptFile.slide_height)
-    
-
-    title = "extractedPPT"
         
-    pptPathRel = os.path.join(os.path.dirname(fileURL), title + '.pptx')
+    pptPathRel = os.path.join(os.path.dirname(fileURL), title + '.ppt')
     pptFile.save(pptPathRel)
+
+
+# idea from PR82 by @minzix
+
+# PPT를 열어 PDF로 저장
+from img2pdf import convert
+
+def makePDFFile(fileURL, title): 
+    pdfPathRel = os.path.join(os.path.dirname(fileURL), title + '.pdf')
+    imagePath = os.path.join(os.path.dirname(fileURL), 'Image')
+
+    imageList = os.listdir(imagePath)
+    
+    with open(pdfPathRel, "wb") as pf:
+        pdfList = []
+
+        for image in imageList:
+            if image.startswith("L") or image.startswith("P"):
+                path = os.path.join(imagePath, image)
+                pdfList.append(path)
+        
+        pdfFile = convert(pdfList)
+        pf.write(pdfFile)
