@@ -52,7 +52,7 @@ def getPPTFile(fileURL, title):
 
 # idea from PR82 by @minzix
 
-# PPT를 열어 PDF로 저장
+# PDF로 저장
 from img2pdf import convert
 
 def makePDFFile(fileURL, title): 
