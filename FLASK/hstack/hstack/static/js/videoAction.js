@@ -132,11 +132,10 @@ function downloadImg(folderName){
     );
 }
 
-function downloadPPT(path, title){
-    console.log(`hello ${path}, ${title}`);
+function downloadFILE(extension, path, title){
     var element = document.createElement('form');
     element.setAttribute('method', 'GET');
-    element.setAttribute('action', `/detail/download/${path}/${title}`);
+    element.setAttribute('action', `/detail/download/${extension}/${path}/${title}`);
     document.body.appendChild(element);
     element.submit();
     document.body.removeChild(element);

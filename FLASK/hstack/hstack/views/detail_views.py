@@ -54,9 +54,9 @@ def data(filepath):
     else :
         return send_from_directory('../media', filepath.split('media/')[1])
 
-@bp.route('/detail/download/<string:path>/<string:title>')
-def download(path, title):
-    filepath = os.path.join('..', app.config.get('UPLOAD_FILE_DIR'), path, title+".pptx")
+@bp.route('/detail/download/<string:extension>/<string:path>/<string:title>')
+def download(extension, path, title):
+    filepath = os.path.join('..', app.config.get('UPLOAD_FILE_DIR'), path, title+'.'+extension)
     return send_file(filepath)
 
 @bp.route('/detail/<int:pk>', methods=['GET'])
@@ -77,8 +77,13 @@ def detailFile(pk):
     pptImage = makePPT.getPPTImage(videoPath)
 
     # PPT 파일 생성
-    title = DB.session.query(Videopath).filter(Videopath.id == pk).first().title
+    # TODO : use video title for make ppt/pdf
+    # title = DB.session.query(Videopath).filter(Videopath.id == pk).first().title
+    title = 'extracted'
     makePPT.getPPTFile(videoPath, title)
+
+    # PPT 파일 바탕으로 PDF 파일 생성
+    makePPT.makePDFFile(videoPath, title)
 
     # PPT 파일을 얻기 위한 폴더명 얻기
     if OS == "Windows":
