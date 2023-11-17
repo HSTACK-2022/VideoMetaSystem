@@ -254,6 +254,9 @@ DJANGO/hstack/tensorflow/ImageSeperate/train/
 DJANGO/hstack/tensorflow/ImageSeperate/validation/
 DJANGO/hstack/secrets.json
 
+# Django - 231117
+DJANGO/
+
 #FLASK
 FLASK/venv
 FLASK/hstack/logs/
